@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Sparkles, Heart, MapPin, Phone, Instagram, Crown, Scissors } from 'lucide-react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { ArrowRight, Sparkles, Heart, MapPin, Phone, Instagram, Crown, Scissors, Star } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Import your images
 import logo from '@/assets/logo.png';
@@ -19,70 +19,37 @@ const galleryImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery
 
 const formatPrice = (price: number) => `₺${price.toLocaleString('tr-TR')}`;
 
-// Floating particles component
-const FloatingParticles = () => {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 rounded-full bg-primary/40"
-          initial={{ 
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            scale: Math.random() * 0.5 + 0.5
-          }}
-          animate={{ 
-            y: [null, Math.random() * -200 - 100],
-            opacity: [0, 1, 0]
-          }}
-          transition={{ 
-            duration: Math.random() * 5 + 5,
-            repeat: Infinity,
-            delay: Math.random() * 5
-          }}
-        />
-      ))}
-    </div>
-  );
-};
+const locations = ['Mağusa', 'Lefke', 'Lefkoşa'];
 
-// Text reveal animation
-const AnimatedText = ({ text, className }: { text: string; className?: string }) => {
-  return (
-    <motion.span className={className}>
-      {text.split('').map((char, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.5,
-            delay: i * 0.03,
-            ease: [0.215, 0.61, 0.355, 1]
-          }}
-          className="inline-block"
-        >
-          {char === ' ' ? '\u00A0' : char}
-        </motion.span>
-      ))}
-    </motion.span>
-  );
+// Animated counter for stats
+const AnimatedCounter = ({ target, suffix = '' }: { target: number; suffix?: string }) => {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    const duration = 2000;
+    const steps = 60;
+    const increment = target / steps;
+    let current = 0;
+    
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+    
+    return () => clearInterval(timer);
+  }, [target]);
+  
+  return <span>{count}{suffix}</span>;
 };
 
 export function Home() {
   const { services, settings } = useSalon();
-  const heroRef = useRef<HTMLDivElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
-  
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const [activeLocation, setActiveLocation] = useState(0);
   
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -90,7 +57,6 @@ export function Home() {
   const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 });
   
   useEffect(() => {
-    setIsLoaded(true);
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -99,6 +65,14 @@ export function Home() {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [mouseX, mouseY]);
+  
+  // Rotate through locations
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveLocation(prev => (prev + 1) % locations.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
   
   const signatureServices = services.filter(s => s.active).slice(0, 4);
   
@@ -110,268 +84,259 @@ export function Home() {
         style={{ x: smoothMouseX, y: smoothMouseY }}
       />
       
-      <FloatingParticles />
-      
-      {/* Hero Section - Completely Redesigned */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Dynamic Background */}
-        <div className="absolute inset-0">
+      {/* Hero Section - Compact & Eye-catching */}
+      <section className="relative py-8 md:py-12 lg:py-16 overflow-hidden">
+        {/* Animated Background Orbs */}
+        <div className="absolute inset-0 overflow-hidden">
           <motion.div 
-            className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full"
-            style={{
-              background: 'radial-gradient(circle, hsl(var(--primary) / 0.15) 0%, transparent 70%)',
-            }}
+            className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/10 blur-3xl"
             animate={{ 
               scale: [1, 1.2, 1],
-              rotate: [0, 180, 360]
+              x: [0, 30, 0],
+              y: [0, -20, 0]
             }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div 
-            className="absolute bottom-[-30%] left-[-20%] w-[600px] h-[600px] rounded-full"
-            style={{
-              background: 'radial-gradient(circle, hsl(var(--primary) / 0.1) 0%, transparent 60%)',
-            }}
+            className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-primary/5 blur-3xl"
             animate={{ 
               scale: [1.2, 1, 1.2],
-              rotate: [360, 180, 0]
+              x: [0, -20, 0]
             }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
         </div>
         
-        {/* Main Hero Content */}
-        <motion.div 
-          style={{ opacity: heroOpacity, scale: heroScale }}
-          className="relative z-10 container mx-auto px-4"
-        >
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[85vh]">
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Top Bar - Location & Rating */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-wrap items-center justify-center gap-4 mb-6"
+          >
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
+              <MapPin className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-foreground/80">North Cyprus</span>
+              <span className="text-primary font-bold">•</span>
+              <motion.span
+                key={activeLocation}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="text-primary font-semibold"
+              >
+                {locations[activeLocation]}
+              </motion.span>
+            </div>
+            <div className="flex items-center gap-1 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
+              {[...Array(5)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <Star className="w-4 h-4 fill-primary text-primary" />
+                </motion.div>
+              ))}
+              <span className="ml-2 text-sm font-bold text-foreground">5.0</span>
+            </div>
+          </motion.div>
+          
+          {/* Main Hero Grid */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Content */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8 }}
               className="order-2 lg:order-1 text-center lg:text-left"
             >
-              {/* Logo with Glow */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
-                className="mb-6 lg:mb-8"
-              >
-                <motion.img 
-                  src={logo} 
-                  alt="La'Couronne" 
-                  className="h-32 sm:h-40 md:h-48 lg:h-56 w-auto mx-auto lg:mx-0"
-                  style={{ 
-                    filter: 'drop-shadow(0 0 40px hsl(var(--primary) / 0.5))'
-                  }}
-                  animate={{ 
-                    filter: [
-                      'drop-shadow(0 0 40px hsl(var(--primary) / 0.3))',
-                      'drop-shadow(0 0 60px hsl(var(--primary) / 0.6))',
-                      'drop-shadow(0 0 40px hsl(var(--primary) / 0.3))'
-                    ]
-                  }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                />
-              </motion.div>
+              {/* Logo */}
+              <motion.img 
+                src={logo} 
+                alt="La'Couronne" 
+                className="h-28 sm:h-36 md:h-44 w-auto mx-auto lg:mx-0 mb-4"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+                style={{ filter: 'drop-shadow(0 0 30px hsl(var(--primary) / 0.4))' }}
+              />
               
-              {/* Animated Tagline */}
+              {/* Tagline Badge */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="mb-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/20 to-primary/5 border border-primary/30 mb-4"
               >
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30">
-                  <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-                  <span className="text-primary font-bold tracking-wider text-xs sm:text-sm uppercase">
-                    Here To Guide Your Hair Journey
-                  </span>
-                  <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+                <Sparkles className="w-3 h-3 text-primary" />
+                <span className="text-xs font-bold tracking-wider text-primary uppercase">
+                  Your Hair Journey Starts Here
                 </span>
               </motion.div>
               
-              {/* Main Heading with Character Animation */}
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight">
-                {isLoaded && (
-                  <>
-                    <AnimatedText text="Crowned" className="text-foreground" />
-                    <br />
-                    <span className="relative">
-                      <AnimatedText text="In Beauty" className="text-gradient-gold" />
-                      <motion.span
-                        className="absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-primary via-primary/50 to-transparent"
-                        initial={{ width: 0 }}
-                        animate={{ width: '100%' }}
-                        transition={{ delay: 1.5, duration: 0.8 }}
-                      />
-                    </span>
-                  </>
-                )}
-              </h1>
-              
-              {/* Description with Stagger */}
-              <motion.p
+              {/* Heading */}
+              <motion.h1 
+                className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2 }}
-                className="text-base sm:text-lg md:text-xl text-foreground/70 max-w-lg mx-auto lg:mx-0 mb-8 leading-relaxed"
+                transition={{ delay: 0.4 }}
               >
-                Expert in <span className="text-primary font-semibold">cornrows, twists, knotless braids, 
-                faux locs, passion twists</span> and more beautiful styles for men & women.
-              </motion.p>
+                Premium{' '}
+                <span className="text-gradient-gold relative">
+                  Hair Artistry
+                  <motion.svg
+                    className="absolute -bottom-2 left-0 w-full"
+                    viewBox="0 0 200 8"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ delay: 1, duration: 0.8 }}
+                  >
+                    <motion.path
+                      d="M0 4 Q50 0 100 4 T200 4"
+                      fill="none"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </motion.svg>
+                </span>
+              </motion.h1>
               
-              {/* CTA Buttons with Hover Effects */}
+              {/* Services List */}
+              <motion.div 
+                className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                {['Cornrows', 'Knotless Braids', 'Faux Locs', 'Twists'].map((style, i) => (
+                  <motion.span
+                    key={style}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6 + i * 0.1 }}
+                    whileHover={{ scale: 1.05, backgroundColor: 'hsl(var(--primary) / 0.2)' }}
+                    className="px-3 py-1 text-xs font-medium rounded-full bg-foreground/5 border border-foreground/10 text-foreground/70 cursor-default transition-colors"
+                  >
+                    {style}
+                  </motion.span>
+                ))}
+                <span className="px-3 py-1 text-xs font-medium text-primary">+more</span>
+              </motion.div>
+              
+              {/* CTA Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.4 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+                transition={{ delay: 0.7 }}
+                className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-6"
               >
                 <Link to="/book">
-                  <motion.div
-                    whileHover={{ scale: 1.05, boxShadow: '0 0 40px hsl(var(--primary) / 0.5)' }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button size="lg" className="btn-premium h-14 sm:h-16 px-8 sm:px-12 text-base sm:text-lg font-bold rounded-full group w-full sm:w-auto">
-                      <Crown className="mr-2 h-5 w-5" />
-                      Book Now
-                      <motion.span
-                        className="ml-2"
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                      >
-                        <ArrowRight className="h-5 w-5" />
-                      </motion.span>
+                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                    <Button size="lg" className="btn-premium h-12 px-8 text-base font-bold rounded-full group w-full sm:w-auto">
+                      <Crown className="mr-2 h-4 w-4" />
+                      Book Appointment
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </motion.div>
                 </Link>
                 <Link to="/services">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button 
-                      size="lg" 
-                      variant="outline" 
-                      className="h-14 sm:h-16 px-8 sm:px-12 text-base sm:text-lg rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 font-semibold w-full sm:w-auto"
-                    >
-                      Explore Services
+                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                    <Button variant="outline" size="lg" className="h-12 px-8 text-base rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold w-full sm:w-auto">
+                      View Services
                     </Button>
                   </motion.div>
                 </Link>
               </motion.div>
+              
+              {/* Stats */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9 }}
+                className="flex justify-center lg:justify-start gap-8"
+              >
+                {[
+                  { value: 500, suffix: '+', label: 'Happy Clients' },
+                  { value: 5, suffix: '+', label: 'Years Experience' },
+                  { value: 20, suffix: '+', label: 'Style Options' },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    className="text-center"
+                    whileHover={{ y: -3 }}
+                  >
+                    <div className="text-2xl font-display font-bold text-primary">
+                      <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                    </div>
+                    <div className="text-xs text-foreground/50">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </motion.div>
             </motion.div>
             
-            {/* Right Side - Hero Image with Effects */}
+            {/* Right - Hero Image */}
             <motion.div
-              initial={{ opacity: 0, x: 50, scale: 0.8 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ duration: 1, delay: 0.3, type: "spring", stiffness: 50 }}
-              className="order-1 lg:order-2 relative"
-              style={{ y: imageY }}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="order-1 lg:order-2"
             >
-              <div className="relative mx-auto max-w-md lg:max-w-none">
-                {/* Decorative Elements */}
+              <div className="relative max-w-sm mx-auto lg:max-w-md">
+                {/* Decorative ring */}
                 <motion.div
-                  className="absolute -top-8 -right-8 w-24 h-24 border-2 border-primary/30 rounded-full"
-                  animate={{ rotate: 360, scale: [1, 1.1, 1] }}
-                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                />
-                <motion.div
-                  className="absolute -bottom-6 -left-6 w-16 h-16 bg-primary/20 rounded-full blur-xl"
-                  animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 4, repeat: Infinity }}
+                  className="absolute inset-0 rounded-3xl border-2 border-primary/20"
+                  style={{ transform: 'rotate(3deg) scale(1.02)' }}
+                  animate={{ rotate: [3, -3, 3] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                 />
                 
-                {/* Golden Frame Container */}
+                {/* Main Image */}
                 <motion.div 
-                  className="relative"
+                  className="relative rounded-3xl overflow-hidden border-3 border-primary/40 shadow-2xl"
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {/* Outer Glow */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/40 via-primary/20 to-primary/40 blur-2xl transform scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
+                  <img
+                    src={heroImage}
+                    alt="Beautiful Hair Art"
+                    className="w-full aspect-[3/4] object-cover"
+                  />
                   
-                  {/* Main Image Container */}
-                  <div className="relative rounded-3xl overflow-hidden border-4 border-primary/50 shadow-2xl">
-                    {/* Animated Border */}
-                    <motion.div
-                      className="absolute inset-0 rounded-3xl"
-                      style={{
-                        background: 'linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent)',
-                      }}
-                      animate={{ x: ['-100%', '200%'] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    />
-                    
-                    {/* Image */}
-                    <motion.img
-                      src={heroImage}
-                      alt="Beautiful Hair Art"
-                      className="w-full aspect-[4/5] object-cover"
-                      initial={{ scale: 1.2 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 1.5 }}
-                    />
-                    
-                    {/* Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
-                    
-                    {/* Floating Badge */}
-                    <motion.div
-                      className="absolute bottom-6 left-6 right-6"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1 }}
-                    >
-                      <div className="glass-card p-4 backdrop-blur-md">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-primary font-bold text-sm">Hair Artistry</p>
-                            <p className="text-foreground/70 text-xs">Men & Women Styles</p>
-                          </div>
-                          <motion.div
-                            animate={{ rotate: [0, 10, -10, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          >
-                            <Crown className="w-8 h-8 text-primary" />
-                          </motion.div>
-                        </div>
+                  {/* Floating Badge */}
+                  <motion.div
+                    className="absolute bottom-4 left-4 right-4 z-20"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1 }}
+                  >
+                    <div className="glass-card p-3 backdrop-blur-md flex items-center justify-between">
+                      <div>
+                        <p className="text-primary font-bold text-sm">Men & Women</p>
+                        <p className="text-foreground/60 text-xs">Professional Styling</p>
                       </div>
-                    </motion.div>
-                  </div>
-                  
-                  {/* Corner Accents */}
-                  <div className="absolute -top-3 -left-3 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-xl" />
-                  <div className="absolute -top-3 -right-3 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-xl" />
-                  <div className="absolute -bottom-3 -left-3 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-xl" />
-                  <div className="absolute -bottom-3 -right-3 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-xl" />
+                      <motion.div
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                      >
+                        <Crown className="w-6 h-6 text-primary" />
+                      </motion.div>
+                    </div>
+                  </motion.div>
                 </motion.div>
+                
+                {/* Corner accents */}
+                <div className="absolute -top-2 -left-2 w-6 h-6 border-t-3 border-l-3 border-primary rounded-tl-lg" />
+                <div className="absolute -top-2 -right-2 w-6 h-6 border-t-3 border-r-3 border-primary rounded-tr-lg" />
+                <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-3 border-l-3 border-primary rounded-bl-lg" />
+                <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-3 border-r-3 border-primary rounded-br-lg" />
               </div>
             </motion.div>
           </div>
-        </motion.div>
-        
-        {/* Scroll Indicator */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <motion.div 
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="flex flex-col items-center gap-2"
-          >
-            <span className="text-xs tracking-widest text-primary/70 uppercase font-medium">Scroll</span>
-            <div className="w-px h-10 bg-gradient-to-b from-primary to-transparent" />
-          </motion.div>
-        </motion.div>
+        </div>
       </section>
       
       {/* Gallery Section with Golden Frames */}
