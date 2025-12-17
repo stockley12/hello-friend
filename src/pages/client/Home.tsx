@@ -21,11 +21,6 @@ import gallery8 from '@/assets/gallery-8.jpg';
 const galleryData = [
   { img: gallery1, category: 'women', style: 'Knotless Braids', featured: true },
   { img: gallery7, category: 'men', style: 'Cornrow Art', featured: true },
-  { img: gallery8, category: 'women', style: 'Bob Locs', featured: false },
-  { img: gallery3, category: 'women', style: 'Faux Locs', featured: false },
-  { img: gallery4, category: 'women', style: 'Goddess Braids', featured: false },
-  { img: gallery5, category: 'women', style: 'Twists', featured: false },
-  { img: gallery6, category: 'women', style: 'Cornrows', featured: false },
 ];
 
 const formatPrice = (price: number) => `₺${price.toLocaleString('tr-TR')}`;
