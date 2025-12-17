@@ -1,7 +1,7 @@
 // DATA MODELS
 // Integration point: These types will match your backend API schema
 
-export type ServiceCategory = 'cut' | 'color' | 'treatment' | 'styling' | 'extensions';
+export type ServiceCategory = 'cut' | 'color' | 'treatment' | 'styling' | 'extensions' | 'braids' | 'twists' | 'locs' | 'mens' | 'natural';
 
 export interface Service {
   id: string;

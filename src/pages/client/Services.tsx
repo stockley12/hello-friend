@@ -12,6 +12,11 @@ const categoryLabels: Record<ServiceCategory, string> = {
   treatment: 'Treatments',
   styling: 'Styling',
   extensions: 'Extensions',
+  braids: 'Braids',
+  twists: 'Twists',
+  locs: 'Locs',
+  mens: 'Mens',
+  natural: 'Natural Hair',
 };
 
 const formatPrice = (price: number) => `₺${price.toLocaleString('tr-TR')}`;
