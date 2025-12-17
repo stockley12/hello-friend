@@ -15,8 +15,19 @@ import gallery3 from '@/assets/gallery-3.jpg';
 import gallery4 from '@/assets/gallery-4.jpg';
 import gallery5 from '@/assets/gallery-5.jpg';
 import gallery6 from '@/assets/gallery-6.jpg';
+import gallery7 from '@/assets/gallery-7.jpg';
+import gallery8 from '@/assets/gallery-8.jpg';
 
-const galleryImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery6];
+const galleryData = [
+  { img: gallery1, category: 'women', style: 'Knotless Braids', featured: true },
+  { img: gallery7, category: 'men', style: 'Cornrow Art', featured: true },
+  { img: gallery2, category: 'women', style: 'Box Braids', featured: false },
+  { img: gallery8, category: 'women', style: 'Bob Locs', featured: false },
+  { img: gallery3, category: 'women', style: 'Faux Locs', featured: false },
+  { img: gallery4, category: 'women', style: 'Goddess Braids', featured: false },
+  { img: gallery5, category: 'women', style: 'Twists', featured: false },
+  { img: gallery6, category: 'women', style: 'Cornrows', featured: false },
+];
 
 const formatPrice = (price: number) => `₺${price.toLocaleString('tr-TR')}`;
 
@@ -552,59 +563,160 @@ export function Home() {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section className="py-12 md:py-16 relative">
-        <div className="container mx-auto px-4">
+      {/* Gallery Section - Premium Design */}
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-10"
+            className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-3 mb-3">
-              <div className="h-px w-8 bg-gradient-to-r from-transparent to-primary" />
-              <Sparkles className="w-5 h-5 text-primary" />
-              <span className="text-primary text-sm font-bold tracking-wider uppercase">Our Work</span>
-              <Sparkles className="w-5 h-5 text-primary" />
-              <div className="h-px w-8 bg-gradient-to-l from-transparent to-primary" />
-            </div>
-            <h2 className="font-display text-2xl md:text-4xl font-bold">
-              Beautiful <span className="text-gradient-gold">Creations</span>
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              whileInView={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 200 }}
+              className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 mb-4"
+            >
+              <Sparkles className="w-8 h-8 text-primary" />
+            </motion.div>
+            <h2 className="font-display text-3xl md:text-5xl font-bold mb-3">
+              Our <span className="text-gradient-gold">Masterpieces</span>
             </h2>
+            <p className="text-foreground/60 max-w-lg mx-auto">
+              Every style tells a story. Explore our collection of stunning transformations.
+            </p>
           </motion.div>
-          
-          {/* Gallery Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-            {galleryImages.map((img, index) => (
+
+          {/* Premium Masonry Gallery */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 auto-rows-[200px] md:auto-rows-[250px]">
+            {galleryData.map((item, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className={`group ${index === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}
+                transition={{ delay: index * 0.08, type: "spring", stiffness: 100 }}
+                className={`group relative overflow-hidden rounded-2xl cursor-pointer ${
+                  item.featured ? 'col-span-2 row-span-2' : 
+                  index === 4 ? 'row-span-2' : ''
+                }`}
               >
-                <div className={`golden-frame img-zoom ${index === 0 ? 'rounded-2xl' : 'rounded-xl'}`}>
-                  <div className={`aspect-square ${index === 0 ? 'md:aspect-[4/3]' : ''}`}>
-                    <img src={img} alt={`Hairstyle ${index + 1}`} className="w-full h-full object-cover" />
-                  </div>
+                {/* Image Container */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent z-10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                
+                {/* Glowing Border on Hover */}
+                <motion.div
+                  className="absolute inset-0 rounded-2xl z-20 pointer-events-none"
+                  initial={false}
+                  whileHover={{ 
+                    boxShadow: "inset 0 0 0 3px hsl(var(--primary))",
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+                
+                {/* Image */}
+                <motion.img
+                  src={item.img}
+                  alt={item.style}
+                  className="w-full h-full object-cover"
+                  whileHover={{ scale: 1.08 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                />
+                
+                {/* Category Badge */}
+                <motion.div
+                  className="absolute top-3 left-3 z-30"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 + 0.2 }}
+                >
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-md ${
+                    item.category === 'men' 
+                      ? 'bg-blue-500/80 text-white' 
+                      : 'bg-pink-500/80 text-white'
+                  }`}>
+                    {item.category}
+                  </span>
+                </motion.div>
+
+                {/* Featured Badge */}
+                {item.featured && (
+                  <motion.div
+                    className="absolute top-3 right-3 z-30"
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.3, type: "spring" }}
+                  >
+                    <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-primary/90 text-primary-foreground text-xs font-bold backdrop-blur-md">
+                      <Star className="w-3 h-3 fill-current" />
+                      Featured
+                    </span>
+                  </motion.div>
+                )}
+
+                {/* Hover Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-20 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                  <motion.div
+                    initial={false}
+                    className="space-y-2"
+                  >
+                    <h3 className="font-display text-lg md:text-xl font-bold text-foreground">
+                      {item.style}
+                    </h3>
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3 h-3 fill-primary text-primary" />
+                      ))}
+                    </div>
+                    <Link to="/book">
+                      <Button size="sm" className="mt-2 rounded-full bg-primary/90 hover:bg-primary text-primary-foreground text-xs">
+                        Book This Style
+                        <ArrowRight className="ml-1 w-3 h-3" />
+                      </Button>
+                    </Link>
+                  </motion.div>
                 </div>
+
+                {/* Shimmer Effect */}
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" />
               </motion.div>
             ))}
           </div>
-          
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-center mt-8"
+
+          {/* Gallery Footer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12 text-center"
           >
-            <a href={`https://instagram.com/${settings.instagramHandle}`} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" className="rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-6 h-11 font-semibold">
-                <Instagram className="mr-2 h-5 w-5" />
-                More on Instagram
-              </Button>
-            </a>
+            <div className="inline-flex items-center gap-4 flex-wrap justify-center">
+              <a href={`https://instagram.com/${settings.instagramHandle}`} target="_blank" rel="noopener noreferrer">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button variant="outline" className="rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-6 h-12 font-semibold">
+                    <Instagram className="mr-2 h-5 w-5" />
+                    Follow @lacouronne
+                  </Button>
+                </motion.div>
+              </a>
+              <Link to="/book">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button className="btn-premium rounded-full px-6 h-12 font-bold">
+                    <Crown className="mr-2 h-5 w-5" />
+                    Book Your Style
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </motion.div>
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>
