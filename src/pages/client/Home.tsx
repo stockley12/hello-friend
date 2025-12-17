@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { ArrowRight, Sparkles, Heart, MapPin, Phone, Instagram, Crown, Scissors, Star, Home as HomeIcon, Palette, Users, Clock, CheckCircle2 } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
+import { VideoShowcase } from '@/components/VideoShowcase';
 import { useEffect, useState, useMemo } from 'react';
 
 // Import your images
@@ -337,6 +338,9 @@ export function Home() {
           </div>
         </div>
       </section>
+
+      {/* Video Showcase Section */}
+      <VideoShowcase />
 
       {/* Men & Women Services Section */}
       <section className="py-12 md:py-16 relative">
