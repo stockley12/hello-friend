@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX, Sparkles, Crown, Heart } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { Sparkles, Crown, Heart, Star, Smile } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 import showcase1 from '@/assets/showcase-1.jpg';
 import showcase2 from '@/assets/showcase-2.jpg';
@@ -9,76 +9,92 @@ import showcase4 from '@/assets/showcase-4.jpg';
 
 const showcaseData = [
   {
-    video: '/videos/showcase-1.mp4',
-    thumbnail: showcase1,
-    title: 'Happy Client Moment',
-    category: 'Transformation'
+    image: showcase1,
+    title: 'Rainbow Magic',
+    quote: '"I love my new look!"',
+    mood: 'Creative & Bold'
   },
   {
-    video: '/videos/showcase-2.mp4',
-    thumbnail: showcase2,
-    title: 'Client Satisfaction',
-    category: 'Style'
+    image: showcase2,
+    title: 'Classic Elegance',
+    quote: '"Exactly what I wanted!"',
+    mood: 'Sleek & Professional'
   },
   {
-    video: '/videos/showcase-3.mp4',
-    thumbnail: showcase3,
-    title: 'Rainbow Yarn Magic',
-    category: 'Creative'
+    image: showcase3,
+    title: 'Fire Red Vibes',
+    quote: '"Feeling like a queen!"',
+    mood: 'Bold & Beautiful'
   },
   {
-    video: '/videos/showcase-4.mp4',
-    thumbnail: showcase4,
-    title: 'Crown Worthy',
-    category: 'Braids'
+    image: showcase4,
+    title: 'Lemonade Braids',
+    quote: '"Absolutely stunning!"',
+    mood: 'Elegant & Chic'
   }
 ];
 
-const galleryImages = [showcase1, showcase2, showcase3, showcase4];
+// Floating hearts animation
+const FloatingEmoji = ({ delay, emoji }: { delay: number; emoji: string }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 50, x: Math.random() * 100 - 50 }}
+    animate={{ 
+      opacity: [0, 1, 1, 0], 
+      y: -100,
+      x: Math.random() * 60 - 30
+    }}
+    transition={{ 
+      duration: 3, 
+      delay,
+      repeat: Infinity,
+      repeatDelay: Math.random() * 2
+    }}
+    className="absolute text-2xl"
+    style={{ left: `${Math.random() * 80 + 10}%`, bottom: '20%' }}
+  >
+    {emoji}
+  </motion.div>
+);
 
 export function VideoShowcase() {
-  const [activeVideo, setActiveVideo] = useState<number | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
 
-  // Auto-rotate gallery images
+  // Auto-rotate through images
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length);
-    }, 3000);
+      setDirection(1);
+      setActiveIndex((prev) => (prev + 1) % showcaseData.length);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
-  const handleVideoClick = (index: number) => {
-    if (activeVideo === index) {
-      if (videoRef.current) {
-        if (isPlaying) {
-          videoRef.current.pause();
-        } else {
-          videoRef.current.play();
-        }
-        setIsPlaying(!isPlaying);
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.8,
+      rotateY: direction > 0 ? 45 : -45
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      rotateY: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut" as const
       }
-    } else {
-      setActiveVideo(index);
-      setIsPlaying(true);
-    }
-  };
-
-  useEffect(() => {
-    if (activeVideo !== null && videoRef.current) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    }
-  }, [activeVideo]);
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
+    },
+    exit: (direction: number) => ({
+      x: direction > 0 ? -300 : 300,
+      opacity: 0,
+      scale: 0.8,
+      rotateY: direction > 0 ? -45 : 45,
+      transition: {
+        duration: 0.6
+      }
+    })
   };
 
   return (
@@ -95,6 +111,11 @@ export function VideoShowcase() {
           animate={{ x: [50, -50, 50], opacity: [0.2, 0.5, 0.2] }}
           transition={{ duration: 12, repeat: Infinity }}
         />
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-primary/5 to-transparent blur-2xl"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -103,7 +124,7 @@ export function VideoShowcase() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-10"
         >
           <motion.div
             initial={{ scale: 0 }}
@@ -111,9 +132,9 @@ export function VideoShowcase() {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-primary/10 border border-primary/20"
           >
-            <Play className="w-4 h-4 text-primary" />
-            <span className="text-primary text-sm font-bold tracking-wider uppercase">Video Showcase</span>
-            <Sparkles className="w-4 h-4 text-primary" />
+            <Smile className="w-4 h-4 text-primary" />
+            <span className="text-primary text-sm font-bold tracking-wider uppercase">Happy Moments</span>
+            <Heart className="w-4 h-4 text-red-500" />
           </motion.div>
           
           <motion.h2
@@ -123,7 +144,7 @@ export function VideoShowcase() {
             transition={{ delay: 0.2 }}
             className="font-display text-3xl md:text-5xl font-bold mb-4"
           >
-            Watch Our <span className="text-gradient-gold">Magic</span> Happen
+            Smiles That <span className="text-gradient-gold">Speak</span>
           </motion.h2>
           
           <motion.p
@@ -133,232 +154,247 @@ export function VideoShowcase() {
             transition={{ delay: 0.3 }}
             className="text-foreground/60 max-w-xl mx-auto"
           >
-            Real transformations, real happiness. See what makes La'Couronne special.
+            When our clients are happy, we are happy. See the joy in every transformation.
           </motion.p>
         </motion.div>
 
-        {/* Main Video Display */}
-        <div className="grid lg:grid-cols-5 gap-6 mb-8">
-          {/* Featured Video Player */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="lg:col-span-3"
-          >
-            <div className="relative rounded-3xl overflow-hidden border-2 border-primary/30 shadow-2xl shadow-primary/20 aspect-[9/16] max-h-[500px] mx-auto bg-background/50">
-              {/* Video/Thumbnail Container */}
-              <AnimatePresence mode="wait">
-                {activeVideo !== null ? (
-                  <motion.div
-                    key="video"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="absolute inset-0"
-                  >
-                    <video
-                      ref={videoRef}
-                      src={showcaseData[activeVideo].video}
-                      className="w-full h-full object-cover"
-                      loop
-                      muted={isMuted}
-                      playsInline
-                      onClick={() => handleVideoClick(activeVideo)}
-                    />
-                    
-                    {/* Video Controls */}
-                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background/90 to-transparent">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <motion.p
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="text-foreground font-bold"
-                          >
-                            {showcaseData[activeVideo].title}
-                          </motion.p>
-                          <span className="text-primary text-xs">{showcaseData[activeVideo].category}</span>
-                        </div>
-                        
-                        <div className="flex items-center gap-2">
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => handleVideoClick(activeVideo)}
-                            className="w-10 h-10 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center"
-                          >
-                            {isPlaying ? (
-                              <Pause className="w-5 h-5 text-primary" />
-                            ) : (
-                              <Play className="w-5 h-5 text-primary ml-0.5" />
-                            )}
-                          </motion.button>
-                          
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={toggleMute}
-                            className="w-10 h-10 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center"
-                          >
-                            {isMuted ? (
-                              <VolumeX className="w-5 h-5 text-primary" />
-                            ) : (
-                              <Volume2 className="w-5 h-5 text-primary" />
-                            )}
-                          </motion.button>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="placeholder"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 to-background"
-                  >
-                    {/* Rotating Image Showcase */}
-                    <div className="relative w-48 h-48 mb-6">
-                      <AnimatePresence mode="wait">
-                        <motion.img
-                          key={currentImageIndex}
-                          src={galleryImages[currentImageIndex]}
-                          alt="Showcase"
-                          initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-                          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                          exit={{ opacity: 0, scale: 0.8, rotate: 10 }}
-                          transition={{ duration: 0.5 }}
-                          className="absolute inset-0 w-full h-full object-cover rounded-2xl border-2 border-primary/40"
-                        />
-                      </AnimatePresence>
-                      
-                      {/* Decorative rings */}
-                      <motion.div
-                        className="absolute -inset-3 rounded-2xl border border-primary/20"
-                        animate={{ rotate: [0, 5, 0, -5, 0] }}
-                        transition={{ duration: 4, repeat: Infinity }}
-                      />
-                      <motion.div
-                        className="absolute -inset-6 rounded-2xl border border-primary/10"
-                        animate={{ rotate: [0, -5, 0, 5, 0] }}
-                        transition={{ duration: 5, repeat: Infinity }}
-                      />
-                    </div>
-                    
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-center"
-                    >
-                      <p className="text-foreground/60 mb-2">Select a video to watch</p>
-                      <motion.div
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="inline-flex items-center gap-2 text-primary"
-                      >
-                        <Play className="w-5 h-5" />
-                        <span className="font-semibold">Click below</span>
-                      </motion.div>
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              
-              {/* Corner Decorations */}
-              <div className="absolute top-0 left-0 w-16 h-16 border-l-2 border-t-2 border-primary/40 rounded-tl-3xl" />
-              <div className="absolute top-0 right-0 w-16 h-16 border-r-2 border-t-2 border-primary/40 rounded-tr-3xl" />
-              <div className="absolute bottom-0 left-0 w-16 h-16 border-l-2 border-b-2 border-primary/40 rounded-bl-3xl" />
-              <div className="absolute bottom-0 right-0 w-16 h-16 border-r-2 border-b-2 border-primary/40 rounded-br-3xl" />
-            </div>
-          </motion.div>
-
-          {/* Video Thumbnails Grid */}
-          <div className="lg:col-span-2 grid grid-cols-2 gap-3">
-            {showcaseData.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.03, y: -5 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => handleVideoClick(index)}
-                className={`relative aspect-square rounded-2xl overflow-hidden cursor-pointer border-2 transition-all duration-300 ${
-                  activeVideo === index 
-                    ? 'border-primary shadow-lg shadow-primary/30' 
-                    : 'border-foreground/10 hover:border-primary/50'
-                }`}
-              >
-                <img
-                  src={item.thumbnail}
-                  alt={item.title}
-                  className="w-full h-full object-cover"
+        {/* Main Showcase Display */}
+        <div className="max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            
+            {/* Main Image Carousel */}
+            <div className="relative">
+              <div className="relative aspect-[3/4] max-w-sm mx-auto" style={{ perspective: '1000px' }}>
+                {/* Decorative Frame */}
+                <motion.div
+                  className="absolute -inset-3 rounded-3xl border-2 border-primary/20"
+                  animate={{ rotate: [2, -2, 2] }}
+                  transition={{ duration: 6, repeat: Infinity }}
+                />
+                <motion.div
+                  className="absolute -inset-6 rounded-3xl border border-primary/10"
+                  animate={{ rotate: [-2, 2, -2] }}
+                  transition={{ duration: 8, repeat: Infinity }}
                 />
                 
-                {/* Overlay */}
-                <div className={`absolute inset-0 transition-all duration-300 ${
-                  activeVideo === index 
-                    ? 'bg-primary/20' 
-                    : 'bg-background/40 hover:bg-background/20'
-                }`}>
-                  <div className="absolute inset-0 flex items-center justify-center">
+                {/* Main Image */}
+                <div className="relative w-full h-full rounded-2xl overflow-hidden border-2 border-primary/40 shadow-2xl shadow-primary/20">
+                  <AnimatePresence mode="wait" custom={direction}>
                     <motion.div
-                      whileHover={{ scale: 1.2 }}
-                      className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                        activeVideo === index 
-                          ? 'bg-primary text-primary-foreground' 
-                          : 'bg-background/80 text-primary'
-                      }`}
+                      key={activeIndex}
+                      custom={direction}
+                      variants={slideVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      className="absolute inset-0"
                     >
-                      {activeVideo === index && isPlaying ? (
-                        <Pause className="w-5 h-5" />
-                      ) : (
-                        <Play className="w-5 h-5 ml-0.5" />
-                      )}
+                      <img
+                        src={showcaseData[activeIndex].image}
+                        alt={showcaseData[activeIndex].title}
+                        className="w-full h-full object-cover"
+                      />
+                      
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                      
+                      {/* Shimmer Effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                        initial={{ x: '-100%' }}
+                        animate={{ x: '200%' }}
+                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                      />
                     </motion.div>
-                  </div>
+                  </AnimatePresence>
                   
-                  {/* Title */}
-                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-background/90 to-transparent">
-                    <p className="text-xs font-semibold text-foreground truncate">{item.title}</p>
-                    <span className="text-[10px] text-primary">{item.category}</span>
-                  </div>
+                  {/* Floating Emojis */}
+                  <FloatingEmoji delay={0} emoji="❤️" />
+                  <FloatingEmoji delay={0.5} emoji="✨" />
+                  <FloatingEmoji delay={1} emoji="💕" />
+                  <FloatingEmoji delay={1.5} emoji="🌟" />
+                  <FloatingEmoji delay={2} emoji="💖" />
+                  
+                  {/* Quote Overlay */}
+                  <motion.div
+                    key={`quote-${activeIndex}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="absolute bottom-0 left-0 right-0 p-5"
+                  >
+                    <motion.p
+                      className="text-foreground text-xl font-display font-bold italic"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      {showcaseData[activeIndex].quote}
+                    </motion.p>
+                    <div className="flex items-center gap-1 mt-2">
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: 0.6 + i * 0.1 }}
+                        >
+                          <Star className="w-4 h-4 fill-primary text-primary" />
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                  
+                  {/* Joy Badge */}
+                  <motion.div
+                    initial={{ scale: 0, rotate: -20 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', delay: 0.4 }}
+                    className="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center gap-1"
+                  >
+                    <Smile className="w-3 h-3" />
+                    Happy Client
+                  </motion.div>
                 </div>
                 
-                {/* Active Indicator */}
-                {activeVideo === index && (
+                {/* Pulse Ring */}
+                <motion.div
+                  className="absolute inset-0 rounded-2xl border-2 border-primary/40"
+                  animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </div>
+            </div>
+
+            {/* Right Side - Info Cards */}
+            <div className="space-y-4">
+              {showcaseData.map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  onClick={() => {
+                    setDirection(index > activeIndex ? 1 : -1);
+                    setActiveIndex(index);
+                  }}
+                  className={`relative cursor-pointer group transition-all duration-300 ${
+                    activeIndex === index ? 'scale-105' : 'hover:scale-102'
+                  }`}
+                >
                   <motion.div
-                    layoutId="activeIndicator"
-                    className="absolute top-2 right-2"
+                    className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 ${
+                      activeIndex === index
+                        ? 'bg-primary/10 border-primary shadow-lg shadow-primary/20'
+                        : 'bg-foreground/5 border-foreground/10 hover:border-primary/30 hover:bg-primary/5'
+                    }`}
+                    whileHover={{ y: -2 }}
                   >
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                      className="w-3 h-3 rounded-full bg-primary"
-                    />
+                    {/* Thumbnail */}
+                    <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                      />
+                      {activeIndex === index && (
+                        <motion.div
+                          className="absolute inset-0 bg-primary/20"
+                          animate={{ opacity: [0.2, 0.4, 0.2] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        />
+                      )}
+                    </div>
+                    
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-display font-bold text-foreground truncate">{item.title}</h4>
+                      <p className="text-sm text-primary">{item.mood}</p>
+                      <p className="text-xs text-foreground/60 italic mt-1 truncate">{item.quote}</p>
+                    </div>
+                    
+                    {/* Active Indicator */}
+                    {activeIndex === index && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="flex-shrink-0"
+                      >
+                        <motion.div
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 1, repeat: Infinity }}
+                        >
+                          <Heart className="w-5 h-5 text-red-500 fill-red-500" />
+                        </motion.div>
+                      </motion.div>
+                    )}
                   </motion.div>
-                )}
-              </motion.div>
-            ))}
+                  
+                  {/* Connection Line */}
+                  {activeIndex === index && (
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full w-8 h-0.5 bg-gradient-to-l from-primary to-transparent origin-right hidden lg:block"
+                    />
+                  )}
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Bottom Stats/Social Proof */}
+        {/* Progress Indicators */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-wrap items-center justify-center gap-6 mt-8"
+          className="flex items-center justify-center gap-3 mt-10"
+        >
+          {showcaseData.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setDirection(index > activeIndex ? 1 : -1);
+                setActiveIndex(index);
+              }}
+              className="relative"
+            >
+              <motion.div
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  activeIndex === index ? 'bg-primary' : 'bg-foreground/20 hover:bg-foreground/40'
+                }`}
+                animate={activeIndex === index ? { scale: [1, 1.3, 1] } : {}}
+                transition={{ duration: 0.5 }}
+              />
+              {activeIndex === index && (
+                <motion.div
+                  className="absolute inset-0 rounded-full border-2 border-primary"
+                  initial={{ scale: 1, opacity: 1 }}
+                  animate={{ scale: 2, opacity: 0 }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                />
+              )}
+            </button>
+          ))}
+        </motion.div>
+
+        {/* Bottom Tagline */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="flex flex-wrap items-center justify-center gap-4 mt-8"
         >
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20"
           >
-            <Heart className="w-4 h-4 text-red-500" />
-            <span className="text-sm text-foreground/80">Happy Clients Daily</span>
+            <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1, repeat: Infinity }}>
+              <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+            </motion.div>
+            <span className="text-sm text-foreground/80">100% Client Satisfaction</span>
           </motion.div>
           
           <motion.div
@@ -366,7 +402,7 @@ export function VideoShowcase() {
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20"
           >
             <Crown className="w-4 h-4 text-primary" />
-            <span className="text-sm text-foreground/80">Premium Quality</span>
+            <span className="text-sm text-foreground/80">Premium Experience</span>
           </motion.div>
           
           <motion.div
@@ -374,7 +410,7 @@ export function VideoShowcase() {
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20"
           >
             <Sparkles className="w-4 h-4 text-yellow-500" />
-            <span className="text-sm text-foreground/80">Creative Styles</span>
+            <span className="text-sm text-foreground/80">Beautiful Results</span>
           </motion.div>
         </motion.div>
       </div>
