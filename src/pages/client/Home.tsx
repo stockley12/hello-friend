@@ -21,7 +21,6 @@ import gallery8 from '@/assets/gallery-8.jpg';
 const galleryData = [
   { img: gallery1, category: 'women', style: 'Knotless Braids', featured: true },
   { img: gallery7, category: 'men', style: 'Cornrow Art', featured: true },
-  { img: gallery2, category: 'women', style: 'Box Braids', featured: false },
   { img: gallery8, category: 'women', style: 'Bob Locs', featured: false },
   { img: gallery3, category: 'women', style: 'Faux Locs', featured: false },
   { img: gallery4, category: 'women', style: 'Goddess Braids', featured: false },
