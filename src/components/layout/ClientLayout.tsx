@@ -25,7 +25,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <div className="min-h-screen flex flex-col relative bg-background">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50">
         <div className="glass">
@@ -33,7 +33,12 @@ export function ClientLayout({ children }: ClientLayoutProps) {
             <div className="flex items-center justify-between h-20">
               {/* Logo */}
               <Link to="/" className="flex items-center gap-3 z-50">
-                <img src={logo} alt="La'Couronne" className="h-14 w-auto" />
+                <img 
+                  src={logo} 
+                  alt="La'Couronne" 
+                  className="h-16 w-auto"
+                  style={{ filter: 'drop-shadow(0 0 10px hsl(48 100% 50% / 0.3))' }}
+                />
               </Link>
               
               {/* Desktop Nav */}
@@ -42,10 +47,10 @@ export function ClientLayout({ children }: ClientLayoutProps) {
                   <Link
                     key={link.href}
                     to={link.href}
-                    className={`text-sm font-medium tracking-wide transition-colors line-animate ${
+                    className={`text-sm font-semibold tracking-wide transition-colors line-animate ${
                       location.pathname === link.href
                         ? 'text-primary'
-                        : 'text-foreground/70 hover:text-foreground'
+                        : 'text-foreground/70 hover:text-primary'
                     }`}
                   >
                     {link.label}
@@ -56,7 +61,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
               {/* Desktop CTA */}
               <div className="hidden md:flex items-center gap-4">
                 <Link to="/book">
-                  <Button className="btn-premium rounded-full px-6">
+                  <Button className="btn-premium rounded-full px-6 font-bold">
                     Book Now
                   </Button>
                 </Link>
@@ -65,7 +70,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
               {/* Mobile Menu Button */}
               <button 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden z-50 p-2"
+                className="md:hidden z-50 p-2 text-primary"
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               >
                 {mobileMenuOpen ? (
@@ -89,6 +94,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
               className="fixed inset-0 bg-background z-40 md:hidden"
             >
               <nav className="flex flex-col items-center justify-center h-full gap-8">
+                <img src={logo} alt="La'Couronne" className="h-24 w-auto mb-8" />
                 {navLinks.map((link, index) => (
                   <motion.div
                     key={link.href}
@@ -99,7 +105,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
                     <Link
                       to={link.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`font-display text-3xl font-medium ${
+                      className={`font-display text-3xl font-bold ${
                         location.pathname === link.href ? 'text-primary' : 'text-foreground'
                       }`}
                     >
@@ -113,7 +119,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
                   transition={{ delay: 0.5 }}
                 >
                   <Link to="/book" onClick={() => setMobileMenuOpen(false)}>
-                    <Button size="lg" className="btn-premium rounded-full mt-4">
+                    <Button size="lg" className="btn-premium rounded-full mt-4 font-bold">
                       Book Appointment
                     </Button>
                   </Link>
@@ -137,16 +143,21 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       </main>
       
       {/* Footer */}
-      <footer className="border-t border-foreground/10 mt-auto bg-white/50">
+      <footer className="border-t border-primary/20 mt-auto bg-card">
         <div className="container mx-auto px-4 py-16">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             {/* Brand */}
             <div className="md:col-span-2">
-              <img src={logo} alt="La'Couronne" className="h-20 w-auto mb-4" />
-              <p className="text-muted-foreground mb-2 text-sm font-medium tracking-wide">
+              <img 
+                src={logo} 
+                alt="La'Couronne" 
+                className="h-24 w-auto mb-4"
+                style={{ filter: 'drop-shadow(0 0 15px hsl(48 100% 50% / 0.3))' }}
+              />
+              <p className="text-primary font-bold text-sm tracking-wide mb-2">
                 Every Strand Matters
               </p>
-              <p className="text-muted-foreground mb-6 max-w-md font-light leading-relaxed">
+              <p className="text-foreground/60 mb-6 max-w-md leading-relaxed">
                 Premium hairstyling for men and women. Braids, locs, natural hair care, 
                 and more - crafted with love and expertise.
               </p>
@@ -155,32 +166,32 @@ export function ClientLayout({ children }: ClientLayoutProps) {
                   href={`https://wa.me/${settings.whatsappNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full border border-foreground/20 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
+                  className="w-10 h-10 rounded-full border-2 border-primary/50 flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all"
                   aria-label="WhatsApp"
                 >
-                  <Phone className="h-4 w-4" />
+                  <Phone className="h-4 w-4 text-primary" />
                 </a>
                 <a
                   href={`https://instagram.com/${settings.instagramHandle}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full border border-foreground/20 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
+                  className="w-10 h-10 rounded-full border-2 border-primary/50 flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all"
                   aria-label="Instagram"
                 >
-                  <Instagram className="h-4 w-4" />
+                  <Instagram className="h-4 w-4 text-primary" />
                 </a>
               </div>
             </div>
             
             {/* Quick Links */}
             <div>
-              <h4 className="text-sm tracking-[0.2em] uppercase text-muted-foreground mb-6 font-medium">Explore</h4>
+              <h4 className="text-sm tracking-[0.2em] uppercase text-primary font-bold mb-6">Explore</h4>
               <ul className="space-y-3">
                 {navLinks.map((link) => (
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-foreground/70 hover:text-primary transition-colors font-light"
+                      className="text-foreground/60 hover:text-primary transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -191,8 +202,8 @@ export function ClientLayout({ children }: ClientLayoutProps) {
             
             {/* Contact */}
             <div>
-              <h4 className="text-sm tracking-[0.2em] uppercase text-muted-foreground mb-6 font-medium">Contact</h4>
-              <address className="not-italic space-y-3 text-foreground/70 font-light">
+              <h4 className="text-sm tracking-[0.2em] uppercase text-primary font-bold mb-6">Contact</h4>
+              <address className="not-italic space-y-3 text-foreground/60">
                 <p className="flex items-start gap-3">
                   <MapPin className="h-4 w-4 mt-1 flex-shrink-0 text-primary" />
                   <span>{settings.address}</span>
@@ -205,15 +216,15 @@ export function ClientLayout({ children }: ClientLayoutProps) {
             </div>
           </div>
           
-          <div className="border-t border-foreground/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground font-light">
+          <div className="border-t border-primary/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-foreground/50">
               © {new Date().getFullYear()} La'Couronne. All rights reserved.
             </p>
             <div className="flex gap-8">
-              <Link to="/policies" className="text-sm text-muted-foreground hover:text-primary transition-colors font-light">
+              <Link to="/policies" className="text-sm text-foreground/50 hover:text-primary transition-colors">
                 Privacy
               </Link>
-              <Link to="/policies" className="text-sm text-muted-foreground hover:text-primary transition-colors font-light">
+              <Link to="/policies" className="text-sm text-foreground/50 hover:text-primary transition-colors">
                 Terms
               </Link>
             </div>
@@ -224,7 +235,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       {/* Sticky Mobile CTA */}
       <div className="fixed bottom-0 left-0 right-0 p-4 glass md:hidden z-40">
         <Link to="/book">
-          <Button className="w-full btn-premium h-14 text-base rounded-full">
+          <Button className="w-full btn-premium h-14 text-base rounded-full font-bold">
             Book Appointment
           </Button>
         </Link>
