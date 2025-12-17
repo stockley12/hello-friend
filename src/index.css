@@ -6,56 +6,59 @@
 
 @layer base {
   :root {
-    /* Light Elegant Cream Theme */
-    --background: 40 30% 96%;
-    --foreground: 30 20% 15%;
+    /* Warm Elegant Theme - Perfect for Hair Salon */
+    --background: 35 40% 97%;
+    --foreground: 25 30% 15%;
     
-    --card: 40 40% 98%;
-    --card-foreground: 30 20% 15%;
+    --card: 35 50% 99%;
+    --card-foreground: 25 30% 15%;
     
-    --popover: 40 40% 98%;
-    --popover-foreground: 30 20% 15%;
+    --popover: 35 50% 99%;
+    --popover-foreground: 25 30% 15%;
     
-    --primary: 45 90% 50%;
-    --primary-foreground: 30 20% 10%;
+    /* Golden Yellow - Matches Logo */
+    --primary: 45 95% 50%;
+    --primary-foreground: 25 30% 10%;
     
-    --secondary: 30 30% 90%;
-    --secondary-foreground: 30 20% 20%;
+    --secondary: 25 25% 92%;
+    --secondary-foreground: 25 30% 20%;
     
-    --muted: 30 20% 88%;
-    --muted-foreground: 30 15% 40%;
+    --muted: 30 20% 90%;
+    --muted-foreground: 25 15% 45%;
     
-    --accent: 350 70% 55%;
+    /* Warm Terracotta Accent */
+    --accent: 15 70% 55%;
     --accent-foreground: 0 0% 100%;
     
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 30 20% 85%;
-    --input: 30 20% 85%;
-    --ring: 45 90% 50%;
+    --border: 30 25% 88%;
+    --input: 30 25% 88%;
+    --ring: 45 95% 50%;
     
     --radius: 0.75rem;
     
-    /* Custom tokens */
-    --gold: 45 90% 50%;
-    --gold-light: 45 100% 70%;
-    --gold-dark: 45 80% 40%;
-    --cream: 40 40% 96%;
-    --cream-dark: 40 30% 90%;
-    --rose: 350 70% 55%;
-    --rose-light: 350 80% 75%;
-    --charcoal: 30 10% 20%;
+    /* Custom Brand Tokens */
+    --gold: 45 95% 50%;
+    --gold-light: 45 100% 65%;
+    --gold-dark: 45 90% 40%;
+    --terracotta: 15 70% 55%;
+    --terracotta-light: 15 80% 75%;
+    --chocolate: 25 40% 25%;
+    --cream: 35 40% 97%;
+    --caramel: 30 60% 55%;
+    --honey: 40 85% 60%;
     
     /* Sidebar */
-    --sidebar-background: 40 40% 98%;
-    --sidebar-foreground: 30 20% 15%;
-    --sidebar-primary: 45 90% 50%;
-    --sidebar-primary-foreground: 30 20% 10%;
-    --sidebar-accent: 30 30% 90%;
-    --sidebar-accent-foreground: 30 20% 20%;
-    --sidebar-border: 30 20% 85%;
-    --sidebar-ring: 45 90% 50%;
+    --sidebar-background: 35 50% 99%;
+    --sidebar-foreground: 25 30% 15%;
+    --sidebar-primary: 45 95% 50%;
+    --sidebar-primary-foreground: 25 30% 10%;
+    --sidebar-accent: 25 25% 92%;
+    --sidebar-accent-foreground: 25 30% 20%;
+    --sidebar-border: 30 25% 88%;
+    --sidebar-ring: 45 95% 50%;
   }
 }
 
@@ -88,28 +91,33 @@
     font-family: 'DM Sans', system-ui, sans-serif;
   }
   
-  /* Elegant gradient text */
+  /* Beautiful gradient text */
   .text-gradient-gold {
-    @apply bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-400 bg-clip-text text-transparent;
+  }
+  
+  .text-gradient-warm {
+    @apply bg-gradient-to-r from-amber-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent;
   }
   
   .text-gradient-rose {
-    @apply bg-gradient-to-r from-rose-500 via-pink-500 to-rose-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-orange-400 via-rose-400 to-pink-400 bg-clip-text text-transparent;
   }
   
   /* Glow effects */
   .glow-gold {
-    box-shadow: 0 0 40px -10px hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 50px -12px hsl(var(--primary) / 0.5);
   }
   
-  .glow-soft {
-    box-shadow: 0 10px 60px -15px hsl(var(--primary) / 0.2);
+  .glow-warm {
+    box-shadow: 0 15px 50px -15px hsl(var(--primary) / 0.25);
   }
   
-  /* Premium button */
+  /* Premium golden button */
   .btn-premium {
-    @apply relative overflow-hidden transition-all duration-500 text-foreground font-medium;
-    background: linear-gradient(135deg, hsl(45 100% 55%), hsl(45 90% 45%));
+    @apply relative overflow-hidden transition-all duration-500 font-semibold;
+    background: linear-gradient(135deg, hsl(45 100% 55%), hsl(40 95% 45%));
+    color: hsl(25 30% 10%);
   }
   
   .btn-premium::before {
@@ -125,21 +133,35 @@
   }
   
   .btn-premium:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px -10px hsl(var(--primary) / 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px -15px hsl(var(--primary) / 0.5);
   }
   
-  /* Glass morphism - light version */
+  /* Glass morphism - warm version */
   .glass {
-    @apply bg-white/80 backdrop-blur-xl border border-foreground/5;
+    @apply backdrop-blur-xl border border-foreground/5;
+    background: linear-gradient(135deg, hsl(35 50% 99% / 0.9), hsl(35 40% 97% / 0.95));
   }
   
   .glass-dark {
-    @apply bg-white/90 backdrop-blur-xl border border-foreground/5;
+    @apply backdrop-blur-xl border border-foreground/5;
+    background: linear-gradient(135deg, hsl(35 50% 99% / 0.95), hsl(35 40% 97% / 0.98));
   }
   
   .glass-card {
-    @apply bg-white backdrop-blur-xl border border-foreground/5 shadow-lg shadow-foreground/5;
+    @apply backdrop-blur-xl border border-foreground/5;
+    background: hsl(35 50% 99%);
+    box-shadow: 0 10px 40px -15px hsl(25 30% 20% / 0.1);
+  }
+  
+  /* Warm card with subtle gradient border */
+  .warm-card {
+    @apply rounded-2xl p-[1px];
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.3), hsl(var(--accent) / 0.2));
+  }
+  
+  .warm-card-inner {
+    @apply rounded-2xl bg-card p-6 h-full;
   }
   
   /* Magnetic hover */
@@ -161,7 +183,7 @@
   }
   
   .img-zoom:hover img {
-    transform: scale(1.1);
+    transform: scale(1.08);
   }
   
   /* Line animation */
@@ -171,7 +193,8 @@
   
   .line-animate::after {
     content: '';
-    @apply absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-primary to-accent;
+    @apply absolute -bottom-1 left-0 h-0.5;
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
     width: 0;
     transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -180,25 +203,20 @@
     width: 100%;
   }
   
-  /* Cursor glow - light version */
+  /* Cursor glow */
   .cursor-glow {
     @apply pointer-events-none fixed rounded-full;
-    background: radial-gradient(circle, hsl(var(--primary) / 0.08), transparent 70%);
+    background: radial-gradient(circle, hsl(var(--primary) / 0.06), transparent 70%);
     width: 500px;
     height: 500px;
     transform: translate(-50%, -50%);
     z-index: 0;
   }
   
-  /* Decorative blob */
-  .blob {
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-    animation: blob-morph 8s ease-in-out infinite;
-  }
-  
-  @keyframes blob-morph {
-    0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-    50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  /* Decorative pattern */
+  .pattern-dots {
+    background-image: radial-gradient(hsl(var(--primary) / 0.15) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 }
 
@@ -231,8 +249,8 @@
     animation: pulseSoft 4s ease-in-out infinite;
   }
   
-  .animate-spin-slow {
-    animation: spin 20s linear infinite;
+  .animate-shimmer {
+    animation: shimmer 3s ease-in-out infinite;
   }
   
   @keyframes fadeUp {
@@ -263,6 +281,11 @@
   @keyframes pulseSoft {
     0%, 100% { opacity: 0.4; transform: scale(1); }
     50% { opacity: 0.7; transform: scale(1.05); }
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
   
   /* Stagger delays */

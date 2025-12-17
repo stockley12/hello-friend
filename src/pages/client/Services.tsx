@@ -35,8 +35,11 @@ export function Services() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="py-24 md:py-32 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
+      <section className="py-24 md:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-accent/5 to-transparent" />
+        <div className="absolute top-20 right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-20 w-48 h-48 bg-accent/10 rounded-full blur-3xl" />
+        
         <div className="container mx-auto px-4 relative">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -44,13 +47,13 @@ export function Services() {
             transition={{ duration: 0.8 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">Menu</p>
-            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-light mb-6">
-              Our <span className="text-gradient-gold">Services</span>
+            <p className="text-primary text-sm font-semibold tracking-[0.2em] uppercase mb-4">Our Services</p>
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-medium mb-6 text-foreground">
+              Beautiful <span className="text-gradient-gold">Styles</span> For You
             </h1>
-            <p className="text-foreground/60 text-lg font-light">
-              From precision cuts to transformative color, discover our full range 
-              of luxury hair services crafted for the discerning.
+            <p className="text-muted-foreground text-lg">
+              Expert braiding, natural hair care, and stunning transformations 
+              for men and women. Every strand matters.
             </p>
           </motion.div>
         </div>
@@ -62,10 +65,10 @@ export function Services() {
           <div className="flex flex-wrap justify-center gap-3">
             <button
               onClick={() => setSelectedCategory('all')}
-              className={`px-6 py-2 rounded-full text-sm font-light transition-all ${
+              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
                 selectedCategory === 'all'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'border border-white/20 text-foreground/70 hover:border-primary hover:text-primary'
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
+                  : 'bg-card border border-border text-foreground/70 hover:border-primary hover:text-primary'
               }`}
             >
               All Services
@@ -74,10 +77,10 @@ export function Services() {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 rounded-full text-sm font-light transition-all ${
+                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
                   selectedCategory === category
-                    ? 'bg-primary text-primary-foreground'
-                    : 'border border-white/20 text-foreground/70 hover:border-primary hover:text-primary'
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
+                    : 'bg-card border border-border text-foreground/70 hover:border-primary hover:text-primary'
                 }`}
               >
                 {categoryLabels[category]}
@@ -98,23 +101,27 @@ export function Services() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
               >
-                <div className="glass-dark rounded-2xl p-8 h-full flex flex-col group magnetic hover:border-primary/30 transition-colors duration-500">
-                  <div className="text-primary/60 text-xs tracking-[0.2em] uppercase mb-3">
+                <motion.div 
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                  className="glass-card rounded-2xl p-8 h-full flex flex-col group hover:shadow-xl transition-all duration-500"
+                >
+                  <div className="text-primary text-xs font-bold tracking-[0.2em] uppercase mb-3">
                     {categoryLabels[service.category]}
                   </div>
-                  <h3 className="font-display text-2xl font-light mb-4 group-hover:text-primary transition-colors">
+                  <h3 className="font-display text-2xl font-medium mb-4 text-foreground group-hover:text-gradient-gold transition-all">
                     {service.name}
                   </h3>
-                  <p className="text-foreground/50 font-light mb-6 flex-1">
+                  <p className="text-muted-foreground mb-6 flex-1">
                     {service.description}
                   </p>
-                  <div className="flex items-center justify-between pt-6 border-t border-white/10">
+                  <div className="flex items-center justify-between pt-6 border-t border-border">
                     <div>
-                      <span className="text-3xl font-light">{formatPrice(service.price)}</span>
+                      <span className="text-3xl font-display font-semibold text-foreground">{formatPrice(service.price)}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-foreground/40">
+                    <div className="flex items-center gap-2 text-muted-foreground">
                       <Clock className="h-4 w-4" />
-                      <span className="text-sm font-light">{service.durationMin} min</span>
+                      <span className="text-sm">{service.durationMin} min</span>
                     </div>
                   </div>
                   <Link to={`/book?service=${service.id}`} className="mt-6">
@@ -123,7 +130,7 @@ export function Services() {
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
-                </div>
+                </motion.div>
               </motion.div>
             ))}
           </div>
@@ -131,18 +138,19 @@ export function Services() {
       </section>
       
       {/* CTA */}
-      <section className="py-20 md:py-32">
-        <div className="container mx-auto px-4 text-center">
+      <section className="py-20 md:py-32 relative">
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent" />
+        <div className="container mx-auto px-4 text-center relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-display text-3xl md:text-4xl font-light mb-6">
+            <h2 className="font-display text-3xl md:text-4xl font-medium mb-6 text-foreground">
               Not sure what you need?
             </h2>
-            <p className="text-foreground/60 mb-8 max-w-xl mx-auto font-light">
-              Book a consultation with one of our stylists. We'll help you discover your perfect look.
+            <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+              Book a consultation and we will help you discover your perfect style.
             </p>
             <Link to="/book">
               <Button size="lg" className="btn-premium rounded-full px-10">
