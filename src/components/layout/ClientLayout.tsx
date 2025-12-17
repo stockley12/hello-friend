@@ -1,11 +1,10 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone, Instagram, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -14,7 +13,7 @@ interface ClientLayoutProps {
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
-  { href: '/book', label: 'Book Now' },
+  { href: '/book', label: 'Book' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -25,131 +24,161 @@ export function ClientLayout({ children }: ClientLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative noise">
       {/* Header */}
-      <header className="sticky top-0 z-50 glass">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <span className="font-display text-xl md:text-2xl font-semibold text-foreground">
-                {settings.name}
-              </span>
-            </Link>
-            
-            {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname === link.href
-                      ? 'text-primary'
-                      : 'text-muted-foreground'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-            
-            {/* Desktop CTA */}
-            <div className="hidden md:flex items-center gap-4">
-              <Link to="/book">
-                <Button className="btn-luxury">
-                  Book Appointment
-                </Button>
+      <header className="fixed top-0 left-0 right-0 z-50">
+        <div className="glass-dark">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between h-20">
+              {/* Logo */}
+              <Link to="/" className="flex items-center gap-2 z-50">
+                <span className="font-display text-2xl md:text-3xl font-light tracking-tight text-gradient-gold">
+                  {settings.name}
+                </span>
               </Link>
-            </div>
-            
-            {/* Mobile Menu */}
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" aria-label="Open menu">
+              
+              {/* Desktop Nav */}
+              <nav className="hidden md:flex items-center gap-10" aria-label="Main navigation">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className={`text-sm font-light tracking-wide transition-colors line-animate ${
+                      location.pathname === link.href
+                        ? 'text-primary'
+                        : 'text-foreground/70 hover:text-foreground'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+              
+              {/* Desktop CTA */}
+              <div className="hidden md:flex items-center gap-4">
+                <Link to="/book">
+                  <Button className="btn-premium rounded-full px-6">
+                    Book Now
+                  </Button>
+                </Link>
+              </div>
+              
+              {/* Mobile Menu Button */}
+              <button 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden z-50 p-2"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              >
+                {mobileMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
                   <Menu className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:w-80">
-                <nav className="flex flex-col gap-4 mt-8" aria-label="Mobile navigation">
-                  {navLinks.map((link) => (
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-background z-40 md:hidden"
+            >
+              <nav className="flex flex-col items-center justify-center h-full gap-8">
+                {navLinks.map((link, index) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
                     <Link
-                      key={link.href}
                       to={link.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`text-lg font-medium py-2 transition-colors ${
-                        location.pathname === link.href
-                          ? 'text-primary'
-                          : 'text-foreground'
+                      className={`font-display text-3xl font-light ${
+                        location.pathname === link.href ? 'text-primary' : 'text-foreground'
                       }`}
                     >
                       {link.label}
                     </Link>
-                  ))}
+                  </motion.div>
+                ))}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
                   <Link to="/book" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full mt-4 btn-luxury">
+                    <Button size="lg" className="btn-premium rounded-full mt-4">
                       Book Appointment
                     </Button>
                   </Link>
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
+                </motion.div>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
       
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1 pt-20">
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          key={location.pathname}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4 }}
         >
           {children}
         </motion.div>
       </main>
       
       {/* Footer */}
-      <footer className="bg-secondary/50 border-t border-border mt-auto">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <footer className="border-t border-white/10 mt-auto">
+        <div className="container mx-auto px-4 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             {/* Brand */}
             <div className="md:col-span-2">
-              <h3 className="font-display text-2xl font-semibold mb-4">{settings.name}</h3>
-              <p className="text-muted-foreground mb-4 max-w-md">
-                Where artistry meets excellence. Experience luxury hair care tailored to your unique style.
+              <h3 className="font-display text-3xl font-light mb-4 text-gradient-gold">{settings.name}</h3>
+              <p className="text-foreground/50 mb-6 max-w-md font-light leading-relaxed">
+                Where artistry meets excellence. Experience transformative hair care 
+                in an atmosphere of uncompromising luxury.
               </p>
               <div className="flex gap-4">
                 <a
                   href={`https://wa.me/${settings.whatsappNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
                   aria-label="WhatsApp"
                 >
-                  <Phone className="h-5 w-5" />
+                  <Phone className="h-4 w-4" />
                 </a>
                 <a
                   href={`https://instagram.com/${settings.instagramHandle}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
                   aria-label="Instagram"
                 >
-                  <Instagram className="h-5 w-5" />
+                  <Instagram className="h-4 w-4" />
                 </a>
               </div>
             </div>
             
             {/* Quick Links */}
             <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2">
+              <h4 className="text-sm tracking-[0.2em] uppercase text-foreground/40 mb-6">Explore</h4>
+              <ul className="space-y-3">
                 {navLinks.map((link) => (
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                      className="text-foreground/60 hover:text-primary transition-colors font-light"
                     >
                       {link.label}
                     </Link>
@@ -160,28 +189,30 @@ export function ClientLayout({ children }: ClientLayoutProps) {
             
             {/* Contact */}
             <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
-              <address className="not-italic space-y-2 text-sm text-muted-foreground">
-                <p className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  {settings.address}
+              <h4 className="text-sm tracking-[0.2em] uppercase text-foreground/40 mb-6">Contact</h4>
+              <address className="not-italic space-y-3 text-foreground/60 font-light">
+                <p className="flex items-start gap-3">
+                  <MapPin className="h-4 w-4 mt-1 flex-shrink-0 text-primary" />
+                  <span>{settings.address}</span>
                 </p>
-                <p>{settings.phone}</p>
-                <p>{settings.email}</p>
+                <p className="flex items-center gap-3">
+                  <Phone className="h-4 w-4 flex-shrink-0 text-primary" />
+                  <span>{settings.phone}</span>
+                </p>
               </address>
             </div>
           </div>
           
-          <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">
+          <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-foreground/40 font-light">
               © {new Date().getFullYear()} {settings.name}. All rights reserved.
             </p>
-            <div className="flex gap-6">
-              <Link to="/policies" className="text-sm text-muted-foreground hover:text-primary">
-                Privacy Policy
+            <div className="flex gap-8">
+              <Link to="/policies" className="text-sm text-foreground/40 hover:text-primary transition-colors font-light">
+                Privacy
               </Link>
-              <Link to="/policies" className="text-sm text-muted-foreground hover:text-primary">
-                Cancellation Policy
+              <Link to="/policies" className="text-sm text-foreground/40 hover:text-primary transition-colors font-light">
+                Terms
               </Link>
             </div>
           </div>
@@ -189,9 +220,9 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       </footer>
       
       {/* Sticky Mobile CTA */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur border-t border-border md:hidden z-40">
+      <div className="fixed bottom-0 left-0 right-0 p-4 glass-dark md:hidden z-40">
         <Link to="/book">
-          <Button className="w-full btn-luxury h-12 text-base">
+          <Button className="w-full btn-premium h-14 text-base rounded-full">
             Book Appointment
           </Button>
         </Link>
