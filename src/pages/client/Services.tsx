@@ -2,11 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Scissors, Crown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-import menStyle1 from '@/assets/men-style-1.jpg';
-import menStyle2 from '@/assets/men-style-2.jpg';
-import gallery1 from '@/assets/gallery-1.jpg';
-import gallery2 from '@/assets/gallery-2.jpg';
+import { ImageShowcase } from '@/components/ImageShowcase';
 
 const womenServices = [
   { name: 'Box Braids', desc: 'Classic protective style that lasts weeks' },
@@ -68,35 +64,14 @@ export function Services() {
       <section className="py-20 md:py-32 relative">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Images */}
+            {/* Animated Image Showcase */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative"
             >
-              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden">
-                <img 
-                  src={gallery1} 
-                  alt="Women's braiding styles" 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-              </div>
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="absolute -bottom-8 -right-8 w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-4 border-background shadow-2xl"
-              >
-                <img 
-                  src={gallery2} 
-                  alt="Braiding detail" 
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
+              <ImageShowcase direction="right" />
             </motion.div>
 
             {/* Content */}
@@ -208,35 +183,15 @@ export function Services() {
               </Link>
             </motion.div>
 
-            {/* Images */}
+            {/* Animated Image Showcase */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative order-1 lg:order-2"
+              className="order-1 lg:order-2"
             >
-              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden">
-                <img 
-                  src={menStyle1} 
-                  alt="Men's grooming styles" 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-              </div>
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="absolute -bottom-8 -left-8 w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-4 border-background shadow-2xl"
-              >
-                <img 
-                  src={menStyle2} 
-                  alt="Precision cut detail" 
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
+              <ImageShowcase direction="left" />
             </motion.div>
           </div>
         </div>
