@@ -34,7 +34,7 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % menImages.length);
-    }, 2500); // Faster transitions - every 2.5 seconds
+    }, 4000); // Change image every 4 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -105,7 +105,7 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
               className="w-full h-full object-cover"
               initial={{ scale: 1 }}
               animate={{ scale: 1.1 }}
-              transition={{ duration: 2.5, ease: "linear" }}
+              transition={{ duration: 4, ease: "linear" }}
             />
           </motion.div>
         </AnimatePresence>
@@ -152,7 +152,7 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
                     width: i === currentIndex ? '100%' : i < currentIndex ? '100%' : '0%'
                   }}
                   transition={{ 
-                    duration: i === currentIndex ? 2.5 : 0.3,
+                    duration: i === currentIndex ? 4 : 0.3,
                     ease: i === currentIndex ? 'linear' : 'easeOut'
                   }}
                 />
