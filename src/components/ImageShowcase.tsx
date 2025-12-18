@@ -2,8 +2,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Women's videos only - organized
+// Women's videos only - organized (priority video first)
 const womenVideos = [
+  '/videos/women-priority.mp4',
   '/videos/women-1.mp4',
   '/videos/women-2.mp4',
   '/videos/women-3.mp4',
