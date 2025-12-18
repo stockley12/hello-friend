@@ -128,7 +128,7 @@ const AnimatedTypingNumber = ({ numbers }: { numbers: string[] }) => {
       <motion.span
         animate={{ opacity: [1, 0] }}
         transition={{ duration: 0.4, repeat: Infinity }}
-        className="text-black ml-0.5"
+        className="text-primary ml-0.5"
       >
         _
       </motion.span>
@@ -254,10 +254,10 @@ export function Home() {
                 transition={{ delay: 0.5 }}
                 className="flex items-center justify-start gap-2 mb-4"
               >
-                <span className="text-3xl font-display font-bold text-black">
+                <span className="text-3xl font-display font-bold text-primary drop-shadow-lg">
                   <AnimatedTypingNumber numbers={typingNumbers} />
                 </span>
-                <span className="text-black/80 text-sm font-medium">Happy Clients & Growing</span>
+                <span className="text-primary text-sm font-bold drop-shadow-lg">Happy Clients & Growing</span>
               </motion.div>
               
               {/* Services Tags */}
