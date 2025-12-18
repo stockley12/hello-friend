@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { SalonProvider, useSalon } from '@/contexts/SalonContext';
 import { ClientLayout } from '@/components/layout/ClientLayout';
 import { AdminLayout } from '@/components/layout/AdminLayout';
+import { WelcomePopup } from '@/components/WelcomePopup';
 
 // Client Pages
 import { Home } from '@/pages/client/Home';
@@ -64,6 +65,7 @@ const App = () => (
     <TooltipProvider>
       <BrowserRouter>
         <SalonProvider>
+          <WelcomePopup />
           <Toaster />
           <Sonner />
           <AppRoutes />

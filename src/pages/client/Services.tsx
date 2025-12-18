@@ -19,7 +19,7 @@ const categoryLabels: Record<ServiceCategory, string> = {
   natural: 'Natural Hair',
 };
 
-const formatPrice = (price: number) => `₺${price.toLocaleString('tr-TR')}`;
+
 
 export function Services() {
   const { services } = useSalon();
@@ -117,10 +117,7 @@ export function Services() {
                   <p className="text-foreground/60 mb-6 flex-1">
                     {service.description}
                   </p>
-                  <div className="flex items-center justify-between pt-6 border-t border-primary/20">
-                    <div>
-                      <span className="text-3xl font-display font-bold text-primary">{formatPrice(service.price)}</span>
-                    </div>
+                  <div className="flex items-center justify-end pt-6 border-t border-primary/20">
                     <div className="flex items-center gap-2 text-foreground/50">
                       <Clock className="h-4 w-4" />
                       <span className="text-sm">{service.durationMin} min</span>
