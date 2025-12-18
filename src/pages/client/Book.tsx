@@ -183,24 +183,22 @@ export function Book() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[35vh] md:h-[40vh] overflow-hidden">
+      <section className="relative h-[50vh] md:h-[55vh]">
         <img
           src={bookHeroBg}
-          alt="Braided hairstyles and faces showcase for booking"
+          alt="Braided hairstyles showcase"
           className="absolute inset-0 h-full w-full object-cover object-top"
-          loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/25 to-background" />
-        <div className="relative h-full flex items-center justify-center">
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute bottom-8 left-0 right-0 text-center">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }}
-            className="text-center"
           >
-            <h1 className="font-display text-4xl md:text-5xl font-semibold text-foreground mb-2">
+            <h1 className="font-display text-3xl md:text-4xl font-semibold text-white drop-shadow-lg mb-1">
               Book Your Session
             </h1>
-            <p className="text-muted-foreground">Transform your look with us</p>
+            <p className="text-white/90 drop-shadow">Transform your look with us</p>
           </motion.div>
         </div>
       </section>
