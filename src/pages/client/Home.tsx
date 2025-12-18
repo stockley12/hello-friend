@@ -183,7 +183,15 @@ export function Home() {
       />
       
       {/* Hero Section - Compact */}
-      <section className="relative py-6 md:py-8 overflow-hidden">
+      <section 
+        className="relative py-6 md:py-8 overflow-hidden"
+        style={{
+          backgroundImage: `url('/home-hero-bg.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
         {/* Animated Background */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div 
