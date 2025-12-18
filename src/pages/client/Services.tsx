@@ -15,7 +15,6 @@ const womenServices = [
 ];
 
 const menServices = [
-  { name: 'Precision Cuts', desc: 'Sharp fades, clean lines, perfect shape' },
   { name: 'Beard Grooming', desc: 'Sculpted, shaped, conditioned' },
   { name: 'Cornrow Designs', desc: 'Classic to creative patterns' },
   { name: 'Loc Styles', desc: 'Retwist, styling, maintenance' },
