@@ -177,13 +177,30 @@ export function Book() {
   }
   
   return (
-    <div className="min-h-screen py-12 md:py-20 pb-40 md:pb-20 relative">
-      <div 
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${bookHeroBg})` }}
-      />
-      <div className="fixed inset-0 bg-background/60 backdrop-blur-[2px]" />
-      <div className="container mx-auto px-4 max-w-2xl relative z-10">
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative h-[35vh] md:h-[40vh] overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${bookHeroBg})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
+        <div className="relative h-full flex items-center justify-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center"
+          >
+            <h1 className="font-display text-4xl md:text-5xl font-semibold text-foreground mb-2">
+              Book Your Session
+            </h1>
+            <p className="text-muted-foreground">Transform your look with us</p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Booking Form Section */}
+      <div className="container mx-auto px-4 max-w-2xl py-8 pb-40 md:pb-20">
         {/* Header */}
         <div className="text-center mb-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -192,9 +209,9 @@ export function Book() {
               <span className="text-sm font-medium tracking-wide text-muted-foreground">Step {currentStep + 1} of {steps.length}</span>
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
-            <h1 className="font-display text-3xl md:text-4xl font-medium text-foreground">
+            <h2 className="font-display text-2xl md:text-3xl font-medium text-foreground">
               {steps[currentStep]}
-            </h1>
+            </h2>
           </motion.div>
         </div>
         
