@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { BookingFormData } from '@/types';
+import bookHeroBg from '@/assets/book-hero-bg.jpg';
 
 const steps = ['Your Details', 'Pick Date & Time'];
 
@@ -128,7 +129,12 @@ export function Book() {
     const whatsappLink = generateWhatsAppLink(createdBooking);
     
     return (
-      <div className="min-h-screen py-20 md:py-32 relative bg-background">
+      <div className="min-h-screen py-20 md:py-32 relative">
+        <div 
+          className="fixed inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${bookHeroBg})` }}
+        />
+        <div className="fixed inset-0 bg-background/60 backdrop-blur-[2px]" />
         <div className="container mx-auto px-4 max-w-lg relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -171,8 +177,13 @@ export function Book() {
   }
   
   return (
-    <div className="min-h-screen py-12 md:py-20 pb-40 md:pb-20 bg-background">
-      <div className="container mx-auto px-4 max-w-2xl">
+    <div className="min-h-screen py-12 md:py-20 pb-40 md:pb-20 relative">
+      <div 
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${bookHeroBg})` }}
+      />
+      <div className="fixed inset-0 bg-background/60 backdrop-blur-[2px]" />
+      <div className="container mx-auto px-4 max-w-2xl relative z-10">
         {/* Header */}
         <div className="text-center mb-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
