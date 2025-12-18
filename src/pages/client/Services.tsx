@@ -4,6 +4,7 @@ import { ArrowRight, Scissors, Crown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ImageShowcase } from '@/components/ImageShowcase';
 import { MenImageShowcase } from '@/components/MenImageShowcase';
+import servicesHeroBg from '@/assets/services-hero-bg.jpg';
 
 const womenServices = [
   { name: 'Box Braids', desc: 'Classic protective style that lasts weeks' },
@@ -27,8 +28,13 @@ export function Services() {
     <div className="min-h-screen bg-background overflow-hidden">
       {/* Hero */}
       <section className="relative py-32 md:py-44 overflow-hidden">
-        {/* Unisex background design */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.2),transparent_70%)]" />
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${servicesHeroBg})` }}
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
         
         {/* Animated floating hair strands */}
         {[...Array(8)].map((_, i) => (
