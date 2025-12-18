@@ -130,11 +130,15 @@ export function Book() {
     
     return (
       <div className="min-h-screen py-20 md:py-32 relative">
-        <div 
-          className="fixed inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${bookHeroBg})` }}
-        />
-        <div className="fixed inset-0 bg-background/60 backdrop-blur-[2px]" />
+        <div className="fixed inset-0">
+          <img
+            src={bookHeroBg}
+            alt="Braided hairstyles booking background"
+            className="h-full w-full object-cover object-top"
+            loading="eager"
+          />
+        </div>
+        <div className="fixed inset-0 bg-background/45 backdrop-blur-[1px]" />
         <div className="container mx-auto px-4 max-w-lg relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -180,11 +184,13 @@ export function Book() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative h-[35vh] md:h-[40vh] overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${bookHeroBg})` }}
+        <img
+          src={bookHeroBg}
+          alt="Braided hairstyles and faces showcase for booking"
+          className="absolute inset-0 h-full w-full object-cover object-top"
+          loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/25 to-background" />
         <div className="relative h-full flex items-center justify-center">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
