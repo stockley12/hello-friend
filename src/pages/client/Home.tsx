@@ -235,7 +235,7 @@ export function Home() {
             transition={{ delay: 0.6 }}
             className="absolute left-4 top-10 md:top-12 flex flex-row gap-2"
           >
-            {['Hair Treatment', 'Braids', 'Locs', 'Home Service'].map((style, i) => (
+            {['Hair Treatment', 'Braids', 'Locs'].map((style, i) => (
               <motion.span
                 key={style}
                 initial={{ opacity: 0, scale: 0.95 }}
