@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { BookingFormData } from '@/types';
 
-const steps = ['Pick Date & Time', 'Your Details'];
+const steps = ['Your Details', 'Pick Date & Time'];
 
 // Available time slots (8am, 12pm, 4pm - each appointment is 4 hours)
 const TIME_SLOTS = ['08:00', '12:00', '16:00'];
@@ -64,8 +64,8 @@ export function Book() {
   
   const canProceed = () => {
     switch (currentStep) {
-      case 0: return formData.date && formData.time;
-      case 1: return formData.clientName && formData.clientPhone;
+      case 0: return formData.clientName && formData.clientPhone;
+      case 1: return formData.date && formData.time;
       default: return false;
     }
   };
@@ -208,8 +208,43 @@ export function Book() {
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Step 1: Date & Time */}
+            {/* Step 1: Your Details */}
             {currentStep === 0 && (
+              <div className="glass-card rounded-2xl p-8 space-y-6">
+                <div>
+                  <Label className="text-foreground font-medium">Your Name *</Label>
+                  <Input
+                    value={formData.clientName}
+                    onChange={(e) => setFormData(p => ({ ...p, clientName: e.target.value }))}
+                    className="h-14 bg-background border-foreground/10 rounded-xl mt-2"
+                    placeholder="Enter your name"
+                  />
+                </div>
+                <div>
+                  <Label className="text-foreground font-medium">WhatsApp Phone Number *</Label>
+                  <Input
+                    type="tel"
+                    value={formData.clientPhone}
+                    onChange={(e) => setFormData(p => ({ ...p, clientPhone: e.target.value }))}
+                    className="h-14 bg-background border-foreground/10 rounded-xl mt-2"
+                    placeholder="+90 5XX XXX XXXX"
+                  />
+                </div>
+                <div>
+                  <Label className="text-foreground font-medium">Email (optional)</Label>
+                  <Input
+                    type="email"
+                    value={formData.clientEmail}
+                    onChange={(e) => setFormData(p => ({ ...p, clientEmail: e.target.value }))}
+                    className="h-14 bg-background border-foreground/10 rounded-xl mt-2"
+                    placeholder="your@email.com"
+                  />
+                </div>
+              </div>
+            )}
+            
+            {/* Step 2: Date & Time */}
+            {currentStep === 1 && (
               <div className="space-y-8">
                 {/* Info Banner */}
                 <div className="glass-card rounded-xl p-4 flex items-start gap-3 bg-primary/5 border-primary/20">
@@ -273,57 +308,29 @@ export function Book() {
                     </div>
                   </motion.div>
                 )}
-              </div>
-            )}
-            
-            {/* Step 2: Details */}
-            {currentStep === 1 && (
-              <div className="glass-card rounded-2xl p-8 space-y-6">
-                <div>
-                  <Label className="text-foreground font-medium">Your Name *</Label>
-                  <Input
-                    value={formData.clientName}
-                    onChange={(e) => setFormData(p => ({ ...p, clientName: e.target.value }))}
-                    className="h-14 bg-background border-foreground/10 rounded-xl mt-2"
-                    placeholder="Enter your name"
-                  />
-                </div>
-                <div>
-                  <Label className="text-foreground font-medium">Phone Number *</Label>
-                  <Input
-                    type="tel"
-                    value={formData.clientPhone}
-                    onChange={(e) => setFormData(p => ({ ...p, clientPhone: e.target.value }))}
-                    className="h-14 bg-background border-foreground/10 rounded-xl mt-2"
-                    placeholder="+90 5XX XXX XXXX"
-                  />
-                </div>
-                <div>
-                  <Label className="text-foreground font-medium">Email (optional)</Label>
-                  <Input
-                    type="email"
-                    value={formData.clientEmail}
-                    onChange={(e) => setFormData(p => ({ ...p, clientEmail: e.target.value }))}
-                    className="h-14 bg-background border-foreground/10 rounded-xl mt-2"
-                    placeholder="your@email.com"
-                  />
-                </div>
                 
                 {/* Summary */}
-                <div className="pt-6 mt-6 border-t border-foreground/10 space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Date</span>
-                    <span className="font-medium text-foreground">{format(new Date(formData.date), 'EEE, d MMM yyyy')}</span>
+                {formData.date && formData.time && (
+                  <div className="glass-card rounded-xl p-6 space-y-3">
+                    <h3 className="font-medium text-foreground mb-4">Booking Summary</h3>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Name</span>
+                      <span className="font-medium text-foreground">{formData.clientName}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Date</span>
+                      <span className="font-medium text-foreground">{format(new Date(formData.date), 'EEE, d MMM yyyy')}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Time</span>
+                      <span className="font-medium text-foreground">{formData.time}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Duration</span>
+                      <span className="font-medium text-foreground">4 hours</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Time</span>
-                    <span className="font-medium text-foreground">{formData.time}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Duration</span>
-                    <span className="font-medium text-foreground">4 hours</span>
-                  </div>
-                </div>
+                )}
               </div>
             )}
           </motion.div>
