@@ -210,11 +210,11 @@ export function Book() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[50vh] md:h-[55vh]">
+      <section className="relative h-[40vh] md:h-[45vh]">
         <img
           src={bookHeroBg}
           alt="Braided hairstyles showcase - women and men"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-cover object-[center_60%]"
           loading="eager"
         />
         {/* Lighter overlay so faces (especially mouth) stay visible */}
