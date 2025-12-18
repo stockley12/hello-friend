@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { ArrowRight, Sparkles, Heart, MapPin, Phone, Instagram, Crown, Scissors, Star, Home as HomeIcon, Palette, Users, Clock, CheckCircle2 } from 'lucide-react';
+import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Sparkles, Heart, MapPin, Phone, Instagram, Crown, Scissors, Star, Home as HomeIcon, Palette, Users, Clock, CheckCircle2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
 import { VideoShowcase } from '@/components/VideoShowcase';
@@ -140,7 +140,12 @@ const AnimatedTypingNumber = ({ numbers }: { numbers: string[] }) => {
 export function Home() {
   const { services, settings } = useSalon();
   const [activeLocation, setActiveLocation] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   
+  const openLightbox = (index: number) => setLightboxIndex(index);
+  const closeLightbox = () => setLightboxIndex(null);
+  const nextImage = () => setLightboxIndex(prev => prev !== null ? (prev + 1) % menGalleryData.length : null);
+  const prevImage = () => setLightboxIndex(prev => prev !== null ? (prev - 1 + menGalleryData.length) % menGalleryData.length : null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 });
@@ -756,7 +761,8 @@ export function Home() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    className="relative overflow-hidden rounded-xl shadow-lg flex-shrink-0"
+                    onClick={() => openLightbox(index)}
+                    className="relative overflow-hidden rounded-xl shadow-lg flex-shrink-0 cursor-pointer active:scale-95 transition-transform"
                     style={{ width: '160px' }}
                   >
                     <div className="aspect-[3/4] overflow-hidden">
@@ -790,7 +796,8 @@ export function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.03, y: -5 }}
-                className="group relative overflow-hidden rounded-2xl shadow-xl"
+                onClick={() => openLightbox(index)}
+                className="group relative overflow-hidden rounded-2xl shadow-xl cursor-pointer"
               >
                 <div className="aspect-[3/4] overflow-hidden">
                   <img
@@ -807,6 +814,75 @@ export function Home() {
               </motion.div>
             ))}
           </div>
+
+          {/* Lightbox Modal */}
+          <AnimatePresence>
+            {lightboxIndex !== null && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm"
+                onClick={closeLightbox}
+              >
+                {/* Close button */}
+                <button
+                  onClick={closeLightbox}
+                  className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                >
+                  <X className="w-6 h-6 text-white" />
+                </button>
+
+                {/* Previous button */}
+                <button
+                  onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                  className="absolute left-4 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                >
+                  <ChevronLeft className="w-6 h-6 text-white" />
+                </button>
+
+                {/* Next button */}
+                <button
+                  onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                  className="absolute right-4 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                >
+                  <ChevronRight className="w-6 h-6 text-white" />
+                </button>
+
+                {/* Image */}
+                <motion.div
+                  key={lightboxIndex}
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  className="relative max-w-4xl max-h-[85vh] mx-4"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <img
+                    src={menGalleryData[lightboxIndex].img}
+                    alt={menGalleryData[lightboxIndex].style}
+                    className="w-full h-full object-contain rounded-lg"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent rounded-b-lg">
+                    <p className="text-white font-bold text-xl">{menGalleryData[lightboxIndex].style}</p>
+                    <p className="text-blue-400">{menGalleryData[lightboxIndex].highlight}</p>
+                  </div>
+                </motion.div>
+
+                {/* Dot indicators */}
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+                  {menGalleryData.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => { e.stopPropagation(); setLightboxIndex(idx); }}
+                      className={`w-2 h-2 rounded-full transition-all ${idx === lightboxIndex ? 'bg-primary w-6' : 'bg-white/40 hover:bg-white/60'}`}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Call to Action */}
           <motion.div
