@@ -28,10 +28,47 @@ export function Services() {
       {/* Hero */}
       <section className="relative py-32 md:py-44 overflow-hidden">
         {/* Unisex background design */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.15),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.2),transparent_70%)]" />
         
-        {/* Decorative hair/braid pattern - left side */}
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 opacity-10">
+        {/* Animated floating hair strands */}
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute opacity-10"
+            style={{
+              left: `${10 + i * 12}%`,
+              top: `${20 + (i % 3) * 25}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              rotate: [0, 5, -5, 0],
+              scale: [1, 1.05, 1],
+            }}
+            transition={{
+              duration: 4 + i * 0.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.3,
+            }}
+          >
+            <svg width="60" height="120" viewBox="0 0 60 120" className="text-primary">
+              <path 
+                d="M30 0 Q45 20, 30 40 Q15 60, 30 80 Q45 100, 30 120" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                fill="none"
+                strokeLinecap="round"
+              />
+            </svg>
+          </motion.div>
+        ))}
+        
+        {/* Animated braid pattern - left side */}
+        <motion.div 
+          className="absolute left-0 top-1/2 -translate-y-1/2 opacity-15"
+          animate={{ y: [0, -20, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        >
           <svg width="200" height="600" viewBox="0 0 200 600" className="text-primary">
             <path d="M50 0 Q100 50, 50 100 Q0 150, 50 200 Q100 250, 50 300 Q0 350, 50 400 Q100 450, 50 500 Q0 550, 50 600" 
               stroke="currentColor" strokeWidth="3" fill="none" />
@@ -40,10 +77,14 @@ export function Services() {
             <path d="M150 0 Q200 50, 150 100 Q100 150, 150 200 Q200 250, 150 300 Q100 350, 150 400 Q200 450, 150 500 Q100 550, 150 600" 
               stroke="currentColor" strokeWidth="3" fill="none" />
           </svg>
-        </div>
+        </motion.div>
         
-        {/* Decorative hair/braid pattern - right side */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-10 rotate-180">
+        {/* Animated braid pattern - right side */}
+        <motion.div 
+          className="absolute right-0 top-1/2 -translate-y-1/2 opacity-15 rotate-180"
+          animate={{ y: [0, 20, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        >
           <svg width="200" height="600" viewBox="0 0 200 600" className="text-primary">
             <path d="M50 0 Q100 50, 50 100 Q0 150, 50 200 Q100 250, 50 300 Q0 350, 50 400 Q100 450, 50 500 Q0 550, 50 600" 
               stroke="currentColor" strokeWidth="3" fill="none" />
@@ -52,29 +93,60 @@ export function Services() {
             <path d="M150 0 Q200 50, 150 100 Q100 150, 150 200 Q200 250, 150 300 Q100 350, 150 400 Q200 450, 150 500 Q100 550, 150 600" 
               stroke="currentColor" strokeWidth="3" fill="none" />
           </svg>
-        </div>
+        </motion.div>
         
-        {/* Scissors & comb decorative elements */}
-        <div className="absolute top-20 left-[15%] opacity-5 rotate-45">
+        {/* Animated scissors */}
+        <motion.div 
+          className="absolute top-20 left-[15%] opacity-10"
+          animate={{ rotate: [45, 55, 45], scale: [1, 1.1, 1] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        >
           <Scissors className="w-32 h-32 text-primary" />
-        </div>
-        <div className="absolute bottom-20 right-[15%] opacity-5 -rotate-12">
+        </motion.div>
+        <motion.div 
+          className="absolute bottom-20 right-[15%] opacity-10"
+          animate={{ rotate: [-12, -22, -12], scale: [1, 1.05, 1] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        >
           <Scissors className="w-24 h-24 text-primary" />
-        </div>
+        </motion.div>
         
-        {/* Sparkle decorations */}
-        <div className="absolute top-32 right-[20%] opacity-20">
-          <Sparkles className="w-8 h-8 text-primary animate-pulse" />
-        </div>
-        <div className="absolute bottom-32 left-[25%] opacity-20">
-          <Sparkles className="w-6 h-6 text-primary animate-pulse" style={{ animationDelay: '1s' }} />
-        </div>
+        {/* Animated sparkles */}
+        <motion.div 
+          className="absolute top-32 right-[20%]"
+          animate={{ opacity: [0.2, 0.5, 0.2], scale: [1, 1.3, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Sparkles className="w-8 h-8 text-primary" />
+        </motion.div>
+        <motion.div 
+          className="absolute bottom-32 left-[25%]"
+          animate={{ opacity: [0.2, 0.5, 0.2], scale: [1, 1.2, 1] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        >
+          <Sparkles className="w-6 h-6 text-primary" />
+        </motion.div>
+        <motion.div 
+          className="absolute top-[60%] right-[30%]"
+          animate={{ opacity: [0.1, 0.4, 0.1], scale: [1, 1.4, 1] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+        >
+          <Sparkles className="w-5 h-5 text-primary" />
+        </motion.div>
         
-        {/* Geometric accents */}
-        <div className="absolute top-1/4 left-[10%] w-40 h-40 border border-primary/10 rounded-full" />
-        <div className="absolute bottom-1/4 right-[10%] w-32 h-32 border border-primary/10 rounded-full" />
-        <div className="absolute top-1/3 right-[5%] w-20 h-20 bg-primary/5 rounded-full blur-xl" />
-        <div className="absolute bottom-1/3 left-[5%] w-24 h-24 bg-primary/5 rounded-full blur-xl" />
+        {/* Animated geometric accents */}
+        <motion.div 
+          className="absolute top-1/4 left-[10%] w-40 h-40 border border-primary/20 rounded-full"
+          animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-[10%] w-32 h-32 border border-primary/20 rounded-full"
+          animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.35, 0.2] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+        <div className="absolute top-1/3 right-[5%] w-20 h-20 bg-primary/10 rounded-full blur-xl" />
+        <div className="absolute bottom-1/3 left-[5%] w-24 h-24 bg-primary/10 rounded-full blur-xl" />
         
         <div className="container mx-auto px-4 relative">
           <motion.div
