@@ -228,8 +228,8 @@ export function Home() {
             </div>
           </motion.div>
           
-          {/* Main Hero Content - Left aligned */}
-          <div className="max-w-2xl">
+          {/* Main Hero Content - Left aligned, positioned lower */}
+          <div className="max-w-2xl pt-32 md:pt-40 lg:pt-48">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -237,16 +237,6 @@ export function Home() {
               transition={{ duration: 0.8 }}
               className="text-left"
             >
-              {/* Logo */}
-              <motion.img 
-                src={logo} 
-                alt="La'Couronne" 
-                className="h-24 sm:h-28 md:h-32 w-auto mb-3"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                style={{ filter: 'drop-shadow(0 0 25px hsl(var(--primary) / 0.5))' }}
-              />
-              
               {/* Typewriter Heading */}
               <motion.h1 
                 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 leading-tight min-h-[2.5em]"
