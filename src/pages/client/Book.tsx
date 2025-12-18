@@ -210,15 +210,15 @@ export function Book() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[40vh] md:h-[45vh]">
+      <section className="relative h-[38vh] min-h-[280px] md:h-[46vh] md:min-h-[380px]">
         <img
           src={bookHeroBg}
           alt="Braided hairstyles showcase - women and men"
-          className="absolute inset-0 h-full w-full object-cover object-[center_60%]"
+          className="absolute inset-0 h-full w-full object-cover object-[center_42%] md:object-[center_28%]"
           loading="eager"
         />
         {/* Lighter overlay so faces (especially mouth) stay visible */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/55 via-background/10 to-transparent" />
         <div className="absolute bottom-8 left-0 right-0 text-center">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
