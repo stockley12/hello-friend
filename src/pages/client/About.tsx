@@ -1,10 +1,58 @@
 import { motion } from 'framer-motion';
-import { Award, Heart, Sparkles } from 'lucide-react';
+import { Award, Heart, Sparkles, MapPin, HelpCircle } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+const faqs = [
+  {
+    question: "Where exactly are you located in Magusa?",
+    answer: "We're located in the heart of Magusa (Famagusta), easily accessible from the main city center. Our salon offers convenient parking and is just a short walk from the historic walled city."
+  },
+  {
+    question: "Do I need to book an appointment in advance?",
+    answer: "While walk-ins are welcome when we have availability, we highly recommend booking in advance to secure your preferred time slot. You can easily book through our website or give us a call."
+  },
+  {
+    question: "What hair types do you specialize in?",
+    answer: "Our stylists are trained in all hair types and textures. We specialize in braiding, locs, protective styles, cuts, coloring, and treatments for both natural and relaxed hair."
+  },
+  {
+    question: "How long do braiding appointments typically take?",
+    answer: "Braiding appointments vary depending on the style. Simple styles may take 2-3 hours, while intricate designs like small box braids or knotless braids can take 4-8 hours. We'll give you an accurate estimate during your consultation."
+  },
+  {
+    question: "Do you offer services for men?",
+    answer: "Absolutely! We offer a full range of men's services including haircuts, beard grooming, braids, locs, twists, and scalp treatments. Our barbers are skilled in all modern and classic styles."
+  },
+  {
+    question: "What products do you use?",
+    answer: "We use only premium, professional-grade products that are gentle on your hair and scalp. We carry brands that cater to all hair types and can recommend products for your home care routine."
+  },
+  {
+    question: "Can I bring reference photos for my appointment?",
+    answer: "Yes, please do! Reference photos help us understand exactly what you're looking for. We'll discuss what's achievable with your hair type and make recommendations based on your lifestyle."
+  },
+  {
+    question: "What is your cancellation policy?",
+    answer: "We require at least 24 hours notice for cancellations or rescheduling. Late cancellations or no-shows may be subject to a fee. We understand emergencies happen, so please communicate with us."
+  },
+  {
+    question: "Do you offer bridal and special occasion styling?",
+    answer: "Yes! We love creating stunning looks for weddings, graduations, and special events. We recommend booking a trial appointment before your big day to perfect your look."
+  },
+  {
+    question: "Is there parking available?",
+    answer: "Yes, we have convenient parking available near our salon. Street parking is also available in the surrounding area of central Magusa."
+  }
+];
 
 export function About() {
-  const { staff, settings } = useSalon();
+  const { settings } = useSalon();
   
   return (
     <div className="min-h-screen">
@@ -26,13 +74,17 @@ export function About() {
             transition={{ duration: 0.5 }}
             className="max-w-2xl"
           >
+            <div className="flex items-center gap-2 text-primary mb-4">
+              <MapPin className="h-5 w-5" />
+              <span className="text-sm font-medium tracking-wider uppercase">Magusa, North Cyprus</span>
+            </div>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
               Our Story
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
               Founded on the belief that everyone deserves to feel extraordinary. 
               {settings.name} has been transforming not just hair, but confidence, 
-              one client at a time.
+              one client at a time in the heart of Magusa.
             </p>
           </motion.div>
         </div>
@@ -46,7 +98,7 @@ export function About() {
               {
                 icon: Sparkles,
                 title: 'Excellence',
-                description: 'We pursue perfection in every cut, color, and style. Our commitment to excellence is unwavering.',
+                description: 'We pursue perfection in every braid, cut, and style. Our commitment to excellence is unwavering.',
               },
               {
                 icon: Heart,
@@ -125,7 +177,7 @@ export function About() {
         </div>
       </section>
       
-      {/* Team */}
+      {/* FAQ Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <motion.div
@@ -135,36 +187,41 @@ export function About() {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <HelpCircle className="h-8 w-8 text-primary" />
+            </div>
             <h2 className="font-display text-3xl md:text-4xl font-semibold mb-4">
-              The Team
+              Frequently Asked Questions
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              A collective of artists, innovators, and perfectionists dedicated to your transformation.
+              Everything you need to know about visiting us in Magusa. Can't find your answer? Feel free to contact us.
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            {staff.map((member, index) => (
-              <motion.div
-                key={member.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
-              >
-                <Avatar className="w-32 h-32 mx-auto mb-4 border-4 border-background shadow-xl">
-                  <AvatarImage src={member.avatar} alt={member.name} />
-                  <AvatarFallback className="text-2xl font-display">
-                    {member.name.split(' ').map(n => n[0]).join('')}
-                  </AvatarFallback>
-                </Avatar>
-                <h3 className="font-display text-lg font-medium">{member.name}</h3>
-                <p className="text-sm text-primary mb-2">{member.title}</p>
-                <p className="text-sm text-muted-foreground">{member.bio}</p>
-              </motion.div>
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="max-w-3xl mx-auto"
+          >
+            <Accordion type="single" collapsible className="w-full space-y-4">
+              {faqs.map((faq, index) => (
+                <AccordionItem 
+                  key={index} 
+                  value={`item-${index}`}
+                  className="bg-card border border-border/50 rounded-xl px-6 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <AccordionTrigger className="text-left font-medium hover:no-underline py-5">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-5">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </motion.div>
         </div>
       </section>
     </div>
