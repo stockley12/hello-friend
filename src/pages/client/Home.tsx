@@ -182,13 +182,13 @@ export function Home() {
         style={{ x: smoothMouseX, y: smoothMouseY }}
       />
       
-      {/* Hero Section - Compact */}
+      {/* Hero Section */}
       <section 
-        className="relative py-6 md:py-8 overflow-hidden"
+        className="relative py-16 md:py-24 lg:py-32 overflow-hidden min-h-[70vh]"
         style={{
           backgroundImage: `url('/home-hero-bg.png?v=2')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center top',
           backgroundRepeat: 'no-repeat'
         }}
       >
