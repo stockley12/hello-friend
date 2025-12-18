@@ -30,7 +30,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       <header className="fixed top-0 left-0 right-0 z-50">
         <div className="glass">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between h-20">
+            <div className="flex items-center justify-between h-16">
               {/* Logo */}
               <Link to="/" className="flex items-center gap-3 z-50">
                 <img 
@@ -131,7 +131,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       </header>
       
       {/* Main Content */}
-      <main className="flex-1 pt-20">
+      <main className="flex-1 pt-16">
         <motion.div
           key={location.pathname}
           initial={{ opacity: 0 }}
