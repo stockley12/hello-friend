@@ -13,7 +13,7 @@ import { BookingFormData } from '@/types';
 
 const steps = ['Choose Service', 'Pick Date & Time', 'Your Details'];
 
-const formatPrice = (price: number) => `₺${price.toLocaleString('tr-TR')}`;
+
 
 export function Book() {
   const [searchParams] = useSearchParams();
@@ -45,12 +45,6 @@ export function Book() {
     }, 0);
   }, [formData.services, services]);
   
-  const totalPrice = useMemo(() => {
-    return formData.services.reduce((acc, id) => {
-      const service = services.find(s => s.id === id);
-      return acc + (service?.price || 0);
-    }, 0);
-  }, [formData.services, services]);
   
   const activeServices = services.filter(s => s.active);
   
@@ -151,10 +145,6 @@ export function Book() {
                 <p className="text-muted-foreground text-sm">Date & Time</p>
                 <p className="font-medium text-foreground">{format(new Date(formData.date), 'EEEE, d MMMM yyyy')} at {formData.time}</p>
               </div>
-              <div>
-                <p className="text-muted-foreground text-sm">Total</p>
-                <p className="text-2xl font-display font-medium text-primary">{formatPrice(totalPrice)}</p>
-              </div>
             </div>
             
             <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
@@ -232,8 +222,7 @@ export function Book() {
                       </span>
                       <h3 className="font-display text-xl font-medium mb-2 text-foreground">{service.name}</h3>
                       <p className="text-muted-foreground text-sm flex-1 mb-4">{service.description}</p>
-                      <div className="flex items-center justify-between pt-4 border-t border-foreground/10">
-                        <span className="text-xl font-display font-medium text-foreground">{formatPrice(service.price)}</span>
+                      <div className="flex items-center justify-end pt-4 border-t border-foreground/10">
                         <span className="text-muted-foreground text-sm">{service.durationMin} min</span>
                       </div>
                     </div>
@@ -335,10 +324,6 @@ export function Book() {
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Time</span>
                     <span className="font-medium text-foreground">{formData.time}</span>
-                  </div>
-                  <div className="flex justify-between text-lg pt-3 border-t border-foreground/10">
-                    <span className="font-medium text-foreground">Total</span>
-                    <span className="font-display text-2xl text-primary font-medium">{formatPrice(totalPrice)}</span>
                   </div>
                 </div>
               </div>
