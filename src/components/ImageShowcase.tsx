@@ -5,6 +5,11 @@ const videos = [
   '/videos/showcase-hair.mp4',
   '/videos/showcase-6.mp4',
   '/videos/showcase-7.mp4',
+  '/videos/showcase-8.mp4',
+  '/videos/showcase-9.mp4',
+  '/videos/showcase-11.mp4',
+  '/videos/showcase-13.mp4',
+  '/videos/showcase-14.mp4',
 ];
 
 interface ImageShowcaseProps {
