@@ -8,7 +8,6 @@ const defaultWomenVideos = [
   '/videos/women-1.mp4',
   '/videos/women-2.mp4',
   '/videos/women-3.mp4',
-  '/videos/women-4.mp4',
 ];
 
 const defaultMenVideos = [
