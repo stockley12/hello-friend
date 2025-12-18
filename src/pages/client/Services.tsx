@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Scissors, Crown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ImageShowcase } from '@/components/ImageShowcase';
+import { MenImageShowcase } from '@/components/MenImageShowcase';
 
 const womenServices = [
   { name: 'Box Braids', desc: 'Classic protective style that lasts weeks' },
@@ -310,7 +311,7 @@ export function Services() {
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-2"
             >
-              <ImageShowcase direction="left" videos={['/videos/men-1.mp4', '/videos/men-2.mp4', '/videos/men-3.mp4', '/videos/men-4.mp4', '/videos/men-5.mp4', '/videos/men-6.mp4', '/videos/men-7.mp4', '/videos/men-8.mp4', '/videos/men-9.mp4']} />
+              <MenImageShowcase direction="left" />
             </motion.div>
           </div>
         </div>
