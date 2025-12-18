@@ -1,27 +1,41 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const videos = [
+const defaultWomenVideos = [
   '/videos/showcase-hair.mp4',
   '/videos/showcase-6.mp4',
   '/videos/showcase-7.mp4',
 ];
 
+const defaultMenVideos = [
+  '/videos/men-1.mp4',
+  '/videos/men-2.mp4',
+  '/videos/men-3.mp4',
+  '/videos/men-4.mp4',
+  '/videos/men-5.mp4',
+  '/videos/men-6.mp4',
+  '/videos/men-7.mp4',
+  '/videos/men-8.mp4',
+  '/videos/men-9.mp4',
+];
+
 interface ImageShowcaseProps {
   direction?: 'left' | 'right';
   className?: string;
+  videos?: string[];
 }
 
-export function ImageShowcase({ direction = 'right', className = '' }: ImageShowcaseProps) {
+export function ImageShowcase({ direction = 'right', className = '', videos }: ImageShowcaseProps) {
+  const videoList = videos || defaultWomenVideos;
   const [currentIndex, setCurrentIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % videos.length);
+      setCurrentIndex((prev) => (prev + 1) % videoList.length);
     }, 6000); // Change video every 6 seconds
     return () => clearInterval(interval);
-  }, []);
+  }, [videoList.length]);
 
   const slideVariants = {
     enter: (dir: 'left' | 'right') => ({
@@ -64,7 +78,7 @@ export function ImageShowcase({ direction = 'right', className = '' }: ImageShow
           >
             <video
               ref={videoRef}
-              src={videos[currentIndex]}
+              src={videoList[currentIndex]}
               autoPlay
               muted
               loop
@@ -79,7 +93,7 @@ export function ImageShowcase({ direction = 'right', className = '' }: ImageShow
 
         {/* Progress dots */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-          {videos.map((_, i) => (
+          {videoList.map((_, i) => (
             <motion.button
               key={i}
               onClick={() => setCurrentIndex(i)}
