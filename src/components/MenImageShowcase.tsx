@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import menStyle1 from '@/assets/men-style-1.jpg';
 import menStyle2 from '@/assets/men-style-2.jpg';
@@ -30,11 +31,35 @@ interface MenImageShowcaseProps {
 
 export function MenImageShowcase({ direction = 'left', className = '' }: MenImageShowcaseProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>(direction);
+
+  // Swipe handlers
+  const handleDragEnd = useCallback((event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const swipeThreshold = 50;
+    if (info.offset.x < -swipeThreshold) {
+      setSlideDirection('right');
+      setCurrentIndex((prev) => (prev + 1) % menImages.length);
+    } else if (info.offset.x > swipeThreshold) {
+      setSlideDirection('left');
+      setCurrentIndex((prev) => (prev - 1 + menImages.length) % menImages.length);
+    }
+  }, []);
+
+  const goToNext = useCallback(() => {
+    setSlideDirection('right');
+    setCurrentIndex((prev) => (prev + 1) % menImages.length);
+  }, []);
+
+  const goToPrev = useCallback(() => {
+    setSlideDirection('left');
+    setCurrentIndex((prev) => (prev - 1 + menImages.length) % menImages.length);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
+      setSlideDirection('right');
       setCurrentIndex((prev) => (prev + 1) % menImages.length);
-    }, 4000); // Change image every 4 seconds
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -60,7 +85,7 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
   };
 
   return (
-    <div className={`relative aspect-[4/5] rounded-3xl overflow-hidden ${className}`}>
+    <div className={`relative aspect-[4/5] rounded-2xl md:rounded-3xl overflow-hidden ${className}`}>
       {/* Animated glow effect */}
       <motion.div 
         className="absolute -inset-4 bg-primary/30 blur-3xl rounded-full"
@@ -73,7 +98,7 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
       
       {/* Rotating border accent */}
       <motion.div
-        className="absolute -inset-1 rounded-3xl"
+        className="absolute -inset-1 rounded-2xl md:rounded-3xl"
         style={{
           background: 'conic-gradient(from 0deg, hsl(var(--primary)), transparent, hsl(var(--primary)))',
         }}
@@ -81,11 +106,33 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
       />
       
-      <div className="relative w-full h-full rounded-3xl overflow-hidden border-2 border-primary/30 bg-background">
-        <AnimatePresence mode="wait" custom={direction}>
+      {/* Navigation Arrows - Mobile optimized touch targets */}
+      <button
+        onClick={goToPrev}
+        className="absolute left-1 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-background/60 backdrop-blur-sm border border-primary/30 active:scale-95 transition-transform touch-manipulation"
+        aria-label="Previous"
+      >
+        <ChevronLeft className="w-5 h-5 text-primary" />
+      </button>
+      <button
+        onClick={goToNext}
+        className="absolute right-1 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-background/60 backdrop-blur-sm border border-primary/30 active:scale-95 transition-transform touch-manipulation"
+        aria-label="Next"
+      >
+        <ChevronRight className="w-5 h-5 text-primary" />
+      </button>
+      
+      <motion.div 
+        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border-2 border-primary/30 bg-background touch-pan-y"
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.2}
+        onDragEnd={handleDragEnd}
+      >
+        <AnimatePresence mode="wait" custom={slideDirection}>
           <motion.div
             key={currentIndex}
-            custom={direction}
+            custom={slideDirection}
             variants={slideVariants}
             initial="enter"
             animate="center"
@@ -102,7 +149,8 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
             <motion.img
               src={menImages[currentIndex]}
               alt="Men's grooming style"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover pointer-events-none"
+              draggable={false}
               initial={{ scale: 1 }}
               animate={{ scale: 1.1 }}
               transition={{ duration: 4, ease: "linear" }}
@@ -116,51 +164,55 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
 
         {/* Animated corner accents */}
         <motion.div 
-          className="absolute top-4 left-4 w-12 h-12 border-l-2 border-t-2 border-primary/50 rounded-tl-lg"
+          className="absolute top-3 left-3 w-8 h-8 md:w-12 md:h-12 border-l-2 border-t-2 border-primary/50 rounded-tl-lg pointer-events-none"
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
         />
         <motion.div 
-          className="absolute top-4 right-4 w-12 h-12 border-r-2 border-t-2 border-primary/50 rounded-tr-lg"
+          className="absolute top-3 right-3 w-8 h-8 md:w-12 md:h-12 border-r-2 border-t-2 border-primary/50 rounded-tr-lg pointer-events-none"
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
         />
         <motion.div 
-          className="absolute bottom-16 left-4 w-12 h-12 border-l-2 border-b-2 border-primary/50 rounded-bl-lg"
+          className="absolute bottom-14 left-3 w-8 h-8 md:w-12 md:h-12 border-l-2 border-b-2 border-primary/50 rounded-bl-lg pointer-events-none"
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity, delay: 1 }}
         />
         <motion.div 
-          className="absolute bottom-16 right-4 w-12 h-12 border-r-2 border-b-2 border-primary/50 rounded-br-lg"
+          className="absolute bottom-14 right-3 w-8 h-8 md:w-12 md:h-12 border-r-2 border-b-2 border-primary/50 rounded-br-lg pointer-events-none"
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
         />
 
-        {/* Progress bar */}
-        <div className="absolute bottom-4 left-4 right-4">
+        {/* Progress bar - larger touch targets */}
+        <div className="absolute bottom-4 left-3 right-3">
           <div className="flex gap-2">
             {menImages.map((_, i) => (
               <motion.button
                 key={i}
                 onClick={() => setCurrentIndex(i)}
-                className="flex-1 h-1 rounded-full overflow-hidden bg-foreground/20"
+                className="h-8 flex-1 flex items-center touch-manipulation"
+                whileTap={{ scale: 0.95 }}
+                aria-label={`Go to image ${i + 1}`}
               >
-                <motion.div
-                  className="h-full bg-primary"
-                  initial={{ width: '0%' }}
-                  animate={{ 
-                    width: i === currentIndex ? '100%' : i < currentIndex ? '100%' : '0%'
-                  }}
-                  transition={{ 
-                    duration: i === currentIndex ? 4 : 0.3,
-                    ease: i === currentIndex ? 'linear' : 'easeOut'
-                  }}
-                />
+                <div className="w-full h-1.5 rounded-full overflow-hidden bg-foreground/20">
+                  <motion.div
+                    className="h-full bg-primary"
+                    initial={{ width: '0%' }}
+                    animate={{ 
+                      width: i === currentIndex ? '100%' : i < currentIndex ? '100%' : '0%'
+                    }}
+                    transition={{ 
+                      duration: i === currentIndex ? 4 : 0.3,
+                      ease: i === currentIndex ? 'linear' : 'easeOut'
+                    }}
+                  />
+                </div>
               </motion.button>
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

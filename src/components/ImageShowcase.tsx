@@ -1,42 +1,61 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const defaultWomenVideos = [
-  '/videos/showcase-hair.mp4',
-  '/videos/showcase-6.mp4',
-  '/videos/showcase-7.mp4',
+// Women's videos only - organized
+const womenVideos = [
   '/videos/women-1.mp4',
   '/videos/women-2.mp4',
   '/videos/women-3.mp4',
+  '/videos/women-4.mp4',
+  '/videos/showcase-hair.mp4',
+  '/videos/showcase-6.mp4',
 ];
 
-const defaultMenVideos = [
+// Men's videos only - organized
+const menVideos = [
   '/videos/men-1.mp4',
   '/videos/men-2.mp4',
   '/videos/men-3.mp4',
   '/videos/men-4.mp4',
   '/videos/men-5.mp4',
   '/videos/men-6.mp4',
-  '/videos/men-7.mp4',
-  '/videos/men-8.mp4',
-  '/videos/men-9.mp4',
 ];
 
 interface ImageShowcaseProps {
   direction?: 'left' | 'right';
   className?: string;
-  videos?: string[];
+  category?: 'women' | 'men';
 }
 
-export function ImageShowcase({ direction = 'right', className = '', videos }: ImageShowcaseProps) {
-  const videoList = videos || defaultWomenVideos;
+export function ImageShowcase({ direction = 'right', className = '', category = 'women' }: ImageShowcaseProps) {
+  // Use correct video list based on category
+  const videoList = category === 'men' ? menVideos : womenVideos;
   const [currentIndex, setCurrentIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Swipe handlers
+  const handleDragEnd = useCallback((event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const swipeThreshold = 50;
+    if (info.offset.x < -swipeThreshold) {
+      setCurrentIndex((prev) => (prev + 1) % videoList.length);
+    } else if (info.offset.x > swipeThreshold) {
+      setCurrentIndex((prev) => (prev - 1 + videoList.length) % videoList.length);
+    }
+  }, [videoList.length]);
+
+  const goToNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % videoList.length);
+  }, [videoList.length]);
+
+  const goToPrev = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + videoList.length) % videoList.length);
+  }, [videoList.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % videoList.length);
-    }, 8000); // Slower transitions - every 8 seconds to show beautiful moments
+    }, 8000);
     return () => clearInterval(interval);
   }, [videoList.length]);
 
@@ -59,7 +78,7 @@ export function ImageShowcase({ direction = 'right', className = '', videos }: I
   };
 
   return (
-    <div className={`relative aspect-[4/5] rounded-3xl overflow-hidden ${className}`}>
+    <div className={`relative aspect-[4/5] rounded-2xl md:rounded-3xl overflow-hidden ${className}`}>
       {/* Animated glow effect */}
       <motion.div 
         className="absolute -inset-4 bg-primary/30 blur-3xl rounded-full"
@@ -74,7 +93,29 @@ export function ImageShowcase({ direction = 'right', className = '', videos }: I
         }}
       />
       
-      <div className="relative w-full h-full rounded-3xl overflow-hidden border border-primary/30 shadow-2xl shadow-primary/20">
+      {/* Navigation Arrows - Mobile optimized touch targets */}
+      <button
+        onClick={goToPrev}
+        className="absolute left-1 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-background/60 backdrop-blur-sm border border-primary/30 active:scale-95 transition-transform touch-manipulation"
+        aria-label="Previous"
+      >
+        <ChevronLeft className="w-5 h-5 text-primary" />
+      </button>
+      <button
+        onClick={goToNext}
+        className="absolute right-1 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-background/60 backdrop-blur-sm border border-primary/30 active:scale-95 transition-transform touch-manipulation"
+        aria-label="Next"
+      >
+        <ChevronRight className="w-5 h-5 text-primary" />
+      </button>
+      
+      <motion.div 
+        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-primary/30 shadow-2xl shadow-primary/20 touch-pan-y"
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.2}
+        onDragEnd={handleDragEnd}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
@@ -96,7 +137,7 @@ export function ImageShowcase({ direction = 'right', className = '', videos }: I
               muted
               loop
               playsInline
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover pointer-events-none"
               initial={{ scale: 1 }}
               animate={{ scale: 1.1 }}
               transition={{ duration: 8, ease: "linear" }}
@@ -121,36 +162,39 @@ export function ImageShowcase({ direction = 'right', className = '', videos }: I
           }}
         />
 
-        {/* Animated progress bar */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 px-4">
+        {/* Animated progress bar - larger touch targets */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 px-3">
           {videoList.map((_, i) => (
             <motion.button
               key={i}
               onClick={() => setCurrentIndex(i)}
-              className="flex-1 h-1.5 rounded-full overflow-hidden bg-foreground/20 backdrop-blur-sm min-w-[20px]"
-              whileHover={{ scale: 1.1 }}
+              className="h-8 flex items-center touch-manipulation"
+              whileTap={{ scale: 0.95 }}
+              aria-label={`Go to video ${i + 1}`}
             >
-              <motion.div
-                className="h-full bg-gradient-to-r from-primary to-primary/80 rounded-full"
-                initial={{ width: '0%' }}
-                animate={{ 
-                  width: i === currentIndex ? '100%' : i < currentIndex ? '100%' : '0%'
-                }}
-                transition={{ 
-                  duration: i === currentIndex ? 8 : 0.3,
-                  ease: i === currentIndex ? 'linear' : 'easeOut'
-                }}
-              />
+              <div className="h-1.5 rounded-full overflow-hidden bg-foreground/20 backdrop-blur-sm min-w-[24px]">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-primary to-primary/80 rounded-full"
+                  initial={{ width: '0%' }}
+                  animate={{ 
+                    width: i === currentIndex ? '100%' : i < currentIndex ? '100%' : '0%'
+                  }}
+                  transition={{ 
+                    duration: i === currentIndex ? 8 : 0.3,
+                    ease: i === currentIndex ? 'linear' : 'easeOut'
+                  }}
+                />
+              </div>
             </motion.button>
           ))}
         </div>
         
         {/* Corner accents */}
-        <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-primary/50 rounded-tl-lg" />
-        <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-primary/50 rounded-tr-lg" />
-        <div className="absolute bottom-16 left-4 w-8 h-8 border-l-2 border-b-2 border-primary/50 rounded-bl-lg" />
-        <div className="absolute bottom-16 right-4 w-8 h-8 border-r-2 border-b-2 border-primary/50 rounded-br-lg" />
-      </div>
+        <div className="absolute top-3 left-3 w-6 h-6 border-l-2 border-t-2 border-primary/50 rounded-tl-lg pointer-events-none" />
+        <div className="absolute top-3 right-3 w-6 h-6 border-r-2 border-t-2 border-primary/50 rounded-tr-lg pointer-events-none" />
+        <div className="absolute bottom-14 left-3 w-6 h-6 border-l-2 border-b-2 border-primary/50 rounded-bl-lg pointer-events-none" />
+        <div className="absolute bottom-14 right-3 w-6 h-6 border-r-2 border-b-2 border-primary/50 rounded-br-lg pointer-events-none" />
+      </motion.div>
     </div>
   );
 }

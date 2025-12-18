@@ -196,7 +196,7 @@ export function Services() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <ImageShowcase direction="right" />
+              <ImageShowcase direction="right" category="women" />
             </motion.div>
 
             {/* Content */}
