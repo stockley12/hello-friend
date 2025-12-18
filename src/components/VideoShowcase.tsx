@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Crown, Heart, Star, Smile } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { Sparkles, Crown, Heart, Star, Smile, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
 
 import showcase1 from '@/assets/showcase-1.jpg';
 import showcase2 from '@/assets/showcase-2.jpg';
@@ -59,6 +59,30 @@ const FloatingEmoji = ({ delay, emoji }: { delay: number; emoji: string }) => (
 export function VideoShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+
+  // Swipe handlers
+  const handleDragEnd = useCallback((event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const swipeThreshold = 50;
+    if (info.offset.x < -swipeThreshold) {
+      // Swiped left - go to next
+      setDirection(1);
+      setActiveIndex((prev) => (prev + 1) % showcaseData.length);
+    } else if (info.offset.x > swipeThreshold) {
+      // Swiped right - go to previous
+      setDirection(-1);
+      setActiveIndex((prev) => (prev - 1 + showcaseData.length) % showcaseData.length);
+    }
+  }, []);
+
+  const goToNext = useCallback(() => {
+    setDirection(1);
+    setActiveIndex((prev) => (prev + 1) % showcaseData.length);
+  }, []);
+
+  const goToPrev = useCallback(() => {
+    setDirection(-1);
+    setActiveIndex((prev) => (prev - 1 + showcaseData.length) % showcaseData.length);
+  }, []);
 
   // Auto-rotate through images
   useEffect(() => {
@@ -162,9 +186,32 @@ export function VideoShowcase() {
         <div className="max-w-5xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-4 md:gap-8 items-center">
             
-            {/* Main Image Carousel */}
+            {/* Main Image Carousel with Swipe */}
             <div className="relative">
-              <div className="relative aspect-[3/4] max-w-sm mx-auto" style={{ perspective: '1000px' }}>
+              {/* Navigation Arrows - Mobile optimized touch targets */}
+              <button
+                onClick={goToPrev}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-background/80 border border-primary/30 shadow-lg active:scale-95 transition-transform touch-manipulation"
+                aria-label="Previous"
+              >
+                <ChevronLeft className="w-6 h-6 text-primary" />
+              </button>
+              <button
+                onClick={goToNext}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-background/80 border border-primary/30 shadow-lg active:scale-95 transition-transform touch-manipulation"
+                aria-label="Next"
+              >
+                <ChevronRight className="w-6 h-6 text-primary" />
+              </button>
+
+              <motion.div 
+                className="relative aspect-[3/4] max-w-sm mx-auto touch-pan-y" 
+                style={{ perspective: '1000px' }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={handleDragEnd}
+              >
                 {/* Decorative Frame */}
                 <motion.div
                   className="absolute -inset-3 rounded-3xl border-2 border-primary/20"
@@ -192,7 +239,8 @@ export function VideoShowcase() {
                       <img
                         src={showcaseData[activeIndex].image}
                         alt={showcaseData[activeIndex].title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover pointer-events-none"
+                        draggable={false}
                       />
                       
                       {/* Gradient Overlay */}
@@ -263,7 +311,7 @@ export function VideoShowcase() {
                   animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0, 0.5] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
-              </div>
+              </motion.div>
             </div>
 
             {/* Right Side - Info Cards */}
@@ -345,12 +393,12 @@ export function VideoShowcase() {
           </div>
         </div>
 
-        {/* Progress Indicators */}
+        {/* Progress Indicators - Larger touch targets */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex items-center justify-center gap-3 mt-10"
+          className="flex items-center justify-center gap-4 mt-6 md:mt-10"
         >
           {showcaseData.map((_, index) => (
             <button
@@ -359,18 +407,19 @@ export function VideoShowcase() {
                 setDirection(index > activeIndex ? 1 : -1);
                 setActiveIndex(index);
               }}
-              className="relative"
+              className="relative p-2 touch-manipulation"
+              aria-label={`Go to slide ${index + 1}`}
             >
               <motion.div
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  activeIndex === index ? 'bg-primary' : 'bg-foreground/20 hover:bg-foreground/40'
+                className={`w-4 h-4 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
+                  activeIndex === index ? 'bg-primary' : 'bg-foreground/20'
                 }`}
                 animate={activeIndex === index ? { scale: [1, 1.3, 1] } : {}}
                 transition={{ duration: 0.5 }}
               />
               {activeIndex === index && (
                 <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-primary"
+                  className="absolute inset-2 rounded-full border-2 border-primary"
                   initial={{ scale: 1, opacity: 1 }}
                   animate={{ scale: 2, opacity: 0 }}
                   transition={{ duration: 1, repeat: Infinity }}
