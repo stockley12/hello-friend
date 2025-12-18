@@ -229,7 +229,7 @@ export function Home() {
           </motion.div>
           
           {/* Main Hero Content - Left aligned, positioned lower */}
-          <div className="max-w-2xl pt-32 md:pt-40 lg:pt-48">
+          <div className="max-w-2xl pt-44 md:pt-56 lg:pt-64">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
