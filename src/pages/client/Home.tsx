@@ -228,20 +228,20 @@ export function Home() {
             </div>
           </motion.div>
           
-          {/* Main Hero Grid */}
-          <div className="grid lg:grid-cols-2 gap-6 items-center">
+          {/* Main Hero Content - Centered */}
+          <div className="max-w-2xl mx-auto">
             {/* Left Content */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="order-2 lg:order-1 text-center lg:text-left"
+              className="text-center"
             >
               {/* Logo */}
               <motion.img 
                 src={logo} 
                 alt="La'Couronne" 
-                className="h-24 sm:h-28 md:h-32 w-auto mx-auto lg:mx-0 mb-3"
+                className="h-24 sm:h-28 md:h-32 w-auto mx-auto mb-3"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 style={{ filter: 'drop-shadow(0 0 25px hsl(var(--primary) / 0.5))' }}
@@ -262,9 +262,9 @@ export function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="flex items-center justify-center lg:justify-start gap-2 mb-4"
+                className="flex items-center justify-center gap-2 mb-4"
               >
-              <span className="text-3xl font-display font-bold text-black">
+                <span className="text-3xl font-display font-bold text-black">
                   <AnimatedTypingNumber numbers={typingNumbers} />
                 </span>
                 <span className="text-black/80 text-sm font-medium">Happy Clients & Growing</span>
@@ -272,7 +272,7 @@ export function Home() {
               
               {/* Services Tags */}
               <motion.div 
-                className="flex flex-wrap justify-center lg:justify-start gap-2 mb-4"
+                className="flex flex-wrap justify-center gap-2 mb-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
@@ -296,7 +296,7 @@ export function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start"
+                className="flex flex-col sm:flex-row gap-3 justify-center"
               >
                 <Link to="/book">
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
@@ -316,52 +316,6 @@ export function Home() {
                   </motion.div>
                 </Link>
               </motion.div>
-            </motion.div>
-            
-            {/* Right - Hero Image */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="order-1 lg:order-2"
-            >
-              <div className="relative max-w-xs mx-auto lg:max-w-sm">
-                {/* Decorative ring */}
-                <motion.div
-                  className="absolute inset-0 rounded-2xl border-2 border-primary/20"
-                  style={{ transform: 'rotate(3deg) scale(1.02)' }}
-                  animate={{ rotate: [3, -3, 3] }}
-                  transition={{ duration: 6, repeat: Infinity }}
-                />
-                
-                {/* Main Image */}
-                <motion.div 
-                  className="relative rounded-2xl overflow-hidden border-2 border-primary/40 shadow-xl"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <img
-                    src={heroImage}
-                    alt="Beautiful Hair Art"
-                    className="w-full aspect-[4/5] object-cover"
-                  />
-                  
-                  {/* Badge */}
-                  <motion.div
-                    className="absolute bottom-3 left-3 right-3 z-20"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 }}
-                  >
-                    <div className="glass-card p-2 backdrop-blur-md flex items-center justify-between">
-                      <div>
-                        <p className="text-primary font-bold text-xs">Men & Women</p>
-                        <p className="text-foreground/60 text-[10px]">Professional Styling</p>
-                      </div>
-                      <Crown className="w-5 h-5 text-primary" />
-                    </div>
-                  </motion.div>
-                </motion.div>
-              </div>
             </motion.div>
           </div>
         </div>
