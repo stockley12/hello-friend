@@ -730,33 +730,54 @@ export function Home() {
           </motion.div>
 
           {/* Premium Men's Image Gallery - Mobile Horizontal Scroll */}
-          <div className="md:hidden overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-            <div className="flex gap-3" style={{ width: 'max-content' }}>
-              {menGalleryData.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="relative overflow-hidden rounded-xl shadow-lg flex-shrink-0"
-                  style={{ width: '160px' }}
-                >
-                  <div className="aspect-[3/4] overflow-hidden">
-                    <img
-                      src={item.img}
-                      alt={item.style}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3">
-                    <p className="text-white font-semibold text-sm">{item.style}</p>
-                    <p className="text-blue-400 text-xs">{item.highlight}</p>
-                  </div>
-                </motion.div>
-              ))}
+          <div className="md:hidden relative">
+            {/* Swipe hint */}
+            <motion.div 
+              className="flex items-center justify-center gap-2 mb-3 text-foreground/50 text-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <span>Swipe to explore</span>
+              <motion.div
+                animate={{ x: [0, 8, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+              >
+                <ArrowRight className="w-4 h-4" />
+              </motion.div>
+            </motion.div>
+            
+            <div className="overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+              <div className="flex gap-3" style={{ width: 'max-content' }}>
+                {menGalleryData.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="relative overflow-hidden rounded-xl shadow-lg flex-shrink-0"
+                    style={{ width: '160px' }}
+                  >
+                    <div className="aspect-[3/4] overflow-hidden">
+                      <img
+                        src={item.img}
+                        alt={item.style}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3">
+                      <p className="text-white font-semibold text-sm">{item.style}</p>
+                      <p className="text-blue-400 text-xs">{item.highlight}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
+            
+            {/* Right fade gradient indicator */}
+            <div className="absolute right-0 top-8 bottom-4 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none" />
           </div>
 
           {/* Premium Men's Image Gallery - Desktop Grid */}
