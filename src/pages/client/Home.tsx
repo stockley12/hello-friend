@@ -17,10 +17,25 @@ import gallery5 from '@/assets/gallery-5.jpg';
 import gallery6 from '@/assets/gallery-6.jpg';
 import gallery7 from '@/assets/gallery-7.jpg';
 import gallery8 from '@/assets/gallery-8.jpg';
+import menStyle1 from '@/assets/men-style-1.jpg';
+import menStyle2 from '@/assets/men-style-2.jpg';
+import menStyle3 from '@/assets/men-style-3.jpg';
+import menStyle4 from '@/assets/men-style-4.jpg';
+import menStyle5 from '@/assets/men-style-5.jpg';
+import menStyle6 from '@/assets/men-style-6.jpg';
 
 const galleryData = [
   { img: gallery1, category: 'women', style: 'Knotless Braids', featured: true },
   { img: gallery7, category: 'men', style: 'Cornrow Art', featured: true },
+];
+
+const menGalleryData = [
+  { img: menStyle1, style: 'Feed-In Braids', highlight: 'Gold Accents' },
+  { img: menStyle2, style: 'Stitch Braids', highlight: 'Clean Lines' },
+  { img: menStyle3, style: 'Box Braids', highlight: 'Freestyle' },
+  { img: menStyle4, style: 'Zig-Zag Design', highlight: 'Geometric' },
+  { img: menStyle5, style: 'Star Pattern', highlight: 'Artistic' },
+  { img: menStyle6, style: 'Pop Smoke', highlight: 'Iconic' },
 ];
 
 const formatPrice = (price: number) => `₺${price.toLocaleString('tr-TR')}`;
@@ -711,6 +726,201 @@ export function Home() {
                 </motion.div>
               </Link>
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Men's Exclusive Gallery Section */}
+      <section className="py-16 md:py-24 relative overflow-hidden bg-gradient-to-b from-background via-blue-950/5 to-background">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <motion.div 
+            className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"
+            animate={{ 
+              scale: [1, 1.3, 1],
+              x: [0, 50, 0],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div 
+            className="absolute bottom-20 right-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              y: [0, -30, 0],
+              opacity: [0.4, 0.6, 0.4]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Section Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              whileInView={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 200 }}
+              className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/30 to-primary/20 mb-4"
+            >
+              <Scissors className="w-10 h-10 text-blue-400" />
+            </motion.div>
+            <motion.h2 
+              className="font-display text-3xl md:text-5xl font-bold mb-3"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              Men's <span className="bg-gradient-to-r from-blue-400 via-primary to-blue-400 bg-clip-text text-transparent">Exclusive</span> Collection
+            </motion.h2>
+            <motion.p 
+              className="text-foreground/60 max-w-lg mx-auto"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Precision. Style. Art. Experience the finest men's braiding techniques.
+            </motion.p>
+          </motion.div>
+
+          {/* Premium Men's Gallery Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
+            {menGalleryData.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 50, rotateX: -15 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                viewport={{ once: true }}
+                transition={{ 
+                  delay: index * 0.12, 
+                  type: "spring", 
+                  stiffness: 80,
+                  damping: 15
+                }}
+                whileHover={{ 
+                  y: -10,
+                  transition: { duration: 0.3 }
+                }}
+                className={`group relative overflow-hidden rounded-2xl cursor-pointer ${
+                  index === 0 || index === 5 ? 'aspect-[4/5]' : 'aspect-square'
+                }`}
+              >
+                {/* Glowing Border Effect */}
+                <motion.div
+                  className="absolute inset-0 rounded-2xl z-30 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, #3b82f6 50%, hsl(var(--primary)) 100%)',
+                    padding: '3px'
+                  }}
+                >
+                  <div className="w-full h-full rounded-2xl bg-background/95" />
+                </motion.div>
+
+                {/* Main Image */}
+                <motion.img
+                  src={item.img}
+                  alt={item.style}
+                  className="absolute inset-0 w-full h-full object-cover z-10"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                />
+                
+                {/* Dark Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-20 opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
+                
+                {/* Top Badge */}
+                <motion.div
+                  className="absolute top-3 left-3 z-40"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 + 0.3 }}
+                >
+                  <span className="px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-blue-500/90 text-white backdrop-blur-md shadow-lg">
+                    {item.highlight}
+                  </span>
+                </motion.div>
+
+                {/* Number Badge */}
+                <motion.div
+                  className="absolute top-3 right-3 z-40"
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  transition={{ delay: index * 0.1 + 0.4, type: "spring" }}
+                >
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/90 text-primary-foreground text-sm font-bold backdrop-blur-md">
+                    0{index + 1}
+                  </span>
+                </motion.div>
+
+                {/* Bottom Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5 z-40">
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    transition={{ delay: index * 0.1 + 0.2 }}
+                    className="transform group-hover:-translate-y-2 transition-transform duration-500"
+                  >
+                    <h3 className="font-display text-lg md:text-xl font-bold text-white mb-1">
+                      {item.style}
+                    </h3>
+                    <div className="flex items-center gap-1 mb-3">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3 h-3 fill-primary text-primary" />
+                      ))}
+                      <span className="text-xs text-white/70 ml-1">Premium</span>
+                    </div>
+                    
+                    {/* Book Button - Appears on Hover */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      className="opacity-0 group-hover:opacity-100 transition-all duration-300"
+                    >
+                      <Link to="/book">
+                        <Button size="sm" className="rounded-full bg-blue-500 hover:bg-blue-600 text-white text-xs shadow-xl shadow-blue-500/30">
+                          Book This Style
+                          <ArrowRight className="ml-1 w-3 h-3" />
+                        </Button>
+                      </Link>
+                    </motion.div>
+                  </motion.div>
+                </div>
+
+                {/* Animated Shine Effect */}
+                <motion.div 
+                  className="absolute inset-0 z-30 pointer-events-none"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '200%' }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  style={{
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
+                    width: '50%'
+                  }}
+                />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Call to Action */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12 text-center"
+          >
+            <Link to="/book">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button className="rounded-full bg-gradient-to-r from-blue-500 via-primary to-blue-500 hover:from-blue-600 hover:via-primary hover:to-blue-600 text-white px-8 h-14 font-bold text-base shadow-xl shadow-blue-500/30">
+                  <Scissors className="mr-2 h-5 w-5" />
+                  Book Men's Style
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </motion.div>
+            </Link>
           </motion.div>
         </div>
       </section>
