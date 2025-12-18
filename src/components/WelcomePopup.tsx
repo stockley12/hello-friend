@@ -8,20 +8,15 @@ export function WelcomePopup() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Check if popup was shown in this session
-    const hasSeenPopup = sessionStorage.getItem('welcomePopupSeen');
-    if (!hasSeenPopup) {
-      // Show popup after a short delay for better UX
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
+    // Show popup after a short delay for better UX
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClose = () => {
     setIsOpen(false);
-    sessionStorage.setItem('welcomePopupSeen', 'true');
   };
 
   return (
