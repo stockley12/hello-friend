@@ -144,8 +144,8 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       
       {/* Footer */}
       <footer className="border-t border-primary/20 mt-auto bg-card">
-        <div className="container mx-auto px-4 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="container mx-auto px-4 py-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Brand */}
             <div className="md:col-span-2">
               <img 
@@ -216,7 +216,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
             </div>
           </div>
           
-          <div className="border-t border-primary/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="border-t border-primary/20 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-foreground/50">
               © {new Date().getFullYear()} La'Couronne. All rights reserved.
             </p>
