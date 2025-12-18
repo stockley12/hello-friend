@@ -250,12 +250,13 @@ export function Home() {
                 <span className="text-primary text-sm font-bold drop-shadow-lg">Happy Clients & Growing</span>
               </motion.div>
               
-              {/* Services Tags */}
+              {/* Services Tags - Positioned at top left */}
               <motion.div 
-                className="flex flex-wrap justify-start gap-2 mb-4"
+                className="absolute top-4 left-0 flex flex-wrap justify-start gap-2"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
+                style={{ marginTop: '-14rem' }}
               >
                 {['Hair Treatment', 'Home Service', 'Braids', 'Locs'].map((style, i) => (
                   <motion.span
