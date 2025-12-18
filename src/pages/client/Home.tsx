@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles, Heart, MapPin, Phone, Instagram, Crown, Scissors,
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
 import { VideoShowcase } from '@/components/VideoShowcase';
+import { MenGallery } from '@/components/MenGallery';
 import { useEffect, useState, useMemo } from 'react';
 
 // Import your images
@@ -724,125 +725,13 @@ export function Home() {
               whileInView={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Precision. Style. Art. Experience the finest men's braiding techniques.
+              Bold looks for the modern man. From clean cornrows to intricate designs.
             </motion.p>
           </motion.div>
 
-          {/* Premium Men's Gallery Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
-            {menGalleryData.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50, rotateX: -15 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  delay: index * 0.12, 
-                  type: "spring", 
-                  stiffness: 80,
-                  damping: 15
-                }}
-                whileHover={{ 
-                  y: -10,
-                  transition: { duration: 0.3 }
-                }}
-                className={`group relative overflow-hidden rounded-2xl cursor-pointer ${
-                  index === 0 || index === 5 ? 'aspect-[4/5]' : 'aspect-square'
-                }`}
-              >
-                {/* Glowing Border Effect */}
-                <motion.div
-                  className="absolute inset-0 rounded-2xl z-30 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{
-                    background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, #3b82f6 50%, hsl(var(--primary)) 100%)',
-                    padding: '3px'
-                  }}
-                >
-                  <div className="w-full h-full rounded-2xl bg-background/95" />
-                </motion.div>
-
-                {/* Main Image */}
-                <motion.img
-                  src={item.img}
-                  alt={item.style}
-                  className="absolute inset-0 w-full h-full object-cover z-10"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                />
-                
-                {/* Dark Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-20 opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
-                
-                {/* Top Badge */}
-                <motion.div
-                  className="absolute top-3 left-3 z-40"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 + 0.3 }}
-                >
-                  <span className="px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-blue-500/90 text-white backdrop-blur-md shadow-lg">
-                    {item.highlight}
-                  </span>
-                </motion.div>
-
-                {/* Number Badge */}
-                <motion.div
-                  className="absolute top-3 right-3 z-40"
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  transition={{ delay: index * 0.1 + 0.4, type: "spring" }}
-                >
-                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/90 text-primary-foreground text-sm font-bold backdrop-blur-md">
-                    0{index + 1}
-                  </span>
-                </motion.div>
-
-                {/* Bottom Content */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5 z-40">
-                  <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ delay: index * 0.1 + 0.2 }}
-                    className="transform group-hover:-translate-y-2 transition-transform duration-500"
-                  >
-                    <h3 className="font-display text-lg md:text-xl font-bold text-white mb-1">
-                      {item.style}
-                    </h3>
-                    <div className="flex items-center gap-1 mb-3">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-primary text-primary" />
-                      ))}
-                      <span className="text-xs text-white/70 ml-1">Premium</span>
-                    </div>
-                    
-                    {/* Book Button - Appears on Hover */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      className="opacity-0 group-hover:opacity-100 transition-all duration-300"
-                    >
-                      <Link to="/book">
-                        <Button size="sm" className="rounded-full bg-blue-500 hover:bg-blue-600 text-white text-xs shadow-xl shadow-blue-500/30">
-                          Book This Style
-                          <ArrowRight className="ml-1 w-3 h-3" />
-                        </Button>
-                      </Link>
-                    </motion.div>
-                  </motion.div>
-                </div>
-
-                {/* Animated Shine Effect */}
-                <motion.div 
-                  className="absolute inset-0 z-30 pointer-events-none"
-                  initial={{ x: '-100%' }}
-                  whileHover={{ x: '200%' }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  style={{
-                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
-                    width: '50%'
-                  }}
-                />
-              </motion.div>
-            ))}
+          {/* Premium Men's Video Gallery */}
+          <div className="max-w-6xl mx-auto">
+            <MenGallery />
           </div>
 
           {/* Call to Action */}
