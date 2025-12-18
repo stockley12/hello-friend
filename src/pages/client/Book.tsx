@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { BookingFormData } from '@/types';
-import bookHeroBg from '@/assets/book-hero-bg.jpg';
+import bookHeroBg from '@/assets/book-hero-bg.png';
 
 const steps = ['Your Details', 'Pick Date & Time'];
 
@@ -217,7 +217,8 @@ export function Book() {
           className="absolute inset-0 h-full w-full object-cover object-center"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+        {/* Lighter overlay so faces (especially mouth) stay visible */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent" />
         <div className="absolute bottom-8 left-0 right-0 text-center">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
