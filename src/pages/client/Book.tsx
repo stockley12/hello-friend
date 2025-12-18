@@ -210,24 +210,24 @@ export function Book() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[45vh] min-h-[320px] md:h-[50vh] md:min-h-[420px]">
+      <section className="relative h-[45vh] min-h-[320px] md:h-[50vh] md:min-h-[420px] overflow-hidden">
         <img
           src={bookHeroBg}
           alt="Braided hairstyles showcase - women and men"
-          className="absolute inset-0 h-full w-full object-cover object-[center_25%] md:object-[center_20%]"
+          className="absolute inset-0 h-full w-full object-cover object-[20%_25%] md:object-[25%_22%]"
           loading="eager"
         />
-        {/* Lighter overlay so faces (especially mouth) stay visible */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/55 via-background/10 to-transparent" />
+        {/* Light overlay for legibility without hiding faces */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-background/10 to-transparent" />
         <div className="absolute bottom-8 left-0 right-0 text-center">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }}
           >
-            <h1 className="font-display text-3xl md:text-4xl font-semibold text-white drop-shadow-lg mb-1">
+            <h1 className="font-display text-3xl md:text-4xl font-semibold text-foreground drop-shadow-lg mb-1">
               Book Your Session
             </h1>
-            <p className="text-white/90 drop-shadow">Transform your look with us</p>
+            <p className="text-foreground/80 drop-shadow">Transform your look with us</p>
           </motion.div>
         </div>
       </section>
