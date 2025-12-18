@@ -210,11 +210,11 @@ export function Book() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[55vh] md:h-[62vh]">
+      <section className="relative h-[50vh] md:h-[55vh]">
         <img
           src={bookHeroBg}
           alt="Braided hairstyles showcase - women and men"
-          className="absolute inset-0 h-full w-full object-cover object-[50%_15%]"
+          className="absolute inset-0 h-full w-full object-cover object-center"
           loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
