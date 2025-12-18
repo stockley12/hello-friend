@@ -7,7 +7,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import bookHeroBg from '@/assets/book-hero-bg.png';
+
+const bookHeroBg = '/book-hero-bg.png?v=2';
 
 const faqs = [
   {
