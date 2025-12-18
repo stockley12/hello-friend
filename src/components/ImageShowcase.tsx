@@ -41,45 +41,55 @@ export function ImageShowcase({ direction = 'right', className = '', videos }: I
   }, [videoList.length]);
 
   const slideVariants = {
-    enter: (dir: 'left' | 'right') => ({
-      x: dir === 'right' ? '100%' : '-100%',
+    enter: {
       opacity: 0,
-      scale: 0.95,
-    }),
+      scale: 1.2,
+      filter: 'blur(10px)',
+    },
     center: {
-      x: 0,
       opacity: 1,
       scale: 1,
+      filter: 'blur(0px)',
     },
-    exit: (dir: 'left' | 'right') => ({
-      x: dir === 'right' ? '-100%' : '100%',
+    exit: {
       opacity: 0,
-      scale: 0.95,
-    }),
+      scale: 0.9,
+      filter: 'blur(10px)',
+    },
   };
 
   return (
     <div className={`relative aspect-[4/5] rounded-3xl overflow-hidden ${className}`}>
-      {/* Glow effect */}
-      <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-full opacity-50" />
+      {/* Animated glow effect */}
+      <motion.div 
+        className="absolute -inset-4 bg-primary/30 blur-3xl rounded-full"
+        animate={{
+          opacity: [0.3, 0.6, 0.3],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
       
-      <div className="relative w-full h-full rounded-3xl overflow-hidden border border-primary/20">
-        <AnimatePresence mode="wait" custom={direction}>
+      <div className="relative w-full h-full rounded-3xl overflow-hidden border border-primary/30 shadow-2xl shadow-primary/20">
+        <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
-            custom={direction}
             variants={slideVariants}
             initial="enter"
             animate="center"
             exit="exit"
             transition={{
-              x: { type: 'spring', stiffness: 200, damping: 25 },
-              opacity: { duration: 0.5 },
-              scale: { duration: 0.5 },
+              duration: 1.2,
+              ease: [0.43, 0.13, 0.23, 0.96],
             }}
             className="absolute inset-0 w-full h-full"
           >
-            <video
+            {/* Ken Burns effect on video */}
+            <motion.video
               ref={videoRef}
               src={videoList[currentIndex]}
               autoPlay
@@ -87,26 +97,59 @@ export function ImageShowcase({ direction = 'right', className = '', videos }: I
               loop
               playsInline
               className="w-full h-full object-cover"
+              initial={{ scale: 1 }}
+              animate={{ scale: 1.1 }}
+              transition={{ duration: 8, ease: "linear" }}
             />
           </motion.div>
         </AnimatePresence>
 
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none" />
+        {/* Beautiful overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/10 to-transparent pointer-events-none" />
+        
+        {/* Shimmer effect */}
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none"
+          animate={{
+            x: ['-100%', '100%'],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            repeatDelay: 5,
+            ease: "easeInOut",
+          }}
+        />
 
-        {/* Progress dots */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+        {/* Animated progress bar */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 px-4">
           {videoList.map((_, i) => (
             <motion.button
               key={i}
               onClick={() => setCurrentIndex(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === currentIndex ? 'bg-primary w-6' : 'bg-foreground/30 w-2'
-              }`}
-              animate={{ scale: i === currentIndex ? 1.2 : 1 }}
-            />
+              className="flex-1 h-1.5 rounded-full overflow-hidden bg-foreground/20 backdrop-blur-sm min-w-[20px]"
+              whileHover={{ scale: 1.1 }}
+            >
+              <motion.div
+                className="h-full bg-gradient-to-r from-primary to-primary/80 rounded-full"
+                initial={{ width: '0%' }}
+                animate={{ 
+                  width: i === currentIndex ? '100%' : i < currentIndex ? '100%' : '0%'
+                }}
+                transition={{ 
+                  duration: i === currentIndex ? 8 : 0.3,
+                  ease: i === currentIndex ? 'linear' : 'easeOut'
+                }}
+              />
+            </motion.button>
           ))}
         </div>
+        
+        {/* Corner accents */}
+        <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-primary/50 rounded-tl-lg" />
+        <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-primary/50 rounded-tr-lg" />
+        <div className="absolute bottom-16 left-4 w-8 h-8 border-l-2 border-b-2 border-primary/50 rounded-bl-lg" />
+        <div className="absolute bottom-16 right-4 w-8 h-8 border-r-2 border-b-2 border-primary/50 rounded-br-lg" />
       </div>
     </div>
   );
