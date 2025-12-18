@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, isSameDay, parseISO } from 'date-fns';
@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { BookingFormData } from '@/types';
 import bookHeroBg from '@/assets/book-hero-bg.jpg';
+import bookHeroWomen from '@/assets/cornrows-woman.jpg';
+import bookHeroMen from '@/assets/men-style-1.jpg';
 
 const steps = ['Your Details', 'Pick Date & Time'];
 
@@ -34,6 +36,33 @@ export function Book() {
   });
   const [bookingComplete, setBookingComplete] = useState(false);
   const [createdBookingId, setCreatedBookingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const salonName = settings?.name || "La'Couronne";
+
+    // Title tag (keep under ~60 chars)
+    document.title = `Book Braids Appointment | ${salonName}`;
+
+    // Meta description
+    const description = `Book your braids appointment with ${salonName}. Choose your date and time and confirm quickly via WhatsApp.`;
+    let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'description');
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', description);
+
+    // Canonical
+    const canonicalUrl = `${window.location.origin}/book`;
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', canonicalUrl);
+  }, [settings?.name]);
   
   // Get available slots for selected date
   const availableSlots = useMemo(() => {
@@ -183,22 +212,36 @@ export function Book() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[50vh] md:h-[55vh]">
-        <img
-          src={bookHeroBg}
-          alt="Braided hairstyles showcase"
-          className="absolute inset-0 h-full w-full object-cover object-top"
-        />
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
-        <div className="absolute bottom-8 left-0 right-0 text-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <h1 className="font-display text-3xl md:text-4xl font-semibold text-white drop-shadow-lg mb-1">
+      <section className="relative h-[50vh] md:h-[55vh] overflow-hidden">
+        <div className="absolute inset-0 grid grid-cols-2">
+          <div className="relative bg-foreground/5">
+            <img
+              src={bookHeroWomen}
+              alt="Women's cornrows braids hairstyle"
+              className="h-full w-full object-contain object-center"
+              loading="eager"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-background/10" />
+          </div>
+          <div className="relative bg-foreground/5">
+            <img
+              src={bookHeroMen}
+              alt="Men's braids hairstyle"
+              className="h-full w-full object-contain object-center"
+              loading="eager"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-background/10" />
+          </div>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-background via-background/70 to-transparent" />
+
+        <div className="absolute bottom-10 left-0 right-0 text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <h1 className="font-display text-3xl md:text-4xl font-semibold text-foreground drop-shadow-lg mb-1">
               Book Your Session
             </h1>
-            <p className="text-white/90 drop-shadow">Transform your look with us</p>
+            <p className="text-foreground/80 drop-shadow">Transform your look with us</p>
           </motion.div>
         </div>
       </section>
