@@ -210,20 +210,18 @@ export function Book() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[45vh] min-h-[320px] md:h-[50vh] md:min-h-[420px] overflow-hidden">
-        <img
-          src={bookHeroBg}
-          alt="Braided hairstyles showcase - women and men"
-          className="absolute inset-0 h-full w-full object-cover object-[20%_25%] md:object-[25%_22%]"
-          loading="eager"
-        />
+      <section
+        className="relative h-[45vh] min-h-[320px] md:h-[50vh] md:min-h-[420px] overflow-hidden bg-cover bg-no-repeat"
+        style={{ backgroundImage: `url(${bookHeroBg})`, backgroundPosition: '20% 25%' }}
+      >
+        {/* Keep an accessible image description while using CSS background for reliability */}
+        <img src={bookHeroBg} alt="Braided hairstyles showcase - women and men" className="sr-only" />
+
         {/* Light overlay for legibility without hiding faces */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-background/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/25 via-background/10 to-transparent" />
+
         <div className="absolute bottom-8 left-0 right-0 text-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="font-display text-3xl md:text-4xl font-semibold text-foreground drop-shadow-lg mb-1">
               Book Your Session
             </h1>
