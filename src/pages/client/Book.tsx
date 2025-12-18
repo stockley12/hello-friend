@@ -1,30 +1,28 @@
 import { useState, useMemo } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { format } from 'date-fns';
-import { Check, ChevronLeft, ChevronRight, MessageCircle, Sparkles } from 'lucide-react';
+import { format, isSameDay, parseISO } from 'date-fns';
+import { Check, ChevronLeft, ChevronRight, MessageCircle, Sparkles, Calendar as CalendarIcon, Clock, AlertCircle } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
-import { useAvailability } from '@/hooks/useAvailability';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { BookingFormData } from '@/types';
 
-const steps = ['Choose Service', 'Pick Date & Time', 'Your Details'];
+const steps = ['Pick Date & Time', 'Your Details'];
 
-
+// Available time slots (8am, 12pm, 4pm - each appointment is 4 hours)
+const TIME_SLOTS = ['08:00', '12:00', '16:00'];
+const MAX_APPOINTMENTS_PER_DAY = 3;
 
 export function Book() {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { services, addBooking, addClient, clients, generateWhatsAppLink, getServiceById } = useSalon();
-  
-  const preSelectedService = searchParams.get('service');
+  const { bookings, addBooking, addClient, clients, generateWhatsAppLink, settings } = useSalon();
   
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<BookingFormData>({
-    services: preSelectedService ? [preSelectedService] : [],
+    services: [],
     staffId: undefined,
     date: '',
     time: '',
@@ -36,30 +34,38 @@ export function Book() {
   const [bookingComplete, setBookingComplete] = useState(false);
   const [createdBookingId, setCreatedBookingId] = useState<string | null>(null);
   
-  const availableSlots = useAvailability(formData.date, formData.staffId, formData.services);
+  // Get available slots for selected date
+  const availableSlots = useMemo(() => {
+    if (!formData.date) return [];
+    
+    const selectedDate = parseISO(formData.date);
+    
+    // Get bookings for the selected date
+    const dayBookings = bookings.filter(booking => {
+      const bookingDate = parseISO(booking.date);
+      return isSameDay(bookingDate, selectedDate);
+    });
+    
+    // Get booked times for that day
+    const bookedTimes = dayBookings.map(b => b.startTime);
+    
+    // Filter out booked slots
+    return TIME_SLOTS.filter(slot => !bookedTimes.includes(slot));
+  }, [formData.date, bookings]);
   
-  const totalDuration = useMemo(() => {
-    return formData.services.reduce((acc, id) => {
-      const service = services.find(s => s.id === id);
-      return acc + (service?.durationMin || 0);
-    }, 0);
-  }, [formData.services, services]);
-  
-  
-  const activeServices = services.filter(s => s.active);
-  
-  const handleServiceSelect = (serviceId: string) => {
-    setFormData(prev => ({
-      ...prev,
-      services: [serviceId], // Single service selection for simplicity
-    }));
+  // Check if day is fully booked
+  const isDayFullyBooked = (date: Date) => {
+    const dayBookings = bookings.filter(booking => {
+      const bookingDate = parseISO(booking.date);
+      return isSameDay(bookingDate, date);
+    });
+    return dayBookings.length >= MAX_APPOINTMENTS_PER_DAY;
   };
   
   const canProceed = () => {
     switch (currentStep) {
-      case 0: return formData.services.length > 0;
-      case 1: return formData.date && formData.time;
-      case 2: return formData.clientName && formData.clientPhone;
+      case 0: return formData.date && formData.time;
+      case 1: return formData.clientName && formData.clientPhone;
       default: return false;
     }
   };
@@ -85,14 +91,15 @@ export function Book() {
       }) as any;
     }
     
+    // Each appointment is 4 hours
     const [hours, minutes] = formData.time.split(':').map(Number);
-    const endMinutes = hours * 60 + minutes + totalDuration;
+    const endMinutes = hours * 60 + minutes + 240; // 4 hours = 240 minutes
     const endTime = `${Math.floor(endMinutes / 60).toString().padStart(2, '0')}:${(endMinutes % 60).toString().padStart(2, '0')}`;
     
     const booking = addBooking({
       clientId: client!.id,
       staffId: formData.staffId,
-      services: formData.services,
+      services: [],
       date: formData.date,
       startTime: formData.time,
       endTime,
@@ -108,7 +115,7 @@ export function Book() {
     id: createdBookingId,
     clientId: clients.find(c => c.phone === formData.clientPhone)?.id || '',
     staffId: formData.staffId,
-    services: formData.services,
+    services: [],
     date: formData.date,
     startTime: formData.time,
     endTime: '',
@@ -138,12 +145,12 @@ export function Book() {
             
             <div className="glass-card rounded-2xl p-8 mb-8 text-left space-y-4">
               <div>
-                <p className="text-muted-foreground text-sm">Service</p>
-                <p className="font-medium text-foreground">{formData.services.map(id => getServiceById(id)?.name).join(', ')}</p>
-              </div>
-              <div>
                 <p className="text-muted-foreground text-sm">Date & Time</p>
                 <p className="font-medium text-foreground">{format(new Date(formData.date), 'EEEE, d MMMM yyyy')} at {formData.time}</p>
+              </div>
+              <div>
+                <p className="text-muted-foreground text-sm">Duration</p>
+                <p className="font-medium text-foreground">4 hours</p>
               </div>
             </div>
             
@@ -201,46 +208,29 @@ export function Book() {
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Step 1: Services */}
+            {/* Step 1: Date & Time */}
             {currentStep === 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {activeServices.map(service => (
-                  <motion.div
-                    key={service.id}
-                    whileHover={{ y: -4 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleServiceSelect(service.id)}
-                    className={`glass-card rounded-2xl p-6 cursor-pointer transition-all duration-300 ${
-                      formData.services.includes(service.id) 
-                        ? 'ring-2 ring-primary glow-gold' 
-                        : 'hover:shadow-lg'
-                    }`}
-                  >
-                    <div className="flex flex-col h-full">
-                      <span className="text-xs font-medium tracking-wide text-primary uppercase mb-2">
-                        {service.category}
-                      </span>
-                      <h3 className="font-display text-xl font-medium mb-2 text-foreground">{service.name}</h3>
-                      <p className="text-muted-foreground text-sm flex-1 mb-4">{service.description}</p>
-                      <div className="flex items-center justify-end pt-4 border-t border-foreground/10">
-                        <span className="text-muted-foreground text-sm">{service.durationMin} min</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            )}
-            
-            {/* Step 2: Date & Time */}
-            {currentStep === 1 && (
               <div className="space-y-8">
+                {/* Info Banner */}
+                <div className="glass-card rounded-xl p-4 flex items-start gap-3 bg-primary/5 border-primary/20">
+                  <Clock className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <div className="text-sm">
+                    <p className="font-medium text-foreground mb-1">Booking Information</p>
+                    <p className="text-muted-foreground">Each session is 4 hours. We accept maximum 3 appointments per day. Sessions start at 8:00 AM, 12:00 PM, or 4:00 PM.</p>
+                  </div>
+                </div>
+                
                 <div className="flex justify-center">
                   <div className="glass-card rounded-2xl p-4">
                     <Calendar
                       mode="single"
                       selected={formData.date ? new Date(formData.date) : undefined}
                       onSelect={(date) => date && setFormData(p => ({ ...p, date: format(date, 'yyyy-MM-dd'), time: '' }))}
-                      disabled={(date) => date < new Date() || date.getDay() === 0}
+                      disabled={(date) => {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        return date < today || date.getDay() === 0 || isDayFullyBooked(date);
+                      }}
                       className="rounded-xl"
                     />
                   </div>
@@ -252,20 +242,19 @@ export function Book() {
                     animate={{ opacity: 1, y: 0 }}
                   >
                     <h3 className="font-display text-xl font-medium mb-4 text-center text-foreground">Available Times</h3>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
                       {availableSlots.map(slot => (
                         <Button
-                          key={slot.time}
-                          variant={formData.time === slot.time ? 'default' : 'outline'}
-                          disabled={!slot.available}
-                          onClick={() => setFormData(p => ({ ...p, time: slot.time }))}
-                          className={`h-12 rounded-full font-medium ${
-                            formData.time === slot.time 
+                          key={slot}
+                          variant={formData.time === slot ? 'default' : 'outline'}
+                          onClick={() => setFormData(p => ({ ...p, time: slot }))}
+                          className={`h-16 rounded-xl font-medium text-lg ${
+                            formData.time === slot 
                               ? 'btn-premium' 
                               : 'border-foreground/20 hover:border-primary hover:text-primary'
                           }`}
                         >
-                          {slot.time}
+                          {slot}
                         </Button>
                       ))}
                     </div>
@@ -273,13 +262,22 @@ export function Book() {
                 )}
                 
                 {formData.date && availableSlots.length === 0 && (
-                  <p className="text-center text-muted-foreground">No available slots for this date. Please try another day.</p>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center"
+                  >
+                    <div className="glass-card rounded-xl p-6 bg-destructive/10 border-destructive/20 inline-flex items-center gap-3">
+                      <AlertCircle className="w-6 h-6 text-destructive" />
+                      <p className="text-foreground font-medium">This day is fully booked. Please select another date.</p>
+                    </div>
+                  </motion.div>
                 )}
               </div>
             )}
             
-            {/* Step 3: Details */}
-            {currentStep === 2 && (
+            {/* Step 2: Details */}
+            {currentStep === 1 && (
               <div className="glass-card rounded-2xl p-8 space-y-6">
                 <div>
                   <Label className="text-foreground font-medium">Your Name *</Label>
@@ -314,16 +312,16 @@ export function Book() {
                 {/* Summary */}
                 <div className="pt-6 mt-6 border-t border-foreground/10 space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Service</span>
-                    <span className="font-medium text-foreground">{formData.services.map(id => getServiceById(id)?.name).join(', ')}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Date</span>
                     <span className="font-medium text-foreground">{format(new Date(formData.date), 'EEE, d MMM yyyy')}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Time</span>
                     <span className="font-medium text-foreground">{formData.time}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Duration</span>
+                    <span className="font-medium text-foreground">4 hours</span>
                   </div>
                 </div>
               </div>
