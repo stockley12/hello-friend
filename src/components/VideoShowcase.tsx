@@ -98,7 +98,7 @@ export function VideoShowcase() {
   };
 
   return (
-    <section className="py-16 md:py-20 relative overflow-hidden">
+    <section className="py-10 md:py-12 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0">
         <motion.div
@@ -124,7 +124,7 @@ export function VideoShowcase() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-10"
+          className="text-center mb-6"
         >
           <motion.div
             initial={{ scale: 0 }}

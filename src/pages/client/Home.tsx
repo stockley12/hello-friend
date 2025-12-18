@@ -184,7 +184,7 @@ export function Home() {
       
       {/* Hero Section */}
       <section 
-        className="relative py-16 md:py-24 lg:py-32 overflow-hidden min-h-[70vh]"
+        className="relative py-10 md:py-16 lg:py-20 overflow-hidden min-h-[60vh]"
         style={{
           backgroundImage: `url('/home-hero-bg.png?v=2')`,
           backgroundSize: 'cover',
@@ -250,7 +250,7 @@ export function Home() {
           </motion.div>
           
           {/* Main Hero Content - Left aligned, positioned lower */}
-          <div className="max-w-2xl pt-60 md:pt-72 lg:pt-80">
+          <div className="max-w-2xl pt-48 md:pt-56 lg:pt-64">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -306,13 +306,13 @@ export function Home() {
       <VideoShowcase />
 
       {/* Men & Women Services Section */}
-      <section className="py-12 md:py-16 relative">
+      <section className="py-8 md:py-10 relative">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-10"
+            className="text-center mb-6"
           >
             <div className="inline-flex items-center gap-2 mb-3">
               <Users className="w-5 h-5 text-primary" />
@@ -323,16 +323,16 @@ export function Home() {
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
             {/* Women's Services */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
-              className="glass-card p-6 rounded-2xl border border-primary/20"
+              className="glass-card p-4 rounded-2xl border border-primary/20"
             >
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 mb-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-primary flex items-center justify-center">
                   <Crown className="w-6 h-6 text-primary-foreground" />
                 </div>
@@ -363,9 +363,9 @@ export function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
-              className="glass-card p-6 rounded-2xl border border-primary/20"
+              className="glass-card p-4 rounded-2xl border border-primary/20"
             >
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 mb-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-primary flex items-center justify-center">
                   <Scissors className="w-6 h-6 text-primary-foreground" />
                 </div>
@@ -394,7 +394,7 @@ export function Home() {
       </section>
 
       {/* Home Services Section */}
-      <section className="py-12 md:py-16 relative bg-primary/5">
+      <section className="py-8 md:py-10 relative bg-primary/5">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -456,13 +456,13 @@ export function Home() {
       </section>
 
       {/* Hair Treatment Section */}
-      <section className="py-12 md:py-16 relative">
+      <section className="py-8 md:py-10 relative">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-8"
+            className="text-center mb-5"
           >
             <div className="inline-flex items-center gap-2 mb-3">
               <Heart className="w-5 h-5 text-primary" />
@@ -473,7 +473,7 @@ export function Home() {
             </h2>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto mb-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 max-w-5xl mx-auto mb-6">
             {[
               { icon: Sparkles, title: 'Deep Conditioning', desc: 'Restore moisture & shine' },
               { icon: Heart, title: 'Scalp Treatment', desc: 'Healthy scalp, healthy hair' },
@@ -516,7 +516,7 @@ export function Home() {
       </section>
 
       {/* Gallery Section - Premium Design */}
-      <section className="py-16 md:py-24 relative overflow-hidden">
+      <section className="py-10 md:py-14 relative overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
@@ -529,7 +529,7 @@ export function Home() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-8"
           >
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
@@ -648,7 +648,7 @@ export function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-12 text-center"
+            className="mt-8 text-center"
           >
             <div className="inline-flex items-center gap-4 flex-wrap justify-center">
               <a href={`https://instagram.com/${settings.instagramHandle}`} target="_blank" rel="noopener noreferrer">
@@ -674,7 +674,7 @@ export function Home() {
       </section>
 
       {/* Men's Exclusive Gallery Section */}
-      <section className="py-16 md:py-24 relative overflow-hidden bg-gradient-to-b from-background via-blue-950/5 to-background">
+      <section className="py-10 md:py-14 relative overflow-hidden bg-gradient-to-b from-background via-blue-950/5 to-background">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <motion.div 
@@ -853,7 +853,7 @@ export function Home() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-12 text-center"
+            className="mt-8 text-center"
           >
             <Link to="/book">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -869,7 +869,7 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 md:py-16 relative bg-gradient-to-b from-primary/10 to-background">
+      <section className="py-8 md:py-10 relative bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
