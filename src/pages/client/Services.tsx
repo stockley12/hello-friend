@@ -191,7 +191,7 @@ export function Services() {
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-2"
             >
-              <ImageShowcase direction="left" />
+              <ImageShowcase direction="left" videos={['/videos/men-1.mp4', '/videos/men-2.mp4', '/videos/men-3.mp4', '/videos/men-4.mp4', '/videos/men-5.mp4', '/videos/men-6.mp4', '/videos/men-7.mp4', '/videos/men-8.mp4', '/videos/men-9.mp4']} />
             </motion.div>
           </div>
         </div>
