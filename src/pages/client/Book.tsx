@@ -10,8 +10,6 @@ import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { BookingFormData } from '@/types';
 import bookHeroBg from '@/assets/book-hero-bg.jpg';
-import bookHeroWomen from '@/assets/cornrows-woman.jpg';
-import bookHeroMen from '@/assets/men-style-1.jpg';
 
 const steps = ['Your Details', 'Pick Date & Time'];
 
@@ -212,36 +210,23 @@ export function Book() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[50vh] md:h-[55vh] overflow-hidden">
-        <div className="absolute inset-0 grid grid-cols-2">
-          <div className="relative bg-foreground/5">
-            <img
-              src={bookHeroWomen}
-              alt="Women's cornrows braids hairstyle"
-              className="h-full w-full object-contain object-center"
-              loading="eager"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-background/10" />
-          </div>
-          <div className="relative bg-foreground/5">
-            <img
-              src={bookHeroMen}
-              alt="Men's braids hairstyle"
-              className="h-full w-full object-contain object-center"
-              loading="eager"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-background/10" />
-          </div>
-        </div>
-
-        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-background via-background/70 to-transparent" />
-
-        <div className="absolute bottom-10 left-0 right-0 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="font-display text-3xl md:text-4xl font-semibold text-foreground drop-shadow-lg mb-1">
+      <section className="relative h-[50vh] md:h-[55vh]">
+        <img
+          src={bookHeroBg}
+          alt="Braided hairstyles showcase - women and men"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+        <div className="absolute bottom-8 left-0 right-0 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h1 className="font-display text-3xl md:text-4xl font-semibold text-white drop-shadow-lg mb-1">
               Book Your Session
             </h1>
-            <p className="text-foreground/80 drop-shadow">Transform your look with us</p>
+            <p className="text-white/90 drop-shadow">Transform your look with us</p>
           </motion.div>
         </div>
       </section>
