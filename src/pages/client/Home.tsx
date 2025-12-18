@@ -286,14 +286,6 @@ export function Home() {
                     </Button>
                   </motion.div>
                 </Link>
-                <Link to="/services">
-                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                    <Button variant="outline" size="lg" className="h-11 px-6 text-sm rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold w-full sm:w-auto">
-                      <HomeIcon className="mr-2 h-4 w-4" />
-                      Home Services
-                    </Button>
-                  </motion.div>
-                </Link>
               </motion.div>
               
               {/* Typewriter Heading - Below buttons */}
