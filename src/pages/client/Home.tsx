@@ -237,16 +237,6 @@ export function Home() {
               transition={{ duration: 0.8 }}
               className="text-left"
             >
-              {/* Typewriter Heading */}
-              <motion.h1 
-                className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 leading-tight min-h-[2.5em]"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                <TypewriterText texts={typewriterTexts} speed={80} />
-              </motion.h1>
-              
               {/* Dynamic Stats with Typing Effect */}
               <motion.div
                 initial={{ opacity: 0 }}
@@ -286,7 +276,7 @@ export function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                className="flex flex-col sm:flex-row gap-3 justify-start"
+                className="flex flex-col sm:flex-row gap-3 justify-start mb-4"
               >
                 <Link to="/book">
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
@@ -306,6 +296,16 @@ export function Home() {
                   </motion.div>
                 </Link>
               </motion.div>
+              
+              {/* Typewriter Heading - Below buttons */}
+              <motion.h1 
+                className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight min-h-[2.5em]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <TypewriterText texts={typewriterTexts} speed={80} />
+              </motion.h1>
             </motion.div>
           </div>
         </div>
