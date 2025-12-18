@@ -1,16 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import gallery1 from '@/assets/gallery-1.jpg';
-import gallery2 from '@/assets/gallery-2.jpg';
-import gallery3 from '@/assets/gallery-3.jpg';
-import gallery4 from '@/assets/gallery-4.jpg';
-import gallery5 from '@/assets/gallery-5.jpg';
-import gallery6 from '@/assets/gallery-6.jpg';
-import gallery7 from '@/assets/gallery-7.jpg';
-import gallery8 from '@/assets/gallery-8.jpg';
-
-const images = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery6, gallery7, gallery8];
+const videos = [
+  '/videos/showcase-hair.mp4',
+  '/videos/showcase-6.mp4',
+  '/videos/showcase-7.mp4',
+];
 
 interface ImageShowcaseProps {
   direction?: 'left' | 'right';
@@ -19,11 +14,12 @@ interface ImageShowcaseProps {
 
 export function ImageShowcase({ direction = 'right', className = '' }: ImageShowcaseProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
+      setCurrentIndex((prev) => (prev + 1) % videos.length);
+    }, 6000); // Change video every 6 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -31,7 +27,7 @@ export function ImageShowcase({ direction = 'right', className = '' }: ImageShow
     enter: (dir: 'left' | 'right') => ({
       x: dir === 'right' ? '100%' : '-100%',
       opacity: 0,
-      scale: 0.9,
+      scale: 0.95,
     }),
     center: {
       x: 0,
@@ -41,7 +37,7 @@ export function ImageShowcase({ direction = 'right', className = '' }: ImageShow
     exit: (dir: 'left' | 'right') => ({
       x: dir === 'right' ? '-100%' : '100%',
       opacity: 0,
-      scale: 0.9,
+      scale: 0.95,
     }),
   };
 
@@ -52,22 +48,30 @@ export function ImageShowcase({ direction = 'right', className = '' }: ImageShow
       
       <div className="relative w-full h-full rounded-3xl overflow-hidden border border-primary/20">
         <AnimatePresence mode="wait" custom={direction}>
-          <motion.img
+          <motion.div
             key={currentIndex}
-            src={images[currentIndex]}
-            alt="Hair styling showcase"
             custom={direction}
             variants={slideVariants}
             initial="enter"
             animate="center"
             exit="exit"
             transition={{
-              x: { type: 'spring', stiffness: 300, damping: 30 },
-              opacity: { duration: 0.4 },
-              scale: { duration: 0.4 },
+              x: { type: 'spring', stiffness: 200, damping: 25 },
+              opacity: { duration: 0.5 },
+              scale: { duration: 0.5 },
             }}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+            className="absolute inset-0 w-full h-full"
+          >
+            <video
+              ref={videoRef}
+              src={videos[currentIndex]}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
         </AnimatePresence>
 
         {/* Overlay gradient */}
@@ -75,11 +79,12 @@ export function ImageShowcase({ direction = 'right', className = '' }: ImageShow
 
         {/* Progress dots */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-          {images.map((_, i) => (
-            <motion.div
+          {videos.map((_, i) => (
+            <motion.button
               key={i}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                i === currentIndex ? 'bg-primary w-6' : 'bg-foreground/30'
+              onClick={() => setCurrentIndex(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === currentIndex ? 'bg-primary w-6' : 'bg-foreground/30 w-2'
               }`}
               animate={{ scale: i === currentIndex ? 1.2 : 1 }}
             />
