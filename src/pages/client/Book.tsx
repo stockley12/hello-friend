@@ -136,7 +136,7 @@ export function Book() {
           style={{ backgroundImage: `url(${bookHeroBg})` }}
         />
         {/* Dark overlay for readability */}
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-[3px]" />
+        <div className="fixed inset-0 bg-background/50 backdrop-blur-[2px]" />
         
         <div className="container mx-auto px-4 max-w-lg relative z-10">
           <motion.div
@@ -187,7 +187,7 @@ export function Book() {
         style={{ backgroundImage: `url(${bookHeroBg})` }}
       />
       {/* Dark overlay for readability */}
-      <div className="fixed inset-0 bg-background/80 backdrop-blur-[3px]" />
+      <div className="fixed inset-0 bg-background/50 backdrop-blur-[2px]" />
       
       <div className="container mx-auto px-4 max-w-2xl relative z-10">
         {/* Header */}
