@@ -184,7 +184,7 @@ export function Home() {
       
       {/* Hero Section */}
       <section 
-        className="relative py-10 md:py-16 lg:py-20 overflow-hidden min-h-[60vh]"
+        className="relative py-6 md:py-12 lg:py-16 overflow-hidden min-h-[50vh] md:min-h-[60vh]"
         style={{
           backgroundImage: `url('/home-hero-bg.png?v=2')`,
           backgroundSize: 'cover',
@@ -201,12 +201,12 @@ export function Home() {
           />
         </div>
         
-        <div className="container mx-auto px-4 relative z-10">
-          {/* Top Location Bar - Fixed at top */}
+        <div className="container mx-auto px-3 md:px-4 relative z-10">
+          {/* Top Location Bar - Hidden on mobile, shown on tablet+ */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute top-4 left-1/2 -translate-x-1/2 flex flex-wrap items-center justify-center gap-3"
+            className="hidden md:flex absolute top-4 left-1/2 -translate-x-1/2 flex-wrap items-center justify-center gap-3"
           >
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/20 backdrop-blur-sm border border-black/10">
               <MapPin className="w-4 h-4 text-black" />
@@ -228,12 +228,12 @@ export function Home() {
             </div>
           </motion.div>
 
-          {/* Hero Service Tags - positioned to keep smiles visible */}
+          {/* Hero Service Tags - Responsive positioning */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="absolute left-4 top-10 md:top-12 flex flex-row gap-2"
+            className="absolute left-3 md:left-4 top-2 md:top-12 flex flex-wrap gap-1.5 md:gap-2 max-w-[200px] md:max-w-none"
           >
             {['Hair Treatment', 'Braids', 'Locs'].map((style, i) => (
               <motion.span
@@ -242,18 +242,18 @@ export function Home() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.7 + i * 0.08 }}
                 whileHover={{ scale: 1.05 }}
-                className="px-4 py-1.5 text-xs font-semibold rounded-full bg-background text-primary border-2 border-primary"
+                className="px-2.5 md:px-4 py-1 md:py-1.5 text-[10px] md:text-xs font-semibold rounded-full bg-background text-primary border border-primary md:border-2"
               >
                 {style}
               </motion.span>
             ))}
           </motion.div>
           
-          {/* Main Hero Content - Left aligned, positioned lower */}
-          <div className="max-w-2xl pt-48 md:pt-56 lg:pt-64">
+          {/* Main Hero Content - Responsive positioning */}
+          <div className="max-w-2xl pt-32 md:pt-48 lg:pt-56">
             {/* Left Content */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               className="text-left relative"
@@ -263,23 +263,23 @@ export function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="flex items-center justify-start gap-2 mb-4"
+                className="flex items-center justify-start gap-2 mb-3 md:mb-4"
               >
-                <span className="text-3xl font-display font-bold text-primary drop-shadow-lg">
+                <span className="text-2xl md:text-3xl font-display font-bold text-primary drop-shadow-lg">
                   <AnimatedTypingNumber numbers={typingNumbers} />
                 </span>
-                <span className="text-primary text-sm font-bold drop-shadow-lg">Happy Clients & Growing</span>
+                <span className="text-primary text-xs md:text-sm font-bold drop-shadow-lg">Happy Clients & Growing</span>
               </motion.div>
               {/* CTA Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                className="flex flex-col sm:flex-row gap-3 justify-start mb-4"
+                className="flex flex-col gap-2 md:gap-3 justify-start mb-3 md:mb-4"
               >
                 <Link to="/book">
-                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                    <Button size="lg" className="btn-premium h-11 px-6 text-sm font-bold rounded-full group w-full sm:w-auto">
+                  <motion.div whileTap={{ scale: 0.97 }}>
+                    <Button size="lg" className="btn-premium h-12 md:h-11 px-5 md:px-6 text-sm font-bold rounded-full group w-full">
                       <Sparkles className="mr-2 h-4 w-4" />
                       Book Hair Treatment
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -290,7 +290,7 @@ export function Home() {
               
               {/* Typewriter Heading - Below buttons */}
               <motion.h1 
-                className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight min-h-[2.5em]"
+                className="font-display text-xl md:text-2xl lg:text-4xl font-bold leading-tight min-h-[2em] md:min-h-[2.5em]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -306,51 +306,50 @@ export function Home() {
       <VideoShowcase />
 
       {/* Men & Women Services Section */}
-      <section className="py-8 md:py-10 relative">
-        <div className="container mx-auto px-4">
+      <section className="py-6 md:py-8 relative">
+        <div className="container mx-auto px-3 md:px-4">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-6"
+            className="text-center mb-4 md:mb-6"
           >
-            <div className="inline-flex items-center gap-2 mb-3">
-              <Users className="w-5 h-5 text-primary" />
-              <span className="text-primary text-sm font-bold tracking-wider uppercase">For Everyone</span>
+            <div className="inline-flex items-center gap-2 mb-2">
+              <Users className="w-4 md:w-5 h-4 md:h-5 text-primary" />
+              <span className="text-primary text-xs md:text-sm font-bold tracking-wider uppercase">For Everyone</span>
             </div>
-            <h2 className="font-display text-2xl md:text-4xl font-bold">
+            <h2 className="font-display text-xl md:text-3xl font-bold">
               <span className="text-gradient-gold">Men</span> & <span className="text-gradient-gold">Women</span> Services
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 gap-3 md:gap-4 max-w-4xl mx-auto">
             {/* Women's Services */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              whileHover={{ y: -5 }}
-              className="glass-card p-4 rounded-2xl border border-primary/20"
+              className="glass-card p-3 md:p-4 rounded-xl md:rounded-2xl border border-primary/20"
             >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-primary flex items-center justify-center">
-                  <Crown className="w-6 h-6 text-primary-foreground" />
+              <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                <div className="w-8 md:w-12 h-8 md:h-12 rounded-full bg-gradient-to-br from-pink-500 to-primary flex items-center justify-center">
+                  <Crown className="w-4 md:w-6 h-4 md:h-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-display text-xl font-bold text-foreground">Women's Styles</h3>
-                  <p className="text-foreground/60 text-sm">Elegant & Beautiful</p>
+                  <h3 className="font-display text-sm md:text-xl font-bold text-foreground">Women's</h3>
+                  <p className="text-foreground/60 text-[10px] md:text-sm hidden md:block">Elegant & Beautiful</p>
                 </div>
               </div>
-              <ul className="space-y-2">
-                {['Knotless Braids', 'Cornrows', 'Faux Locs', 'Twists', 'Goddess Locs', 'Hair Treatment'].map((service, i) => (
+              <ul className="space-y-1 md:space-y-2">
+                {['Knotless Braids', 'Cornrows', 'Faux Locs', 'Twists', 'Hair Treatment'].map((service, i) => (
                   <motion.li
                     key={service}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="flex items-center gap-2 text-sm text-foreground/80"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center gap-1.5 md:gap-2 text-[11px] md:text-sm text-foreground/80"
                   >
-                    <CheckCircle2 className="w-4 h-4 text-primary" />
+                    <CheckCircle2 className="w-3 md:w-4 h-3 md:h-4 text-primary flex-shrink-0" />
                     {service}
                   </motion.li>
                 ))}
@@ -359,31 +358,30 @@ export function Home() {
 
             {/* Men's Services */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              whileHover={{ y: -5 }}
-              className="glass-card p-4 rounded-2xl border border-primary/20"
+              className="glass-card p-3 md:p-4 rounded-xl md:rounded-2xl border border-primary/20"
             >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-primary flex items-center justify-center">
-                  <Scissors className="w-6 h-6 text-primary-foreground" />
+              <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                <div className="w-8 md:w-12 h-8 md:h-12 rounded-full bg-gradient-to-br from-blue-500 to-primary flex items-center justify-center">
+                  <Scissors className="w-4 md:w-6 h-4 md:h-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-display text-xl font-bold text-foreground">Men's Styles</h3>
-                  <p className="text-foreground/60 text-sm">Sharp & Clean</p>
+                  <h3 className="font-display text-sm md:text-xl font-bold text-foreground">Men's</h3>
+                  <p className="text-foreground/60 text-[10px] md:text-sm hidden md:block">Sharp & Clean</p>
                 </div>
               </div>
-              <ul className="space-y-2">
-                {['Cornrows', 'Box Braids', 'Twists', 'Dreadlocks', 'Fade Designs', 'Hair Treatment'].map((service, i) => (
+              <ul className="space-y-1 md:space-y-2">
+                {['Cornrows', 'Box Braids', 'Twists', 'Dreadlocks', 'Hair Treatment'].map((service, i) => (
                   <motion.li
                     key={service}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="flex items-center gap-2 text-sm text-foreground/80"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center gap-1.5 md:gap-2 text-[11px] md:text-sm text-foreground/80"
                   >
-                    <CheckCircle2 className="w-4 h-4 text-primary" />
+                    <CheckCircle2 className="w-3 md:w-4 h-3 md:h-4 text-primary flex-shrink-0" />
                     {service}
                   </motion.li>
                 ))}
@@ -394,10 +392,10 @@ export function Home() {
       </section>
 
       {/* Home Services Section */}
-      <section className="py-8 md:py-10 relative bg-primary/5">
-        <div className="container mx-auto px-4">
+      <section className="py-6 md:py-8 relative bg-primary/5">
+        <div className="container mx-auto px-3 md:px-4">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="max-w-3xl mx-auto text-center"
@@ -406,45 +404,45 @@ export function Home() {
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true }}
-              className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4"
+              className="w-12 md:w-16 h-12 md:h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3"
             >
-              <HomeIcon className="w-8 h-8 text-primary" />
+              <HomeIcon className="w-6 md:w-8 h-6 md:h-8 text-primary" />
             </motion.div>
             
-            <h2 className="font-display text-2xl md:text-4xl font-bold mb-3">
+            <h2 className="font-display text-xl md:text-3xl font-bold mb-2">
               <span className="text-gradient-gold">Home Service</span> Available
             </h2>
-            <p className="text-foreground/70 mb-6 max-w-xl mx-auto">
-              Can't come to us? We'll come to you! Professional hair styling and treatment in the comfort of your home across Mağusa, Lefke & Lefkoşa.
+            <p className="text-foreground/70 mb-4 text-sm md:text-base max-w-xl mx-auto px-2">
+              We'll come to you! Professional hair styling in the comfort of your home.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4 mb-6">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-4">
               {locations.map((loc, i) => (
                 <motion.div
                   key={loc}
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ delay: i * 0.1 }}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-background border border-primary/30"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background border border-primary/30"
                 >
-                  <MapPin className="w-4 h-4 text-primary" />
-                  <span className="font-semibold text-foreground">{loc}</span>
+                  <MapPin className="w-3 h-3 text-primary" />
+                  <span className="font-semibold text-foreground text-xs md:text-sm">{loc}</span>
                 </motion.div>
               ))}
             </div>
 
-            <div className="flex flex-wrap justify-center gap-3">
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+            <div className="flex flex-col sm:flex-row justify-center gap-2 md:gap-3">
+              <motion.div whileTap={{ scale: 0.97 }}>
                 <Link to="/book">
-                  <Button className="btn-premium h-11 px-6 rounded-full font-bold">
+                  <Button className="btn-premium h-11 md:h-10 px-5 rounded-full font-bold w-full sm:w-auto">
                     <HomeIcon className="mr-2 h-4 w-4" />
                     Book Home Service
                   </Button>
                 </Link>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <motion.div whileTap={{ scale: 0.97 }}>
                 <a href={`tel:${settings.phone}`}>
-                  <Button variant="outline" className="h-11 px-6 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold">
+                  <Button variant="outline" className="h-11 md:h-10 px-5 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold w-full sm:w-auto">
                     <Phone className="mr-2 h-4 w-4" />
                     Call Now
                   </Button>
@@ -456,43 +454,42 @@ export function Home() {
       </section>
 
       {/* Hair Treatment Section */}
-      <section className="py-8 md:py-10 relative">
-        <div className="container mx-auto px-4">
+      <section className="py-6 md:py-8 relative">
+        <div className="container mx-auto px-3 md:px-4">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-5"
+            className="text-center mb-4"
           >
-            <div className="inline-flex items-center gap-2 mb-3">
-              <Heart className="w-5 h-5 text-primary" />
-              <span className="text-primary text-sm font-bold tracking-wider uppercase">Hair Care</span>
+            <div className="inline-flex items-center gap-2 mb-2">
+              <Heart className="w-4 md:w-5 h-4 md:h-5 text-primary" />
+              <span className="text-primary text-xs md:text-sm font-bold tracking-wider uppercase">Hair Care</span>
             </div>
-            <h2 className="font-display text-2xl md:text-4xl font-bold">
+            <h2 className="font-display text-xl md:text-3xl font-bold">
               Professional <span className="text-gradient-gold">Hair Treatment</span>
             </h2>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 max-w-5xl mx-auto mb-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 max-w-5xl mx-auto mb-4">
             {[
-              { icon: Sparkles, title: 'Deep Conditioning', desc: 'Restore moisture & shine' },
-              { icon: Heart, title: 'Scalp Treatment', desc: 'Healthy scalp, healthy hair' },
-              { icon: Palette, title: 'Hair Repair', desc: 'Fix damaged hair' },
-              { icon: Clock, title: 'Growth Therapy', desc: 'Promote hair growth' },
+              { icon: Sparkles, title: 'Deep Conditioning', desc: 'Restore moisture' },
+              { icon: Heart, title: 'Scalp Treatment', desc: 'Healthy scalp' },
+              { icon: Palette, title: 'Hair Repair', desc: 'Fix damage' },
+              { icon: Clock, title: 'Growth Therapy', desc: 'Promote growth' },
             ].map((item, i) => (
               <motion.div
                 key={item.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="glass-card p-4 rounded-xl text-center border border-primary/10"
+                transition={{ delay: i * 0.05 }}
+                className="glass-card p-3 md:p-4 rounded-lg md:rounded-xl text-center border border-primary/10"
               >
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
-                  <item.icon className="w-5 h-5 text-primary" />
+                <div className="w-8 md:w-10 h-8 md:h-10 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-2">
+                  <item.icon className="w-4 md:w-5 h-4 md:h-5 text-primary" />
                 </div>
-                <h3 className="font-semibold text-foreground mb-1">{item.title}</h3>
-                <p className="text-xs text-foreground/60">{item.desc}</p>
+                <h3 className="font-semibold text-foreground text-xs md:text-sm mb-0.5">{item.title}</h3>
+                <p className="text-[10px] md:text-xs text-foreground/60">{item.desc}</p>
               </motion.div>
             ))}
           </div>

@@ -29,14 +29,14 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50">
         <div className="glass">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between h-16">
+          <div className="container mx-auto px-3 md:px-4">
+            <div className="flex items-center justify-between h-14 md:h-16">
               {/* Logo */}
               <Link to="/" className="flex items-center gap-3 z-50">
                 <img 
                   src={logo} 
                   alt="La'Couronne" 
-                  className="h-16 w-auto"
+                  className="h-12 md:h-16 w-auto"
                   style={{ filter: 'drop-shadow(0 0 10px hsl(48 100% 50% / 0.3))' }}
                 />
               </Link>
@@ -131,7 +131,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       </header>
       
       {/* Main Content */}
-      <main className="flex-1 pt-16">
+      <main className="flex-1 pt-14 md:pt-16">
         <motion.div
           key={location.pathname}
           initial={{ opacity: 0 }}
@@ -143,55 +143,54 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       </main>
       
       {/* Footer */}
-      <footer className="border-t border-primary/20 mt-auto bg-card">
-        <div className="container mx-auto px-4 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <footer className="border-t border-primary/20 mt-auto bg-card pb-20 md:pb-0">
+        <div className="container mx-auto px-3 md:px-4 py-6 md:py-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             {/* Brand */}
-            <div className="md:col-span-2">
+            <div className="col-span-2">
               <img 
                 src={logo} 
                 alt="La'Couronne" 
-                className="h-24 w-auto mb-4"
+                className="h-16 md:h-24 w-auto mb-2 md:mb-4"
                 style={{ filter: 'drop-shadow(0 0 15px hsl(48 100% 50% / 0.3))' }}
               />
-              <p className="text-primary font-bold text-sm tracking-wide mb-2">
+              <p className="text-primary font-bold text-xs md:text-sm tracking-wide mb-1 md:mb-2">
                 Every Strand Matters
               </p>
-              <p className="text-foreground/60 mb-6 max-w-md leading-relaxed">
-                Premium hairstyling for men and women. Braids, locs, natural hair care, 
-                and more - crafted with love and expertise.
+              <p className="text-foreground/60 mb-3 md:mb-6 max-w-md leading-relaxed text-xs md:text-base">
+                Premium hairstyling for men and women.
               </p>
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 <a
                   href={`https://wa.me/${settings.whatsappNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full border-2 border-primary/50 flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all"
+                  className="w-8 md:w-10 h-8 md:h-10 rounded-full border-2 border-primary/50 flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all"
                   aria-label="WhatsApp"
                 >
-                  <Phone className="h-4 w-4 text-primary" />
+                  <Phone className="h-3 md:h-4 w-3 md:w-4 text-primary" />
                 </a>
                 <a
                   href={`https://instagram.com/${settings.instagramHandle}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full border-2 border-primary/50 flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all"
+                  className="w-8 md:w-10 h-8 md:h-10 rounded-full border-2 border-primary/50 flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all"
                   aria-label="Instagram"
                 >
-                  <Instagram className="h-4 w-4 text-primary" />
+                  <Instagram className="h-3 md:h-4 w-3 md:w-4 text-primary" />
                 </a>
               </div>
             </div>
             
             {/* Quick Links */}
             <div>
-              <h4 className="text-sm tracking-[0.2em] uppercase text-primary font-bold mb-6">Explore</h4>
-              <ul className="space-y-3">
+              <h4 className="text-xs md:text-sm tracking-[0.2em] uppercase text-primary font-bold mb-3 md:mb-6">Explore</h4>
+              <ul className="space-y-2 md:space-y-3">
                 {navLinks.map((link) => (
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-foreground/60 hover:text-primary transition-colors"
+                      className="text-foreground/60 hover:text-primary transition-colors text-xs md:text-base"
                     >
                       {link.label}
                     </Link>
@@ -202,29 +201,29 @@ export function ClientLayout({ children }: ClientLayoutProps) {
             
             {/* Contact */}
             <div>
-              <h4 className="text-sm tracking-[0.2em] uppercase text-primary font-bold mb-6">Contact</h4>
-              <address className="not-italic space-y-3 text-foreground/60">
-                <p className="flex items-start gap-3">
-                  <MapPin className="h-4 w-4 mt-1 flex-shrink-0 text-primary" />
-                  <span>{settings.address}</span>
+              <h4 className="text-xs md:text-sm tracking-[0.2em] uppercase text-primary font-bold mb-3 md:mb-6">Contact</h4>
+              <address className="not-italic space-y-2 md:space-y-3 text-foreground/60 text-xs md:text-base">
+                <p className="flex items-start gap-2 md:gap-3">
+                  <MapPin className="h-3 md:h-4 w-3 md:w-4 mt-0.5 flex-shrink-0 text-primary" />
+                  <span className="text-xs md:text-base">{settings.address}</span>
                 </p>
-                <p className="flex items-center gap-3">
-                  <Phone className="h-4 w-4 flex-shrink-0 text-primary" />
+                <p className="flex items-center gap-2 md:gap-3">
+                  <Phone className="h-3 md:h-4 w-3 md:w-4 flex-shrink-0 text-primary" />
                   <span>{settings.phone}</span>
                 </p>
               </address>
             </div>
           </div>
           
-          <div className="border-t border-primary/20 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-foreground/50">
+          <div className="border-t border-primary/20 mt-4 md:mt-8 pt-4 md:pt-6 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4">
+            <p className="text-xs md:text-sm text-foreground/50">
               © {new Date().getFullYear()} La'Couronne. All rights reserved.
             </p>
-            <div className="flex gap-8">
-              <Link to="/policies" className="text-sm text-foreground/50 hover:text-primary transition-colors">
+            <div className="flex gap-4 md:gap-8">
+              <Link to="/policies" className="text-xs md:text-sm text-foreground/50 hover:text-primary transition-colors">
                 Privacy
               </Link>
-              <Link to="/policies" className="text-sm text-foreground/50 hover:text-primary transition-colors">
+              <Link to="/policies" className="text-xs md:text-sm text-foreground/50 hover:text-primary transition-colors">
                 Terms
               </Link>
             </div>
@@ -233,9 +232,9 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       </footer>
       
       {/* Sticky Mobile CTA */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 glass md:hidden z-40">
+      <div className="fixed bottom-0 left-0 right-0 p-3 glass md:hidden z-40">
         <Link to="/book">
-          <Button className="w-full btn-premium h-14 text-base rounded-full font-bold">
+          <Button className="w-full btn-premium h-12 text-sm rounded-full font-bold">
             Book Appointment
           </Button>
         </Link>

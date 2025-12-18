@@ -98,7 +98,7 @@ export function VideoShowcase() {
   };
 
   return (
-    <section className="py-10 md:py-12 relative overflow-hidden">
+    <section className="py-6 md:py-10 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0">
         <motion.div
@@ -118,23 +118,23 @@ export function VideoShowcase() {
         />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-3 md:px-4 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-6"
+          className="text-center mb-4 md:mb-6"
         >
           <motion.div
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-primary/10 border border-primary/20"
+            className="inline-flex items-center gap-1.5 md:gap-2 mb-2 md:mb-4 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-primary/10 border border-primary/20"
           >
-            <Smile className="w-4 h-4 text-primary" />
-            <span className="text-primary text-sm font-bold tracking-wider uppercase">Happy Moments</span>
-            <Heart className="w-4 h-4 text-red-500" />
+            <Smile className="w-3 md:w-4 h-3 md:h-4 text-primary" />
+            <span className="text-primary text-xs md:text-sm font-bold tracking-wider uppercase">Happy Moments</span>
+            <Heart className="w-3 md:w-4 h-3 md:h-4 text-red-500" />
           </motion.div>
           
           <motion.h2
@@ -142,7 +142,7 @@ export function VideoShowcase() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="font-display text-3xl md:text-5xl font-bold mb-4"
+            className="font-display text-xl md:text-4xl font-bold mb-2 md:mb-4"
           >
             Smiles That <span className="text-gradient-gold">Speak</span>
           </motion.h2>
@@ -152,15 +152,15 @@ export function VideoShowcase() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="text-foreground/60 max-w-xl mx-auto"
+            className="text-foreground/60 max-w-xl mx-auto text-sm md:text-base px-2"
           >
-            When our clients are happy, we are happy. See the joy in every transformation.
+            See the joy in every transformation.
           </motion.p>
         </motion.div>
 
         {/* Main Showcase Display */}
         <div className="max-w-5xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
+          <div className="grid lg:grid-cols-2 gap-4 md:gap-8 items-center">
             
             {/* Main Image Carousel */}
             <div className="relative">
