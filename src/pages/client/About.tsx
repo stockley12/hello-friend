@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import bookHeroBg from '@/assets/book-hero-bg.jpg';
 
 const faqs = [
   {
@@ -61,7 +62,7 @@ export function About() {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1920&q=80)',
+            backgroundImage: `url(${bookHeroBg})`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/80" />
@@ -160,17 +161,12 @@ export function About() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="grid grid-cols-2 gap-4"
+              className="overflow-hidden rounded-xl shadow-2xl"
             >
               <img
-                src="https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=600&q=80"
-                alt="Salon interior"
-                className="rounded-lg shadow-lg"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=600&q=80"
-                alt="Styling station"
-                className="rounded-lg shadow-lg mt-8"
+                src={bookHeroBg}
+                alt="Our stylists showcasing braided hairstyles"
+                className="w-full h-auto object-cover"
               />
             </motion.div>
           </div>
