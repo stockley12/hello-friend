@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const defaultWomenVideos = [
+  '/videos/showcase-hair.mp4',
+  '/videos/showcase-6.mp4',
+  '/videos/showcase-7.mp4',
   '/videos/women-1.mp4',
   '/videos/women-2.mp4',
   '/videos/women-3.mp4',
