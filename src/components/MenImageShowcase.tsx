@@ -7,6 +7,9 @@ import menStyle3 from '@/assets/men-style-3.jpg';
 import menStyle4 from '@/assets/men-style-4.jpg';
 import menStyle5 from '@/assets/men-style-5.jpg';
 import menStyle6 from '@/assets/men-style-6.jpg';
+import menStyle7 from '@/assets/men-style-7.jpg';
+import menStyle8 from '@/assets/men-style-8.jpg';
+import menStyle9 from '@/assets/men-style-9.jpg';
 
 const menImages = [
   menStyle1,
@@ -15,6 +18,9 @@ const menImages = [
   menStyle4,
   menStyle5,
   menStyle6,
+  menStyle7,
+  menStyle8,
+  menStyle9,
 ];
 
 interface MenImageShowcaseProps {
@@ -28,7 +34,7 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % menImages.length);
-    }, 4000); // Change image every 4 seconds
+    }, 2500); // Faster transitions - every 2.5 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -99,7 +105,7 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
               className="w-full h-full object-cover"
               initial={{ scale: 1 }}
               animate={{ scale: 1.1 }}
-              transition={{ duration: 4, ease: "linear" }}
+              transition={{ duration: 2.5, ease: "linear" }}
             />
           </motion.div>
         </AnimatePresence>
@@ -146,7 +152,7 @@ export function MenImageShowcase({ direction = 'left', className = '' }: MenImag
                     width: i === currentIndex ? '100%' : i < currentIndex ? '100%' : '0%'
                   }}
                   transition={{ 
-                    duration: i === currentIndex ? 4 : 0.3,
+                    duration: i === currentIndex ? 2.5 : 0.3,
                     ease: i === currentIndex ? 'linear' : 'easeOut'
                   }}
                 />
