@@ -1,159 +1,267 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, ArrowRight, Sparkles } from 'lucide-react';
-import { useSalon } from '@/contexts/SalonContext';
+import { ArrowRight, Scissors, Crown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ServiceCategory } from '@/types';
 
-const categoryLabels: Record<ServiceCategory, string> = {
-  cut: 'Cuts',
-  color: 'Color',
-  treatment: 'Treatments',
-  styling: 'Styling',
-  extensions: 'Extensions',
-  braids: 'Braids',
-  twists: 'Twists',
-  locs: 'Locs',
-  mens: 'Mens',
-  natural: 'Natural Hair',
-};
+import menStyle1 from '@/assets/men-style-1.jpg';
+import menStyle2 from '@/assets/men-style-2.jpg';
+import gallery1 from '@/assets/gallery-1.jpg';
+import gallery2 from '@/assets/gallery-2.jpg';
 
+const womenServices = [
+  { name: 'Box Braids', desc: 'Classic protective style that lasts weeks' },
+  { name: 'Knotless Braids', desc: 'Seamless, lightweight, natural-looking' },
+  { name: 'Cornrows', desc: 'Timeless patterns, endless creativity' },
+  { name: 'Twist Styles', desc: 'Senegalese, passion, spring twists' },
+  { name: 'Locs & Maintenance', desc: 'Start, style, and maintain your journey' },
+  { name: 'Natural Hair Care', desc: 'Deep treatments & silk press' },
+];
 
+const menServices = [
+  { name: 'Precision Cuts', desc: 'Sharp fades, clean lines, perfect shape' },
+  { name: 'Beard Grooming', desc: 'Sculpted, shaped, conditioned' },
+  { name: 'Cornrow Designs', desc: 'Classic to creative patterns' },
+  { name: 'Loc Styles', desc: 'Retwist, styling, maintenance' },
+  { name: 'Hair Treatments', desc: 'Scalp care & conditioning' },
+  { name: 'Full Grooming', desc: 'Complete transformation package' },
+];
 
 export function Services() {
-  const { services } = useSalon();
-  const [selectedCategory, setSelectedCategory] = useState<ServiceCategory | 'all'>('all');
-  
-  const activeServices = services.filter(s => s.active);
-  const categories = [...new Set(activeServices.map(s => s.category))] as ServiceCategory[];
-  
-  const filteredServices = selectedCategory === 'all'
-    ? activeServices
-    : activeServices.filter(s => s.category === selectedCategory);
-  
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-hidden">
       {/* Hero */}
-      <section className="py-24 md:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(48_100%_50%/0.1),transparent_50%)]" />
+      <section className="relative py-32 md:py-44">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.15),transparent_70%)]" />
         
         <div className="container mx-auto px-4 relative">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center max-w-3xl mx-auto"
+            className="text-center max-w-4xl mx-auto"
           >
-            <div className="inline-flex items-center gap-3 mb-4">
-              <Sparkles className="w-5 h-5 text-primary" />
-              <span className="text-primary text-sm font-bold tracking-[0.2em] uppercase">Our Services</span>
-              <Sparkles className="w-5 h-5 text-primary" />
-            </div>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
-              Beautiful <span className="text-gradient-gold">Styles</span> For You
+            <motion.div 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: "spring" }}
+              className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 border border-primary/30 mb-8"
+            >
+              <Crown className="w-10 h-10 text-primary" />
+            </motion.div>
+            
+            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-8">
+              <span className="text-foreground">Your </span>
+              <span className="text-gradient-gold">Crown</span>
+              <br />
+              <span className="text-foreground">Our Craft</span>
             </h1>
-            <p className="text-foreground/60 text-lg">
-              Expert braiding, natural hair care, and stunning transformations 
-              for men and women. Every strand matters.
+            
+            <p className="text-foreground/60 text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed">
+              Expert braiding, natural hair care, and precision grooming 
+              for those who refuse to settle for ordinary.
             </p>
           </motion.div>
         </div>
       </section>
-      
-      {/* Category Filter */}
-      <section className="pb-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-3">
-            <button
-              onClick={() => setSelectedCategory('all')}
-              className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
-                selectedCategory === 'all'
-                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
-                  : 'border-2 border-primary/30 text-foreground/70 hover:border-primary hover:text-primary'
-              }`}
-            >
-              All Services
-            </button>
-            {categories.map(category => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
-                  selectedCategory === category
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
-                    : 'border-2 border-primary/30 text-foreground/70 hover:border-primary hover:text-primary'
-                }`}
-              >
-                {categoryLabels[category]}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-      
-      {/* Services Grid */}
-      <section className="py-12 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredServices.map((service, index) => (
-              <motion.div
-                key={service.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-              >
-                <motion.div 
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                  className="glass-card p-8 h-full flex flex-col group"
-                >
-                  <div className="text-primary text-xs font-bold tracking-[0.2em] uppercase mb-3">
-                    {categoryLabels[service.category]}
-                  </div>
-                  <h3 className="font-display text-2xl font-bold mb-4 text-foreground group-hover:text-gradient-gold transition-all">
-                    {service.name}
-                  </h3>
-                  <p className="text-foreground/60 mb-6 flex-1">
-                    {service.description}
-                  </p>
-                  <div className="flex items-center justify-end pt-6 border-t border-primary/20">
-                    <div className="flex items-center gap-2 text-foreground/50">
-                      <Clock className="h-4 w-4" />
-                      <span className="text-sm">{service.durationMin} min</span>
-                    </div>
-                  </div>
-                  <Link to={`/book?service=${service.id}`} className="mt-6">
-                    <Button className="w-full btn-premium rounded-full font-bold">
-                      Book Now
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-      
-      {/* CTA */}
+
+      {/* Women's Section */}
       <section className="py-20 md:py-32 relative">
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent" />
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Images */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative"
+            >
+              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden">
+                <img 
+                  src={gallery1} 
+                  alt="Women's braiding styles" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+              </div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                className="absolute -bottom-8 -right-8 w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-4 border-background shadow-2xl"
+              >
+                <img 
+                  src={gallery2} 
+                  alt="Braiding detail" 
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+            </motion.div>
+
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="inline-flex items-center gap-2 text-primary mb-4">
+                <Sparkles className="w-5 h-5" />
+                <span className="text-sm font-bold tracking-[0.2em] uppercase">For Her</span>
+              </div>
+              
+              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+                Queen-Level<br />
+                <span className="text-gradient-gold">Hair Artistry</span>
+              </h2>
+              
+              <p className="text-foreground/60 text-lg mb-10 leading-relaxed">
+                From protective styles that last for weeks to natural hair treatments 
+                that restore your crown's glory. Every braid tells a story.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                {womenServices.map((service, i) => (
+                  <motion.div
+                    key={service.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="group p-4 rounded-xl bg-card/50 border border-border/50 hover:border-primary/50 transition-all duration-300"
+                  >
+                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                      {service.name}
+                    </h3>
+                    <p className="text-sm text-foreground/50">{service.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+
+              <Link to="/book">
+                <Button size="lg" className="btn-premium rounded-full px-10 font-bold group">
+                  Book Your Style
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="container mx-auto px-4">
+        <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+      </div>
+
+      {/* Men's Section */}
+      <section className="py-20 md:py-32 relative">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="order-2 lg:order-1"
+            >
+              <div className="inline-flex items-center gap-2 text-primary mb-4">
+                <Scissors className="w-5 h-5" />
+                <span className="text-sm font-bold tracking-[0.2em] uppercase">For Him</span>
+              </div>
+              
+              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+                Sharp Cuts,<br />
+                <span className="text-gradient-gold">Clean Living</span>
+              </h2>
+              
+              <p className="text-foreground/60 text-lg mb-10 leading-relaxed">
+                Precision fades, detailed lineup, and expert grooming. 
+                Walk out looking like you own the room. Every. Single. Time.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                {menServices.map((service, i) => (
+                  <motion.div
+                    key={service.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="group p-4 rounded-xl bg-card/50 border border-border/50 hover:border-primary/50 transition-all duration-300"
+                  >
+                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                      {service.name}
+                    </h3>
+                    <p className="text-sm text-foreground/50">{service.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+
+              <Link to="/book">
+                <Button size="lg" className="btn-premium rounded-full px-10 font-bold group">
+                  Book Your Cut
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </motion.div>
+
+            {/* Images */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative order-1 lg:order-2"
+            >
+              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden">
+                <img 
+                  src={menStyle1} 
+                  alt="Men's grooming styles" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+              </div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                className="absolute -bottom-8 -left-8 w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-4 border-background shadow-2xl"
+              >
+                <img 
+                  src={menStyle2} 
+                  alt="Precision cut detail" 
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-24 md:py-40 relative">
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-primary/5 to-transparent" />
         <div className="container mx-auto px-4 text-center relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            className="max-w-3xl mx-auto"
           >
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-6 text-foreground">
-              Not sure what you need?
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+              Ready to <span className="text-gradient-gold">Transform?</span>
             </h2>
-            <p className="text-foreground/60 mb-8 max-w-xl mx-auto">
-              Book a consultation and we will help you discover your perfect style.
+            <p className="text-foreground/60 text-xl mb-10 max-w-xl mx-auto">
+              Book your appointment today and let us show you 
+              what happens when skill meets passion.
             </p>
             <Link to="/book">
-              <Button size="lg" className="btn-premium rounded-full px-10 font-bold">
-                Book Consultation
+              <Button size="lg" className="btn-premium rounded-full px-12 py-6 text-lg font-bold">
+                Book Your Appointment
               </Button>
             </Link>
           </motion.div>
