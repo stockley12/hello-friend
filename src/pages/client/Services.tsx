@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Scissors, Crown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ImageShowcase } from '@/components/ImageShowcase';
-import { MenImageShowcase } from '@/components/MenImageShowcase';
+import { MenGallery } from '@/components/MenGallery';
 import servicesHeroBg from '@/assets/services-hero-bg.jpg';
 
 const womenServices = [
@@ -308,7 +308,7 @@ export function Services() {
               </Link>
             </motion.div>
 
-            {/* Animated Image Showcase */}
+            {/* Men's Gallery */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -316,7 +316,7 @@ export function Services() {
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-2"
             >
-              <MenImageShowcase direction="left" />
+              <MenGallery />
             </motion.div>
           </div>
         </div>
