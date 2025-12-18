@@ -252,7 +252,7 @@ export function Home() {
               
               {/* Services Tags */}
               <motion.div 
-                className="flex flex-wrap justify-start gap-2 mb-4"
+                className="flex flex-wrap justify-start gap-2 mb-4 -ml-4 pl-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
@@ -263,8 +263,8 @@ export function Home() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.7 + i * 0.1 }}
-                    whileHover={{ scale: 1.05, backgroundColor: 'hsl(var(--primary) / 0.2)' }}
-                    className="px-4 py-1.5 text-xs font-semibold rounded-full border-2 border-primary text-primary bg-transparent"
+                    whileHover={{ scale: 1.05 }}
+                    className="px-4 py-1.5 text-xs font-semibold rounded-full bg-black text-white border-2 border-black"
                   >
                     {style}
                   </motion.span>
