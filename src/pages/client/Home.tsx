@@ -729,8 +729,38 @@ export function Home() {
             </motion.p>
           </motion.div>
 
-          {/* Premium Men's Image Gallery */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
+          {/* Premium Men's Image Gallery - Mobile Horizontal Scroll */}
+          <div className="md:hidden overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+            <div className="flex gap-3" style={{ width: 'max-content' }}>
+              {menGalleryData.map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="relative overflow-hidden rounded-xl shadow-lg flex-shrink-0"
+                  style={{ width: '160px' }}
+                >
+                  <div className="aspect-[3/4] overflow-hidden">
+                    <img
+                      src={item.img}
+                      alt={item.style}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <p className="text-white font-semibold text-sm">{item.style}</p>
+                    <p className="text-blue-400 text-xs">{item.highlight}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Premium Men's Image Gallery - Desktop Grid */}
+          <div className="hidden md:grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
             {menGalleryData.map((item, index) => (
               <motion.div
                 key={index}
@@ -748,8 +778,8 @@ export function Home() {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4">
                   <p className="text-white font-bold text-lg">{item.style}</p>
                   <p className="text-blue-400 text-sm">{item.highlight}</p>
                 </div>
