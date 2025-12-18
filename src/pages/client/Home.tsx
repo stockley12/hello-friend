@@ -227,6 +227,27 @@ export function Home() {
               ))}
             </div>
           </motion.div>
+
+          {/* Hero Service Tags - positioned to keep smiles visible */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="absolute left-4 top-10 md:top-12 flex flex-row gap-2"
+          >
+            {['Hair Treatment', 'Braids', 'Locs', 'Home Service'].map((style, i) => (
+              <motion.span
+                key={style}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.7 + i * 0.08 }}
+                whileHover={{ scale: 1.05 }}
+                className="px-4 py-1.5 text-xs font-semibold rounded-full bg-background text-primary border-2 border-primary"
+              >
+                {style}
+              </motion.span>
+            ))}
+          </motion.div>
           
           {/* Main Hero Content - Left aligned, positioned lower */}
           <div className="max-w-2xl pt-60 md:pt-72 lg:pt-80">
@@ -249,30 +270,6 @@ export function Home() {
                 </span>
                 <span className="text-primary text-sm font-bold drop-shadow-lg">Happy Clients & Growing</span>
               </motion.div>
-              
-              {/* Services Tags - Positioned at top left in a straight line */}
-              <motion.div 
-                className="absolute left-0 flex flex-row gap-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                style={{ top: '-12rem' }}
-              >
-                {['Hair Treatment', 'Home Service', 'Braids', 'Locs'].map((style, i) => (
-                  <motion.span
-                    key={style}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.7 + i * 0.1 }}
-                    whileHover={{ scale: 1.05 }}
-                    className="px-4 py-1.5 text-xs font-semibold rounded-full text-primary border-2 border-primary"
-                    style={{ backgroundColor: '#000000' }}
-                  >
-                    {style}
-                  </motion.span>
-                ))}
-              </motion.div>
-              
               {/* CTA Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
