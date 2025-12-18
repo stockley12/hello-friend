@@ -235,7 +235,7 @@ export function Home() {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-left"
+              className="text-left relative"
             >
               {/* Dynamic Stats with Typing Effect */}
               <motion.div
@@ -252,10 +252,11 @@ export function Home() {
               
               {/* Services Tags */}
               <motion.div 
-                className="flex flex-wrap justify-start gap-2 mb-4 -ml-4 pl-4"
+                className="absolute left-0 flex flex-wrap gap-2 mb-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
+                style={{ marginLeft: '-1rem' }}
               >
                 {['Hair Treatment', 'Home Service', 'Braids', 'Locs'].map((style, i) => (
                   <motion.span
@@ -265,6 +266,7 @@ export function Home() {
                     transition={{ delay: 0.7 + i * 0.1 }}
                     whileHover={{ scale: 1.05 }}
                     className="px-4 py-1.5 text-xs font-semibold rounded-full bg-black text-primary border-2 border-primary"
+                    style={{ backgroundColor: '#000000' }}
                   >
                     {style}
                   </motion.span>
