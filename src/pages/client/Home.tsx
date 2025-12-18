@@ -202,26 +202,26 @@ export function Home() {
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
-          {/* Top Location Bar */}
+          {/* Top Location Bar - Fixed at top */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-wrap items-center justify-center gap-3 mb-4"
+            className="absolute top-4 left-1/2 -translate-x-1/2 flex flex-wrap items-center justify-center gap-3"
           >
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-              <MapPin className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-foreground/80">North Cyprus</span>
-              <span className="text-primary font-bold">•</span>
+            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/20 backdrop-blur-sm border border-black/10">
+              <MapPin className="w-4 h-4 text-black" />
+              <span className="text-sm font-medium text-black">North Cyprus</span>
+              <span className="text-black font-bold">•</span>
               <motion.span
                 key={activeLocation}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-primary font-semibold"
+                className="text-black font-semibold"
               >
                 {locations[activeLocation]}
               </motion.span>
             </div>
-            <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+            <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-sm border border-black/10">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-3 h-3 fill-primary text-primary" />
               ))}
@@ -229,7 +229,7 @@ export function Home() {
           </motion.div>
           
           {/* Main Hero Content - Left aligned, positioned lower */}
-          <div className="max-w-2xl pt-44 md:pt-56 lg:pt-64">
+          <div className="max-w-2xl pt-60 md:pt-72 lg:pt-80">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
