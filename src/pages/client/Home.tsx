@@ -186,7 +186,7 @@ export function Home() {
       <section 
         className="relative py-6 md:py-8 overflow-hidden"
         style={{
-          backgroundImage: `url('/home-hero-bg.png')`,
+          backgroundImage: `url('/home-hero-bg.png?v=2')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
