@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { BookingFormData } from '@/types';
-import bookHeroBg from '@/assets/book-hero-bg.png';
+
+const bookHeroBg = '/book-hero-bg.png?v=2';
 
 const steps = ['Your Details', 'Pick Date & Time'];
 
