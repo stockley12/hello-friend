@@ -24,7 +24,7 @@ export function ImageShowcase({ direction = 'right', className = '' }: ImageShow
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % videos.length);
-    }, 3500); // Change video every 3.5 seconds for faster transitions
+    }, 6000); // Change video every 6 seconds
     return () => clearInterval(interval);
   }, []);
 
