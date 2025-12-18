@@ -228,20 +228,20 @@ export function Home() {
             </div>
           </motion.div>
           
-          {/* Main Hero Content - Centered */}
-          <div className="max-w-2xl mx-auto">
+          {/* Main Hero Content - Left aligned */}
+          <div className="max-w-2xl">
             {/* Left Content */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-center"
+              className="text-left"
             >
               {/* Logo */}
               <motion.img 
                 src={logo} 
                 alt="La'Couronne" 
-                className="h-24 sm:h-28 md:h-32 w-auto mx-auto mb-3"
+                className="h-24 sm:h-28 md:h-32 w-auto mb-3"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 style={{ filter: 'drop-shadow(0 0 25px hsl(var(--primary) / 0.5))' }}
@@ -262,7 +262,7 @@ export function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="flex items-center justify-center gap-2 mb-4"
+                className="flex items-center justify-start gap-2 mb-4"
               >
                 <span className="text-3xl font-display font-bold text-black">
                   <AnimatedTypingNumber numbers={typingNumbers} />
@@ -272,7 +272,7 @@ export function Home() {
               
               {/* Services Tags */}
               <motion.div 
-                className="flex flex-wrap justify-center gap-2 mb-4"
+                className="flex flex-wrap justify-start gap-2 mb-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
@@ -296,7 +296,7 @@ export function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                className="flex flex-col sm:flex-row gap-3 justify-center"
+                className="flex flex-col sm:flex-row gap-3 justify-start"
               >
                 <Link to="/book">
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
