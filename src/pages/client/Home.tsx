@@ -75,12 +75,12 @@ const TypewriterText = ({ texts, speed = 100 }: { texts: string[]; speed?: numbe
   }, [charIndex, isDeleting, textIndex, texts, speed]);
 
   return (
-    <span className="text-gradient-gold">
+    <span className="text-black font-bold">
       {displayText}
       <motion.span
         animate={{ opacity: [1, 0] }}
         transition={{ duration: 0.5, repeat: Infinity }}
-        className="text-primary"
+        className="text-black"
       >
         |
       </motion.span>
@@ -128,7 +128,7 @@ const AnimatedTypingNumber = ({ numbers }: { numbers: string[] }) => {
       <motion.span
         animate={{ opacity: [1, 0] }}
         transition={{ duration: 0.4, repeat: Infinity }}
-        className="text-primary ml-0.5"
+        className="text-black ml-0.5"
       >
         _
       </motion.span>
@@ -172,7 +172,7 @@ export function Home() {
     'Men & Women Styling'
   ], []);
 
-  const typingNumbers = useMemo(() => ['500+', '100%', '24/7', '5.0★'], []);
+  const typingNumbers = useMemo(() => ['100+', '100%', '24/7', '5.0★'], []);
   
   return (
     <div className="relative overflow-hidden bg-background">
@@ -264,10 +264,10 @@ export function Home() {
                 transition={{ delay: 0.5 }}
                 className="flex items-center justify-center lg:justify-start gap-2 mb-4"
               >
-                <span className="text-3xl font-display font-bold text-primary">
+              <span className="text-3xl font-display font-bold text-black">
                   <AnimatedTypingNumber numbers={typingNumbers} />
                 </span>
-                <span className="text-foreground/60 text-sm">Happy Clients & Growing</span>
+                <span className="text-black/80 text-sm font-medium">Happy Clients & Growing</span>
               </motion.div>
               
               {/* Services Tags */}
@@ -283,8 +283,8 @@ export function Home() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.7 + i * 0.1 }}
-                    whileHover={{ scale: 1.05, backgroundColor: 'hsl(var(--primary) / 0.2)' }}
-                    className="px-3 py-1 text-xs font-medium rounded-full bg-foreground/5 border border-foreground/10 text-foreground/70"
+                    whileHover={{ scale: 1.05, backgroundColor: 'rgba(0,0,0,0.1)' }}
+                    className="px-3 py-1 text-xs font-medium rounded-full bg-black/10 border border-black/20 text-black"
                   >
                     {style}
                   </motion.span>
