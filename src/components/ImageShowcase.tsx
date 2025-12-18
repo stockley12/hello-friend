@@ -36,7 +36,7 @@ export function ImageShowcase({ direction = 'right', className = '', videos }: I
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % videoList.length);
-    }, 6000); // Change video every 6 seconds
+    }, 8000); // Slower transitions - every 8 seconds to show beautiful moments
     return () => clearInterval(interval);
   }, [videoList.length]);
 
