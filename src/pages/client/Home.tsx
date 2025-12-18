@@ -263,8 +263,8 @@ export function Home() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.7 + i * 0.1 }}
-                    whileHover={{ scale: 1.05, backgroundColor: 'rgba(0,0,0,0.1)' }}
-                    className="px-3 py-1 text-xs font-medium rounded-full bg-black/10 border border-black/20 text-black"
+                    whileHover={{ scale: 1.05, backgroundColor: 'hsl(var(--primary) / 0.2)' }}
+                    className="px-4 py-1.5 text-xs font-semibold rounded-full border-2 border-primary text-primary bg-transparent"
                   >
                     {style}
                   </motion.span>
