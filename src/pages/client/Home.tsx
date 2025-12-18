@@ -4,7 +4,7 @@ import { ArrowRight, Sparkles, Heart, MapPin, Phone, Instagram, Crown, Scissors,
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
 import { VideoShowcase } from '@/components/VideoShowcase';
-import { MenGallery } from '@/components/MenGallery';
+
 import { useEffect, useState, useMemo } from 'react';
 
 // Import your images
@@ -729,9 +729,32 @@ export function Home() {
             </motion.p>
           </motion.div>
 
-          {/* Premium Men's Video Gallery */}
-          <div className="max-w-6xl mx-auto">
-            <MenGallery />
+          {/* Premium Men's Image Gallery */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
+            {menGalleryData.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.03, y: -5 }}
+                className="group relative overflow-hidden rounded-2xl shadow-xl"
+              >
+                <div className="aspect-[3/4] overflow-hidden">
+                  <img
+                    src={item.img}
+                    alt={item.style}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  <p className="text-white font-bold text-lg">{item.style}</p>
+                  <p className="text-blue-400 text-sm">{item.highlight}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* Call to Action */}
