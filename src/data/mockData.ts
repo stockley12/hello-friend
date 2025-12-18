@@ -57,15 +57,6 @@ export const mockServices: Service[] = [
     active: true,
   },
   {
-    id: 'srv-7',
-    name: 'Mens Cut & Style',
-    category: 'mens',
-    durationMin: 45,
-    price: 800,
-    description: 'Fresh cuts, fades, and lineups for the modern gentleman.',
-    active: true,
-  },
-  {
     id: 'srv-8',
     name: 'Natural Hair Styling',
     category: 'natural',
@@ -110,7 +101,7 @@ export const mockStaff: Staff[] = [
       saturday: { start: '09:00', end: '17:00' },
       sunday: null,
     },
-    servicesOffered: ['srv-3', 'srv-6', 'srv-7'],
+    servicesOffered: ['srv-3', 'srv-6'],
   },
   {
     id: 'staff-3',
