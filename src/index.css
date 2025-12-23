@@ -56,25 +56,59 @@
     --sidebar-accent-foreground: 45 30% 90%;
     --sidebar-border: 45 30% 20%;
     --sidebar-ring: 48 100% 50%;
+    
+    /* Safe area insets for mobile */
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    --safe-area-inset-left: env(safe-area-inset-left);
+    --safe-area-inset-right: env(safe-area-inset-right);
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+    -webkit-tap-highlight-color: transparent;
   }
   
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'DM Sans', system-ui, sans-serif;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
   }
   
   html {
     scroll-behavior: smooth;
+    /* Prevent zoom on input focus on iOS */
+    touch-action: manipulation;
+  }
+  
+  /* Prevent pull-to-refresh on mobile */
+  html, body {
+    overscroll-behavior-y: contain;
+  }
+  
+  /* Better font rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
   
   ::selection {
     background: hsl(var(--primary) / 0.4);
+  }
+  
+  /* Prevent text selection on mobile */
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Input styles for mobile */
+  input, textarea, select {
+    font-size: 16px !important; /* Prevent zoom on iOS */
   }
 }
 
@@ -119,12 +153,14 @@
     border: 2px solid hsl(var(--primary));
   }
   
-  /* Premium golden button */
+  /* Premium golden button - mobile optimized */
   .btn-premium {
-    @apply relative overflow-hidden transition-all duration-500 font-bold;
+    @apply relative overflow-hidden font-bold;
     background: linear-gradient(135deg, hsl(48 100% 55%), hsl(45 100% 45%));
     color: hsl(40 10% 5%);
     text-shadow: none;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
   }
   
   .btn-premium::before {
@@ -135,6 +171,8 @@
     transition: transform 0.6s ease;
   }
   
+  /* Hover only on non-touch devices */
+  @media (hover: hover) {
   .btn-premium:hover::before {
     transform: translateX(100%);
   }
@@ -142,6 +180,12 @@
   .btn-premium:hover {
     transform: translateY(-3px);
     box-shadow: 0 20px 50px -15px hsl(var(--primary) / 0.6);
+    }
+  }
+  
+  /* Active state for touch */
+  .btn-premium:active {
+    transform: scale(0.98);
   }
   
   /* Glass morphism - dark version */
@@ -170,16 +214,18 @@
     box-shadow: 0 0 30px -5px hsl(var(--primary) / 0.5);
   }
   
-  /* Magnetic hover */
+  /* Magnetic hover - desktop only */
   .magnetic {
     transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   }
   
+  @media (hover: hover) {
   .magnetic:hover {
     transform: translateY(-8px) scale(1.02);
+    }
   }
   
-  /* Image hover zoom */
+  /* Image hover zoom - desktop only */
   .img-zoom {
     @apply overflow-hidden;
   }
@@ -188,8 +234,10 @@
     transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
   
+  @media (hover: hover) {
   .img-zoom:hover img {
     transform: scale(1.08);
+    }
   }
   
   /* Line animation - gold */
@@ -205,8 +253,10 @@
     transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
   
+  @media (hover: hover) {
   .line-animate:hover::after {
     width: 100%;
+    }
   }
   
   /* Cursor glow - gold */
@@ -218,6 +268,75 @@
     transform: translate(-50%, -50%);
     z-index: 0;
   }
+  
+  /* Mobile-specific touch feedback */
+  .touch-feedback {
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+  }
+  
+  .touch-feedback:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+  
+  /* Safe area padding utilities */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  /* Mobile card with touch ripple effect */
+  .card-touch {
+    @apply relative overflow-hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .card-touch::after {
+    content: '';
+    @apply absolute inset-0 pointer-events-none;
+    background: radial-gradient(circle, hsl(var(--primary) / 0.2), transparent 70%);
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  
+  .card-touch:active::after {
+    opacity: 1;
+    transform: scale(2);
+  }
+  
+  /* Smooth scroll container */
+  .smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Bottom sheet style */
+  .bottom-sheet {
+    @apply fixed bottom-0 left-0 right-0 rounded-t-3xl;
+    background: hsl(40 10% 8% / 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Swipe handle */
+  .swipe-handle {
+    @apply w-10 h-1.5 rounded-full mx-auto;
+    background: hsl(var(--foreground) / 0.2);
+  }
 }
 
 @layer utilities {
@@ -228,6 +347,17 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  
+  /* Mobile viewport height fix */
+  .h-screen-mobile {
+    height: 100vh;
+    height: 100dvh;
+  }
+  
+  .min-h-screen-mobile {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
   
   .animate-fade-up {
@@ -248,6 +378,14 @@
   
   .animate-pulse-gold {
     animation: pulseGold 3s ease-in-out infinite;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  .animate-bounce-in {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
   }
   
   @keyframes fadeUp {
@@ -275,10 +413,33 @@
     50% { box-shadow: 0 0 40px hsl(var(--primary) / 0.6); }
   }
   
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(100%); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes bounceIn {
+    0% { opacity: 0; transform: scale(0.3); }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  
   /* Stagger delays */
   .delay-100 { animation-delay: 0.1s; }
   .delay-200 { animation-delay: 0.2s; }
   .delay-300 { animation-delay: 0.3s; }
   .delay-400 { animation-delay: 0.4s; }
   .delay-500 { animation-delay: 0.5s; }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }

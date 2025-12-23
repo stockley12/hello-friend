@@ -8,7 +8,6 @@ import { VideoShowcase } from '@/components/VideoShowcase';
 import { useEffect, useState, useMemo } from 'react';
 
 // Import your images
-import logo from '@/assets/logo.png';
 import heroImage from '@/assets/hero-image.jpeg';
 import gallery1 from '@/assets/gallery-1.jpg';
 import gallery2 from '@/assets/gallery-2.jpg';
@@ -190,11 +189,11 @@ export function Home() {
       
       {/* Hero Section */}
       <section 
-        className="relative py-6 md:py-12 lg:py-16 overflow-hidden min-h-[50vh] md:min-h-[60vh]"
+        className="relative py-6 md:py-12 lg:py-16 overflow-hidden min-h-[55vh] md:min-h-[60vh]"
         style={{
-          backgroundImage: `url('/home-hero-bg.png?v=2')`,
+          backgroundImage: `url('./home-hero-bg.png?v=3')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center top',
+          backgroundPosition: 'center 30%',
           backgroundRepeat: 'no-repeat'
         }}
       >
@@ -239,7 +238,7 @@ export function Home() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="absolute left-3 md:left-4 top-2 md:top-12 flex flex-wrap gap-1.5 md:gap-2 max-w-[200px] md:max-w-none"
+            className="absolute left-3 md:left-4 top-4 md:top-12 flex flex-wrap gap-1.5 md:gap-2 max-w-[140px] md:max-w-none"
           >
             {['Hair Treatment', 'Braids', 'Locs'].map((style, i) => (
               <motion.span
@@ -248,14 +247,14 @@ export function Home() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.7 + i * 0.08 }}
                 whileHover={{ scale: 1.05 }}
-                className="px-2.5 md:px-4 py-1 md:py-1.5 text-[10px] md:text-xs font-semibold rounded-full bg-background text-primary border border-primary md:border-2"
+                className="px-2 md:px-4 py-0.5 md:py-1.5 text-[9px] md:text-xs font-semibold rounded-full bg-background text-primary border border-primary md:border-2"
               >
                 {style}
               </motion.span>
             ))}
           </motion.div>
           
-          {/* Main Hero Content - Responsive positioning */}
+          {/* Main Hero Content - Responsive positioning - Adjusted for mobile */}
           <div className="max-w-2xl pt-32 md:pt-48 lg:pt-56">
             {/* Left Content */}
             <motion.div
@@ -269,26 +268,26 @@ export function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="flex items-center justify-start gap-2 mb-3 md:mb-4"
+                className="flex items-center justify-start gap-2 mb-2 md:mb-4"
               >
-                <span className="text-2xl md:text-3xl font-display font-bold text-primary drop-shadow-lg">
+                <span className="text-xl md:text-3xl font-display font-bold text-primary drop-shadow-lg">
                   <AnimatedTypingNumber numbers={typingNumbers} />
                 </span>
-                <span className="text-primary text-xs md:text-sm font-bold drop-shadow-lg">Happy Clients & Growing</span>
+                <span className="text-primary text-[10px] md:text-sm font-bold drop-shadow-lg">Happy Clients & Growing</span>
               </motion.div>
               {/* CTA Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                className="flex flex-col gap-2 md:gap-3 justify-start mb-3 md:mb-4"
+                className="flex flex-col gap-2 md:gap-3 justify-start mb-2 md:mb-4"
               >
                 <Link to="/book">
                   <motion.div whileTap={{ scale: 0.97 }}>
-                    <Button size="lg" className="btn-premium h-12 md:h-11 px-5 md:px-6 text-sm font-bold rounded-full group w-full">
-                      <Sparkles className="mr-2 h-4 w-4" />
-                      Book Hair Treatment
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    <Button size="lg" className="btn-premium h-10 md:h-11 px-4 md:px-6 text-xs md:text-sm font-bold rounded-full group w-full">
+                      <Sparkles className="mr-1.5 md:mr-2 h-3.5 md:h-4 w-3.5 md:w-4" />
+                      Book Your Hair
+                      <ArrowRight className="ml-1.5 md:ml-2 h-3.5 md:h-4 w-3.5 md:w-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </motion.div>
                 </Link>
@@ -296,7 +295,7 @@ export function Home() {
               
               {/* Typewriter Heading - Below buttons */}
               <motion.h1 
-                className="font-display text-xl md:text-2xl lg:text-4xl font-bold leading-tight min-h-[2em] md:min-h-[2.5em]"
+                className="font-display text-lg md:text-2xl lg:text-4xl font-bold leading-tight min-h-[1.5em] md:min-h-[2.5em]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -509,7 +508,7 @@ export function Home() {
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                 <Button className="btn-premium h-11 px-8 rounded-full font-bold">
                   <Heart className="mr-2 h-4 w-4" />
-                  Book Hair Treatment
+                  Book Your Hair
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </motion.div>
@@ -929,7 +928,7 @@ export function Home() {
                   </Button>
                 </motion.div>
               </Link>
-              <a href={`https://wa.me/${settings.whatsappNumber?.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
+              <a href={`https://wa.me/${(settings.whatsappNumber || '905338709271').replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   <Button variant="outline" className="h-12 px-8 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-bold text-base">
                     WhatsApp Us

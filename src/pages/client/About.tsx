@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { Award, Heart, Sparkles, MapPin, HelpCircle } from 'lucide-react';
+import { Award, Heart, Sparkles, MapPin, HelpCircle, ChevronDown } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
+import { haptics } from '@/lib/haptics';
 import {
   Accordion,
   AccordionContent,
@@ -53,13 +54,43 @@ const faqs = [
   }
 ];
 
+// Value Card Component
+function ValueCard({ icon: Icon, title, description, index }: { 
+  icon: React.ElementType; 
+  title: string; 
+  description: string;
+  index: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={() => haptics.light()}
+      className="text-center p-4 md:p-6 glass-card rounded-2xl touch-feedback"
+    >
+      <motion.div 
+        className="w-12 h-12 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4"
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <Icon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+      </motion.div>
+      <h3 className="font-display text-lg md:text-xl font-medium mb-2">{title}</h3>
+      <p className="text-muted-foreground text-sm md:text-base">{description}</p>
+    </motion.div>
+  );
+}
+
 export function About() {
   const { settings } = useSalon();
   
   return (
-    <div className="min-h-screen">
-      {/* Hero */}
-      <section className="relative py-20 md:py-32 overflow-hidden">
+    <div className="min-h-[100dvh] pb-20 md:pb-0">
+      {/* Hero - Mobile optimized */}
+      <section className="relative py-16 md:py-20 lg:py-32 overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -76,14 +107,19 @@ export function About() {
             transition={{ duration: 0.5 }}
             className="max-w-2xl"
           >
-            <div className="flex items-center gap-2 text-primary mb-4">
-              <MapPin className="h-5 w-5" />
-              <span className="text-sm font-medium tracking-wider uppercase">Magusa, North Cyprus</span>
-            </div>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
+            <motion.div 
+              className="flex items-center gap-2 text-primary mb-3 md:mb-4"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <MapPin className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-xs md:text-sm font-medium tracking-wider uppercase">Magusa, North Cyprus</span>
+            </motion.div>
+            <h1 className="font-display text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold mb-4 md:mb-6">
               Our Story
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground">
+            <p className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed">
               Founded on the belief that everyone deserves to feel extraordinary. 
               {settings.name} has been transforming not just hair, but confidence, 
               one client at a time in the heart of Magusa.
@@ -92,65 +128,52 @@ export function About() {
         </div>
       </section>
       
-      {/* Values */}
-      <section className="py-20">
+      {/* Values - Mobile optimized grid */}
+      <section className="py-12 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {[
-              {
-                icon: Sparkles,
-                title: 'Excellence',
-                description: 'We pursue perfection in every braid, cut, and style. Our commitment to excellence is unwavering.',
-              },
-              {
-                icon: Heart,
-                title: 'Care',
-                description: 'Your hair health is our priority. We use only premium, gentle products that nurture while they transform.',
-              },
-              {
-                icon: Award,
-                title: 'Expertise',
-                description: 'Our team continuously trains with industry leaders, staying at the forefront of techniques and trends.',
-              },
-            ].map((value, index) => (
-              <motion.div
-                key={value.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
-              >
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <value.icon className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="font-display text-xl font-medium mb-2">{value.title}</h3>
-                <p className="text-muted-foreground">{value.description}</p>
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-5xl mx-auto">
+            <ValueCard
+              icon={Sparkles}
+              title="Excellence"
+              description="We pursue perfection in every braid, cut, and style. Our commitment to excellence is unwavering."
+              index={0}
+            />
+            <ValueCard
+              icon={Heart}
+              title="Care"
+              description="Your hair health is our priority. We use only premium, gentle products that nurture while they transform."
+              index={1}
+            />
+            <ValueCard
+              icon={Award}
+              title="Expertise"
+              description="Our team continuously trains with industry leaders, staying at the forefront of techniques and trends."
+              index={2}
+            />
           </div>
         </div>
       </section>
       
-      {/* The Space */}
-      <section className="py-20 bg-secondary/30">
+      {/* The Space - Mobile optimized */}
+      <section className="py-12 md:py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
+              className="order-2 lg:order-1"
             >
-              <h2 className="font-display text-3xl md:text-4xl font-semibold mb-6">
+              <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-semibold mb-4 md:mb-6">
                 The Space
               </h2>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-muted-foreground mb-4 text-sm md:text-base leading-relaxed">
                 Step into our sanctuary designed for your complete comfort. Every detail, 
                 from our curated music to our artisan refreshments, creates an atmosphere 
                 of understated luxury.
               </p>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
                 Our stations feature natural lighting optimized for color accuracy, 
                 premium Italian leather chairs, and state-of-the-art equipment that 
                 ensures both precision and comfort.
@@ -162,35 +185,40 @@ export function About() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="overflow-hidden rounded-xl shadow-2xl"
+              className="overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl order-1 lg:order-2"
             >
               <img
                 src={bookHeroBg}
                 alt="Our stylists showcasing braided hairstyles"
                 className="w-full h-auto object-cover"
+                loading="lazy"
               />
             </motion.div>
           </div>
         </div>
       </section>
       
-      {/* FAQ Section */}
-      <section className="py-20">
+      {/* FAQ Section - Mobile optimized */}
+      <section className="py-12 md:py-20">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-12"
+            className="text-center mb-8 md:mb-12"
           >
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <HelpCircle className="h-8 w-8 text-primary" />
-            </div>
-            <h2 className="font-display text-3xl md:text-4xl font-semibold mb-4">
+            <motion.div 
+              className="w-12 h-12 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6"
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <HelpCircle className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+            </motion.div>
+            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-semibold mb-3 md:mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto px-4">
               Everything you need to know about visiting us in Magusa. Can't find your answer? Feel free to contact us.
             </p>
           </motion.div>
@@ -202,22 +230,42 @@ export function About() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="max-w-3xl mx-auto"
           >
-            <Accordion type="single" collapsible className="w-full space-y-4">
+            <Accordion type="single" collapsible className="w-full space-y-3 md:space-y-4">
               {faqs.map((faq, index) => (
                 <AccordionItem 
                   key={index} 
                   value={`item-${index}`}
-                  className="bg-card border border-border/50 rounded-xl px-6 shadow-sm hover:shadow-md transition-shadow"
+                  className="glass-card border border-border/50 rounded-xl md:rounded-2xl px-4 md:px-6 shadow-sm data-[state=open]:shadow-md transition-shadow overflow-hidden"
                 >
-                  <AccordionTrigger className="text-left font-medium hover:no-underline py-5">
-                    {faq.question}
+                  <AccordionTrigger 
+                    className="text-left font-medium hover:no-underline py-4 md:py-5 text-sm md:text-base gap-3"
+                    onClick={() => haptics.selection()}
+                  >
+                    <span className="flex-1 pr-2">{faq.question}</span>
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground pb-5">
+                  <AccordionContent className="text-muted-foreground pb-4 md:pb-5 text-sm md:text-base leading-relaxed">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
+          </motion.div>
+          
+          {/* Scroll hint for mobile */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="flex justify-center mt-6 md:hidden"
+          >
+            <motion.div
+              animate={{ y: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="flex flex-col items-center text-muted-foreground"
+            >
+              <span className="text-xs mb-1">Scroll for more</span>
+              <ChevronDown className="w-4 h-4" />
+            </motion.div>
           </motion.div>
         </div>
       </section>

@@ -1,352 +1,279 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, Scissors, Crown, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Crown, Sparkles, User, Users, Clock, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ImageShowcase } from '@/components/ImageShowcase';
-import { MenGallery } from '@/components/MenGallery';
+import { haptics } from '@/lib/haptics';
+import { useSalon } from '@/contexts/SalonContext';
 import servicesHeroBg from '@/assets/services-hero-bg.jpg';
 
-const womenServices = [
-  { name: 'Box Braids', desc: 'Classic protective style that lasts weeks' },
-  { name: 'Knotless Braids', desc: 'Seamless, lightweight, natural-looking' },
-  { name: 'Cornrows', desc: 'Timeless patterns, endless creativity' },
-  { name: 'Twist Styles', desc: 'Senegalese, passion, spring twists' },
-  { name: 'Locs & Maintenance', desc: 'Start, style, and maintain your journey' },
-  { name: 'Natural Hair Care', desc: 'Deep treatments & silk press' },
-];
+// Category display names
+const categoryLabels: Record<string, string> = {
+  braids: '✨ Braids',
+  twists: '🌀 Twists',
+  locs: '🔥 Locs',
+  natural: '🌿 Natural Hair',
+  treatment: '💆 Treatments',
+  styling: '💫 Styling',
+  extensions: '✂️ Extensions',
+  color: '🎨 Color',
+  mens: '👔 Men\'s Styles',
+  cut: '💈 Cuts & Fades',
+};
 
-const menServices = [
-  { name: 'Beard Grooming', desc: 'Sculpted, shaped, conditioned' },
-  { name: 'Cornrow Designs', desc: 'Classic to creative patterns' },
-  { name: 'Loc Styles', desc: 'Retwist, styling, maintenance' },
-  { name: 'Hair Treatments', desc: 'Scalp care & conditioning' },
-  { name: 'Full Grooming', desc: 'Complete transformation package' },
-];
+// All possible categories
+const allCategories = ['braids', 'twists', 'locs', 'natural', 'treatment', 'styling', 'extensions', 'color', 'mens', 'cut'];
 
 export function Services() {
+  const { services } = useSalon();
+  const [selectedGender, setSelectedGender] = useState<'female' | 'male' | null>(null);
+  
+  // Filter services by gender field
+  const filteredServices = services.filter(s => {
+    if (!s.active) return false;
+    if (!selectedGender) return true;
+    // Show if service gender matches selection, or if service is for 'both'
+    if (s.gender === 'both') return true;
+    return s.gender === selectedGender;
+  });
+
+  // Group services by category
+  const groupedServices = allCategories.reduce((acc, category) => {
+    const categoryServices = filteredServices.filter(s => s.category === category);
+    if (categoryServices.length > 0) {
+      acc[category] = categoryServices;
+    }
+    return acc;
+  }, {} as Record<string, typeof filteredServices>);
+
+  const handleGenderSelect = (gender: 'female' | 'male') => {
+    haptics.medium();
+    setSelectedGender(gender);
+  };
+
   return (
-    <div className="min-h-screen bg-background overflow-hidden">
-      {/* Hero */}
-      <section className="relative py-32 md:py-44 overflow-hidden">
-        {/* Background Image */}
+    <div className="min-h-[100dvh] bg-background overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative py-20 md:py-32 overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${servicesHeroBg})` }}
         />
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
         
-        {/* Animated floating hair strands */}
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute opacity-10"
-            style={{
-              left: `${10 + i * 12}%`,
-              top: `${20 + (i % 3) * 25}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              rotate: [0, 5, -5, 0],
-              scale: [1, 1.05, 1],
-            }}
-            transition={{
-              duration: 4 + i * 0.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.3,
-            }}
-          >
-            <svg width="60" height="120" viewBox="0 0 60 120" className="text-primary">
-              <path 
-                d="M30 0 Q45 20, 30 40 Q15 60, 30 80 Q45 100, 30 120" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                fill="none"
-                strokeLinecap="round"
-              />
-            </svg>
-          </motion.div>
-        ))}
-        
-        {/* Animated braid pattern - left side */}
-        <motion.div 
-          className="absolute left-0 top-1/2 -translate-y-1/2 opacity-15"
-          animate={{ y: [0, -20, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <svg width="200" height="600" viewBox="0 0 200 600" className="text-primary">
-            <path d="M50 0 Q100 50, 50 100 Q0 150, 50 200 Q100 250, 50 300 Q0 350, 50 400 Q100 450, 50 500 Q0 550, 50 600" 
-              stroke="currentColor" strokeWidth="3" fill="none" />
-            <path d="M100 0 Q150 50, 100 100 Q50 150, 100 200 Q150 250, 100 300 Q50 350, 100 400 Q150 450, 100 500 Q50 550, 100 600" 
-              stroke="currentColor" strokeWidth="3" fill="none" />
-            <path d="M150 0 Q200 50, 150 100 Q100 150, 150 200 Q200 250, 150 300 Q100 350, 150 400 Q200 450, 150 500 Q100 550, 150 600" 
-              stroke="currentColor" strokeWidth="3" fill="none" />
-          </svg>
-        </motion.div>
-        
-        {/* Animated braid pattern - right side */}
-        <motion.div 
-          className="absolute right-0 top-1/2 -translate-y-1/2 opacity-15 rotate-180"
-          animate={{ y: [0, 20, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        >
-          <svg width="200" height="600" viewBox="0 0 200 600" className="text-primary">
-            <path d="M50 0 Q100 50, 50 100 Q0 150, 50 200 Q100 250, 50 300 Q0 350, 50 400 Q100 450, 50 500 Q0 550, 50 600" 
-              stroke="currentColor" strokeWidth="3" fill="none" />
-            <path d="M100 0 Q150 50, 100 100 Q50 150, 100 200 Q150 250, 100 300 Q50 350, 100 400 Q150 450, 100 500 Q50 550, 100 600" 
-              stroke="currentColor" strokeWidth="3" fill="none" />
-            <path d="M150 0 Q200 50, 150 100 Q100 150, 150 200 Q200 250, 150 300 Q100 350, 150 400 Q200 450, 150 500 Q100 550, 150 600" 
-              stroke="currentColor" strokeWidth="3" fill="none" />
-          </svg>
-        </motion.div>
-        
-        {/* Animated scissors */}
-        <motion.div 
-          className="absolute top-20 left-[15%] opacity-10"
-          animate={{ rotate: [45, 55, 45], scale: [1, 1.1, 1] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Scissors className="w-32 h-32 text-primary" />
-        </motion.div>
-        <motion.div 
-          className="absolute bottom-20 right-[15%] opacity-10"
-          animate={{ rotate: [-12, -22, -12], scale: [1, 1.05, 1] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        >
-          <Scissors className="w-24 h-24 text-primary" />
-        </motion.div>
-        
-        {/* Animated sparkles */}
-        <motion.div 
-          className="absolute top-32 right-[20%]"
-          animate={{ opacity: [0.2, 0.5, 0.2], scale: [1, 1.3, 1] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Sparkles className="w-8 h-8 text-primary" />
-        </motion.div>
-        <motion.div 
-          className="absolute bottom-32 left-[25%]"
-          animate={{ opacity: [0.2, 0.5, 0.2], scale: [1, 1.2, 1] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        >
-          <Sparkles className="w-6 h-6 text-primary" />
-        </motion.div>
-        <motion.div 
-          className="absolute top-[60%] right-[30%]"
-          animate={{ opacity: [0.1, 0.4, 0.1], scale: [1, 1.4, 1] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-        >
-          <Sparkles className="w-5 h-5 text-primary" />
-        </motion.div>
-        
-        {/* Animated geometric accents */}
-        <motion.div 
-          className="absolute top-1/4 left-[10%] w-40 h-40 border border-primary/20 rounded-full"
-          animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div 
-          className="absolute bottom-1/4 right-[10%] w-32 h-32 border border-primary/20 rounded-full"
-          animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.35, 0.2] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
-        <div className="absolute top-1/3 right-[5%] w-20 h-20 bg-primary/10 rounded-full blur-xl" />
-        <div className="absolute bottom-1/3 left-[5%] w-24 h-24 bg-primary/10 rounded-full blur-xl" />
-        
-        <div className="container mx-auto px-4 relative">
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
+            className="text-center max-w-3xl mx-auto"
           >
             <motion.div 
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
-              className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 border border-primary/30 mb-8"
+              className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 border border-primary/30 mb-6"
             >
-              <Crown className="w-10 h-10 text-primary" />
+              <Crown className="w-8 h-8 text-primary" />
             </motion.div>
             
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-8">
-              <span className="text-foreground">Your </span>
-              <span className="text-gradient-gold">Crown</span>
-              <br />
-              <span className="text-foreground">Our Craft</span>
+            <h1 className="font-display text-3xl md:text-5xl font-bold mb-4">
+              <span className="text-foreground">Our </span>
+              <span className="text-gradient-gold">Services</span>
             </h1>
             
-            <p className="text-foreground/60 text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed">
-              Expert braiding, natural hair care, and precision grooming 
-              for those who refuse to settle for ordinary.
+            <p className="text-foreground/60 text-base md:text-lg max-w-xl mx-auto">
+              Premium hair styling for every crown. Select your preference to view our curated services.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Women's Section */}
-      <section className="py-20 md:py-32 relative">
+      {/* Gender Selection */}
+      <section className="py-8 md:py-12 border-b border-border sticky top-16 md:top-20 bg-background/95 backdrop-blur-lg z-30">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Animated Image Showcase */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+          <div className="flex justify-center gap-4 md:gap-6">
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleGenderSelect('female')}
+              className={`flex flex-col items-center gap-2 p-4 md:p-6 rounded-2xl border-2 transition-all duration-300 min-w-[140px] md:min-w-[180px] ${
+                selectedGender === 'female'
+                  ? 'border-pink-500 bg-pink-500/10 shadow-lg shadow-pink-500/20'
+                  : 'border-border hover:border-pink-500/50 bg-card/50'
+              }`}
             >
-              <ImageShowcase direction="right" category="women" />
-            </motion.div>
+              <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all ${
+                selectedGender === 'female' ? 'bg-pink-500 text-white' : 'bg-pink-500/20 text-pink-500'
+              }`}>
+                <Users className="w-7 h-7 md:w-8 md:h-8" />
+              </div>
+              <span className={`font-bold text-lg ${selectedGender === 'female' ? 'text-pink-500' : 'text-foreground'}`}>
+                Women
+              </span>
+              <span className="text-xs text-muted-foreground">👑 Queen Services</span>
+            </motion.button>
 
-            {/* Content */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleGenderSelect('male')}
+              className={`flex flex-col items-center gap-2 p-4 md:p-6 rounded-2xl border-2 transition-all duration-300 min-w-[140px] md:min-w-[180px] ${
+                selectedGender === 'male'
+                  ? 'border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/20'
+                  : 'border-border hover:border-blue-500/50 bg-card/50'
+              }`}
             >
-              <div className="inline-flex items-center gap-2 text-primary mb-4">
-                <Sparkles className="w-5 h-5" />
-                <span className="text-sm font-bold tracking-[0.2em] uppercase">For Her</span>
+              <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all ${
+                selectedGender === 'male' ? 'bg-blue-500 text-white' : 'bg-blue-500/20 text-blue-500'
+              }`}>
+                <User className="w-7 h-7 md:w-8 md:h-8" />
               </div>
-              
-              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
-                Queen-Level<br />
-                <span className="text-gradient-gold">Hair Artistry</span>
-              </h2>
-              
-              <p className="text-foreground/60 text-lg mb-10 leading-relaxed">
-                From protective styles that last for weeks to natural hair treatments 
-                that restore your crown's glory. Every braid tells a story.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                {womenServices.map((service, i) => (
-                  <motion.div
-                    key={service.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="group p-4 rounded-xl bg-card/50 border border-border/50 hover:border-primary/50 transition-all duration-300"
-                  >
-                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                      {service.name}
-                    </h3>
-                    <p className="text-sm text-foreground/50">{service.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
-
-              <Link to="/book">
-                <Button size="lg" className="btn-premium rounded-full px-10 font-bold group">
-                  Book Your Style
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </motion.div>
+              <span className={`font-bold text-lg ${selectedGender === 'male' ? 'text-blue-500' : 'text-foreground'}`}>
+                Men
+              </span>
+              <span className="text-xs text-muted-foreground">👔 King Services</span>
+            </motion.button>
           </div>
         </div>
       </section>
 
-      {/* Divider */}
-      <div className="container mx-auto px-4">
-        <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-      </div>
-
-      {/* Men's Section */}
-      <section className="py-20 md:py-32 relative">
+      {/* Services Display */}
+      <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="order-2 lg:order-1"
-            >
-              <div className="inline-flex items-center gap-2 text-primary mb-4">
-                <Scissors className="w-5 h-5" />
-                <span className="text-sm font-bold tracking-[0.2em] uppercase">For Him</span>
-              </div>
-              
-              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
-                Sharp Cuts,<br />
-                <span className="text-gradient-gold">Clean Living</span>
-              </h2>
-              
-              <p className="text-foreground/60 text-lg mb-10 leading-relaxed">
-                Precision fades, detailed lineup, and expert grooming. 
-                Walk out looking like you own the room. Every. Single. Time.
-              </p>
+          <AnimatePresence mode="wait">
+            {!selectedGender ? (
+              <motion.div
+                key="prompt"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-center py-16"
+              >
+                <Sparkles className="w-16 h-16 mx-auto mb-6 text-primary/50" />
+                <h3 className="text-2xl font-bold mb-2">Select Your Preference</h3>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  Choose "Women" or "Men" above to see our curated services designed specifically for you.
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={selectedGender}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-10"
+              >
+                {/* Header */}
+                <div className="text-center">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                    {selectedGender === 'female' ? '👑 Services for Queens' : '👔 Services for Kings'}
+                  </h2>
+                  <p className="text-muted-foreground">
+                    {Object.keys(groupedServices).length} categories • {filteredServices.length} services available
+                  </p>
+                </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                {menServices.map((service, i) => (
+                {/* Services by Category */}
+                {Object.entries(groupedServices).map(([category, categoryServices], categoryIndex) => (
                   <motion.div
-                    key={service.name}
+                    key={category}
                     initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="group p-4 rounded-xl bg-card/50 border border-border/50 hover:border-primary/50 transition-all duration-300"
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: categoryIndex * 0.1 }}
                   >
-                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                      {service.name}
+                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                      {categoryLabels[category] || category}
+                      <span className="text-sm font-normal text-muted-foreground">
+                        ({categoryServices.length})
+                      </span>
                     </h3>
-                    <p className="text-sm text-foreground/50">{service.desc}</p>
+                    
+                    <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                      {categoryServices.map((service, index) => (
+                        <motion.div
+                          key={service.id}
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.05 }}
+                          whileHover={{ y: -4 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => haptics.light()}
+                          className={`group p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+                            selectedGender === 'female'
+                              ? 'bg-gradient-to-br from-pink-500/5 to-purple-500/5 border-pink-500/20 hover:border-pink-500/50 hover:shadow-lg hover:shadow-pink-500/10'
+                              : 'bg-gradient-to-br from-blue-500/5 to-cyan-500/5 border-blue-500/20 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10'
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1">
+                              <h4 className="font-bold text-foreground group-hover:text-primary transition-colors">
+                                {service.name}
+                              </h4>
+                              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                                {service.description}
+                              </p>
+                              <div className="flex items-center gap-3 mt-3">
+                                <span className={`text-lg font-bold ${
+                                  selectedGender === 'female' ? 'text-pink-500' : 'text-blue-500'
+                                }`}>
+                                  ₺{service.price.toLocaleString()}
+                                </span>
+                                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                                  <Clock className="w-3 h-3" />
+                                  {service.durationMin >= 60 
+                                    ? `${Math.floor(service.durationMin / 60)}h ${service.durationMin % 60 > 0 ? `${service.durationMin % 60}m` : ''}`
+                                    : `${service.durationMin}m`
+                                  }
+                                </span>
+                              </div>
+                            </div>
+                            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
                   </motion.div>
                 ))}
-              </div>
 
-              <Link to="/book">
-                <Button size="lg" className="btn-premium rounded-full px-10 font-bold group">
-                  Book Your Cut
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </motion.div>
-
-            {/* Men's Gallery */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="order-1 lg:order-2"
-            >
-              <MenGallery />
-            </motion.div>
-          </div>
+                {/* Book Now CTA */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="text-center pt-8"
+                >
+                  <Link to="/book" onClick={() => haptics.heavy()}>
+                    <Button 
+                      size="lg" 
+                      className={`rounded-full px-10 h-14 font-bold text-lg shadow-lg ${
+                        selectedGender === 'female'
+                          ? 'bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 shadow-pink-500/25'
+                          : 'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 shadow-blue-500/25'
+                      }`}
+                    >
+                      Book Your Appointment
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                  </Link>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 md:py-40 relative">
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-primary/5 to-transparent" />
-        <div className="container mx-auto px-4 text-center relative">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto"
-          >
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+      {/* Bottom CTA for non-selected state */}
+      {!selectedGender && (
+        <section className="py-16 bg-gradient-to-t from-primary/10 to-transparent">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
               Ready to <span className="text-gradient-gold">Transform?</span>
             </h2>
-            <p className="text-foreground/60 text-xl mb-10 max-w-xl mx-auto">
-              Book your appointment today and let us show you 
-              what happens when skill meets passion.
+            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              Select your preference above to explore our premium services.
             </p>
-            <Link to="/book">
-              <Button size="lg" className="btn-premium rounded-full px-12 py-6 text-lg font-bold">
-                Book Your Appointment
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

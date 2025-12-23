@@ -98,7 +98,7 @@ export function Policies() {
               <ul className="text-muted-foreground mt-4">
                 <li>Email: {settings.email}</li>
                 <li>Phone: {settings.phone}</li>
-                <li>WhatsApp: +{settings.whatsappNumber}</li>
+                <li>WhatsApp: +{settings.whatsappNumber || '905338709271'}</li>
               </ul>
             </section>
           </div>

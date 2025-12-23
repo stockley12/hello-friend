@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - La'Couronne</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #0d0a07 0%, #1a1510 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #fff;
+    }
+    
+    .container {
+      text-align: center;
+      max-width: 400px;
+    }
+    
+    .logo {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 30px;
+      background: linear-gradient(135deg, #facc15, #eab308);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+    
+    h1 {
+      font-size: 28px;
+      margin-bottom: 16px;
+      color: #facc15;
+    }
+    
+    p {
+      font-size: 16px;
+      color: #a1a1aa;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: rgba(250, 204, 21, 0.1);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      border-radius: 50px;
+      color: #facc15;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #facc15, #eab308);
+      color: #0d0a07;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(250, 204, 21, 0.3);
+    }
+    
+    .contact {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .contact p {
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    
+    .contact a {
+      color: #facc15;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">👑</div>
+    
+    <h1>You're Offline</h1>
+    
+    <div class="status">
+      <span class="status-dot"></span>
+      No Internet Connection
+    </div>
+    
+    <p>
+      Don't worry! Your bookings are saved locally. 
+      Connect to the internet to sync your data and browse our services.
+    </p>
+    
+    <button class="btn" onclick="location.reload()">
+      Try Again
+    </button>
+    
+    <div class="contact">
+      <p>Need to reach us?</p>
+      <p>
+        <a href="tel:+905338709271">📞 Call: +90 533 870 9271</a>
+      </p>
+      <p>
+        <a href="https://wa.me/905338709271">💬 WhatsApp Us</a>
+      </p>
+    </div>
+  </div>
+  
+  <script>
+    // Auto-reload when back online
+    window.addEventListener('online', () => {
+      location.reload();
+    });
+  </script>
+</body>
+</html>

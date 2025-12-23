@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { generateConfirmationLink, openWhatsApp } from '@/lib/whatsapp';
 
 export function AdminCalendar() {
-  const { bookings, staff, getClientById, getServiceById, getStaffById, generateWhatsAppLink } = useSalon();
+  const { bookings, staff, getClientById, getServiceById, getStaffById, settings } = useSalon();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<'day' | 'week'>('day');
   const [selectedStaff, setSelectedStaff] = useState<string>('all');
@@ -94,11 +95,21 @@ export function AdminCalendar() {
                           <div key={booking.id} className="bg-primary/10 border-l-4 border-primary rounded p-2 text-sm">
                             <div className="flex items-center justify-between">
                               <span className="font-medium">{client?.name}</span>
-                              <a href={generateWhatsAppLink(booking)} target="_blank" rel="noopener noreferrer">
-                                <MessageCircle className="h-4 w-4 text-muted-foreground hover:text-primary" />
-                              </a>
+                              <button 
+                                onClick={() => {
+                                  if (client) {
+                                    const whatsappData = generateConfirmationLink(booking, client, settings);
+                                    openWhatsApp(whatsappData.link);
+                                  }
+                                }}
+                                className="hover:opacity-80"
+                                title={`Send WhatsApp to ${client?.phone || 'client'}`}
+                              >
+                                <MessageCircle className="h-4 w-4 text-green-600 hover:text-green-500" />
+                              </button>
                             </div>
                             <p className="text-xs text-muted-foreground">{booking.startTime} - {booking.endTime}</p>
+                            <p className="text-xs text-green-600">📱 {client?.phone}</p>
                             {staffMember && <p className="text-xs text-muted-foreground">with {staffMember.name}</p>}
                           </div>
                         );

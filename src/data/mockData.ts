@@ -1,11 +1,13 @@
-import { Service, Staff, Client, Booking, SalonSettings } from '@/types';
+import { Service, Staff, Client, Booking, SalonSettings, AvailabilitySettings } from '@/types';
 
 // Services for Men & Women Hairstyling
+// gender: 'female' | 'male' | 'both' - determines who sees this service
 export const mockServices: Service[] = [
   {
     id: 'srv-1',
     name: 'Box Braids',
     category: 'braids',
+    gender: 'female',
     durationMin: 180,
     price: 2500,
     description: 'Classic box braids in various sizes - small, medium, or large. Perfect for any occasion.',
@@ -15,6 +17,7 @@ export const mockServices: Service[] = [
     id: 'srv-2',
     name: 'Knotless Braids',
     category: 'braids',
+    gender: 'female',
     durationMin: 240,
     price: 3500,
     description: 'Lightweight, tension-free braids that start flat at the root for a natural look.',
@@ -24,6 +27,7 @@ export const mockServices: Service[] = [
     id: 'srv-3',
     name: 'Cornrows',
     category: 'braids',
+    gender: 'both',
     durationMin: 120,
     price: 1500,
     description: 'Traditional African cornrow styles for men and women. Custom patterns available.',
@@ -33,6 +37,7 @@ export const mockServices: Service[] = [
     id: 'srv-4',
     name: 'Fulani Braids',
     category: 'braids',
+    gender: 'female',
     durationMin: 180,
     price: 2800,
     description: 'Beautiful tribal-inspired style with beads and accessories.',
@@ -42,6 +47,7 @@ export const mockServices: Service[] = [
     id: 'srv-5',
     name: 'Twist Styles',
     category: 'twists',
+    gender: 'female',
     durationMin: 150,
     price: 2000,
     description: 'Senegalese twists, passion twists, or marley twists - your choice!',
@@ -51,6 +57,7 @@ export const mockServices: Service[] = [
     id: 'srv-6',
     name: 'Locs Maintenance',
     category: 'locs',
+    gender: 'both',
     durationMin: 90,
     price: 1200,
     description: 'Retwisting, interlocking, and styling for mature locs.',
@@ -60,9 +67,30 @@ export const mockServices: Service[] = [
     id: 'srv-8',
     name: 'Natural Hair Styling',
     category: 'natural',
+    gender: 'female',
     durationMin: 60,
     price: 1000,
     description: 'Wash, condition, and style for natural curls and coils.',
+    active: true,
+  },
+  {
+    id: 'srv-9',
+    name: 'Fade Haircut',
+    category: 'mens',
+    gender: 'male',
+    durationMin: 45,
+    price: 800,
+    description: 'Sharp fade cuts - low, mid, or high. Includes lineup and styling.',
+    active: true,
+  },
+  {
+    id: 'srv-10',
+    name: 'Men\'s Braids',
+    category: 'braids',
+    gender: 'male',
+    durationMin: 90,
+    price: 1200,
+    description: 'Stylish braids for men - cornrows, two-strand twists, or box braids.',
     active: true,
   },
 ];
@@ -162,10 +190,10 @@ export const mockBookings: Booking[] = [
 
 export const defaultSalonSettings: SalonSettings = {
   name: "La'Couronne",
-  address: 'Nişantaşı, İstanbul',
-  phone: '+90 212 555 0100',
+  address: 'Famagusta (Gazimağusa), North Cyprus',
+  phone: '+90 533 870 9271',
   email: 'info@lacouronne.com',
-  whatsappNumber: '905325550100',
+  whatsappNumber: '+905338709271',
   instagramHandle: 'lcouronne',
   businessHours: {
     monday: { start: '09:00', end: '18:00' },
@@ -177,5 +205,23 @@ export const defaultSalonSettings: SalonSettings = {
     sunday: null,
   },
   whatsappTemplate: `Hello! I'd like to confirm my appointment:\n\nName: {clientName}\nService: {serviceName}\nDate: {date}\nTime: {time}\nBooking ID: {id}\n\nPlease confirm. Thank you!`,
-  adminPin: '1234',
+  adminPin: '67771',
+  termsAndConditions: 'By booking an appointment, you agree to arrive on time and provide 24-hour notice for cancellations.',
+  cancellationPolicy: 'Cancellations must be made at least 24 hours before your scheduled appointment. Late cancellations may be subject to a fee.',
+};
+
+// Default availability settings
+export const defaultAvailability: AvailabilitySettings = {
+  weeklySchedule: {
+    sunday: { isOpen: false, startTime: '09:00', endTime: '17:00' },
+    monday: { isOpen: true, startTime: '08:00', endTime: '20:00' },
+    tuesday: { isOpen: true, startTime: '08:00', endTime: '20:00' },
+    wednesday: { isOpen: true, startTime: '08:00', endTime: '20:00' },
+    thursday: { isOpen: true, startTime: '08:00', endTime: '20:00' },
+    friday: { isOpen: true, startTime: '08:00', endTime: '20:00' },
+    saturday: { isOpen: true, startTime: '09:00', endTime: '18:00' },
+  },
+  blockedDates: [],
+  slotDurationMinutes: 240, // 4 hours per appointment
+  maxBookingsPerSlot: 1,    // 1 booking per time slot
 };

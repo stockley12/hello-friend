@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { format } from 'date-fns';
-import { Search, Plus, Phone, Mail, MoreVertical, Tag, User } from 'lucide-react';
+import { Search, Plus, Phone, Mail, Crown, Star } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,9 +10,10 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { haptics } from '@/lib/haptics';
 
 export function AdminClients() {
-  const { clients, bookings, addClient, updateClient, getServiceById } = useSalon();
+  const { clients, bookings, addClient, updateClient, getServiceById, toggleClientVIP } = useSalon();
   const [search, setSearch] = useState('');
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
@@ -88,19 +89,30 @@ export function AdminClients() {
           filteredClients.map(client => {
             const clientBookings = getClientBookings(client.id);
             const totalSpent = clientBookings.reduce((acc, b) => acc + b.services.reduce((sum, id) => sum + (getServiceById(id)?.price || 0), 0), 0);
+            const isVIP = client.tags.includes('VIP');
             
             return (
-              <Card key={client.id} className="overflow-hidden">
+              <Card key={client.id} className={`overflow-hidden border-2 ${isVIP ? 'border-amber-300 bg-amber-50/50' : ''}`}>
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3">
-                      <Avatar className="h-12 w-12">
-                        <AvatarFallback className="bg-primary/10 text-primary">{client.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                      <Avatar className={`h-12 w-12 ${isVIP ? 'ring-2 ring-amber-400' : ''}`}>
+                        <AvatarFallback className={isVIP ? 'bg-amber-500 text-white' : 'bg-primary/10 text-primary'}>
+                          {isVIP ? <Crown className="w-5 h-5" /> : client.name.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{client.name}</span>
-                          {client.tags.map(tag => <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>)}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-bold">{client.name}</span>
+                          {isVIP && (
+                            <Badge className="bg-amber-500 text-white">
+                              <Crown className="w-3 h-3 mr-1" />
+                              VIP
+                            </Badge>
+                          )}
+                          {client.tags.filter(t => t !== 'VIP').map(tag => (
+                            <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
+                          ))}
                         </div>
                         <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{client.phone}</span>
@@ -108,12 +120,23 @@ export function AdminClients() {
                         </div>
                         <div className="flex gap-4 mt-2 text-sm">
                           <span><strong>{clientBookings.length}</strong> visits</span>
-                          <span><strong>${totalSpent}</strong> total</span>
+                          <span><strong>₺{totalSpent.toLocaleString()}</strong> total</span>
                         </div>
                         {client.notes && <p className="text-sm text-muted-foreground mt-2 italic">"{client.notes}"</p>}
                       </div>
                     </div>
-                    <Button size="sm" variant="ghost" onClick={() => openEdit(client.id)}>Edit</Button>
+                    <div className="flex flex-col gap-2">
+                      <Button 
+                        size="sm" 
+                        variant={isVIP ? 'default' : 'outline'}
+                        className={isVIP ? 'bg-amber-500 hover:bg-amber-600' : ''}
+                        onClick={() => { haptics.medium(); toggleClientVIP(client.id); }}
+                      >
+                        <Star className={`w-4 h-4 mr-1 ${isVIP ? 'fill-white' : ''}`} />
+                        {isVIP ? 'VIP' : 'Make VIP'}
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => openEdit(client.id)}>Edit</Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

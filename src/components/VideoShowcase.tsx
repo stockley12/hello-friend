@@ -2,29 +2,22 @@ import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Sparkles, Crown, Heart, Star, Smile, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 
-import showcase1 from '@/assets/showcase-1.jpg';
-import showcase2 from '@/assets/showcase-2.jpg';
-import showcase3 from '@/assets/showcase-3.jpg';
+import showcaseNew2 from '@/assets/showcase-new-2.png';
 import showcase4 from '@/assets/showcase-4.jpg';
+import heroImage from '@/assets/hero-image.jpeg';
 
 const showcaseData = [
   {
-    image: showcase1,
-    title: 'Rainbow Magic',
-    quote: '"I love my new look!"',
+    image: heroImage,
+    title: 'Natural Beauty',
+    quote: '"Art meets hair!"',
     mood: 'Creative & Bold'
   },
   {
-    image: showcase2,
-    title: 'Classic Elegance',
-    quote: '"Exactly what I wanted!"',
-    mood: 'Sleek & Professional'
-  },
-  {
-    image: showcase3,
-    title: 'Fire Red Vibes',
+    image: showcaseNew2,
+    title: 'Edgy Undercut',
     quote: '"Feeling like a queen!"',
-    mood: 'Bold & Beautiful'
+    mood: 'Bold & Unique'
   },
   {
     image: showcase4,

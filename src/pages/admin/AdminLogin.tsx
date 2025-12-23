@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
@@ -9,14 +8,15 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export function AdminLogin() {
   const { authenticateAdmin, settings } = useSalon();
-  const navigate = useNavigate();
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (authenticateAdmin(pin)) {
-      navigate('/admin');
+    const isValid = await authenticateAdmin(pin);
+    if (isValid) {
+      // Force full page load so Safari updates URL bar
+      window.location.href = '/admin/dashboard';
     } else {
       setError('Invalid PIN');
       setPin('');
@@ -54,7 +54,7 @@ export function AdminLogin() {
               </div>
               <Button type="submit" className="w-full h-12">Sign In</Button>
             </form>
-            <p className="text-xs text-muted-foreground text-center mt-4">Default PIN: 1234</p>
+            <p className="text-xs text-muted-foreground text-center mt-4">Enter your admin PIN</p>
           </CardContent>
         </Card>
       </motion.div>
