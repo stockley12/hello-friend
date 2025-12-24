@@ -505,6 +505,7 @@ export async function fetchGallery(): Promise<GalleryImage[]> {
     id: row.id,
     url: row.url,
     category: row.category,
+    mediaType: row.media_type || 'image',
     caption: row.caption || '',
     createdAt: row.created_at,
   }));
@@ -518,6 +519,7 @@ export async function addGalleryImage(image: Omit<GalleryImage, 'id' | 'createdA
     .insert({
       url: image.url,
       category: image.category,
+      media_type: image.mediaType || 'image',
       caption: image.caption || '',
     })
     .select()
@@ -532,6 +534,7 @@ export async function addGalleryImage(image: Omit<GalleryImage, 'id' | 'createdA
     id: data.id,
     url: data.url,
     category: data.category,
+    mediaType: data.media_type || 'image',
     caption: data.caption || '',
     createdAt: data.created_at,
   };
@@ -547,6 +550,55 @@ export async function deleteGalleryImage(id: string): Promise<boolean> {
   
   if (error) {
     console.error('Error deleting gallery image:', error);
+    return false;
+  }
+  
+  return true;
+}
+
+// Upload file to gallery storage bucket
+export async function uploadGalleryFile(file: File, category: string): Promise<string | null> {
+  if (!isSupabaseConfigured()) return null;
+  
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${category}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+  
+  const { data, error } = await supabase.storage
+    .from('gallery')
+    .upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: false,
+    });
+  
+  if (error) {
+    console.error('Error uploading file:', error);
+    return null;
+  }
+  
+  // Get public URL
+  const { data: urlData } = supabase.storage
+    .from('gallery')
+    .getPublicUrl(data.path);
+  
+  return urlData.publicUrl;
+}
+
+// Delete file from gallery storage bucket
+export async function deleteGalleryFile(url: string): Promise<boolean> {
+  if (!isSupabaseConfigured()) return false;
+  
+  // Extract file path from URL
+  const urlParts = url.split('/gallery/');
+  if (urlParts.length < 2) return false;
+  
+  const filePath = urlParts[1];
+  
+  const { error } = await supabase.storage
+    .from('gallery')
+    .remove([filePath]);
+  
+  if (error) {
+    console.error('Error deleting file:', error);
     return false;
   }
   

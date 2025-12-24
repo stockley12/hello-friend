@@ -125,6 +125,7 @@ export type Database = {
           category: string
           created_at: string | null
           id: string
+          media_type: string | null
           url: string
         }
         Insert: {
@@ -132,6 +133,7 @@ export type Database = {
           category: string
           created_at?: string | null
           id?: string
+          media_type?: string | null
           url: string
         }
         Update: {
@@ -139,6 +141,7 @@ export type Database = {
           category?: string
           created_at?: string | null
           id?: string
+          media_type?: string | null
           url?: string
         }
         Relationships: []
