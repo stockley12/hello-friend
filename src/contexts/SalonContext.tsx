@@ -3,7 +3,7 @@ import { Service, Staff, Client, Booking, SalonSettings, BookingStatus, Availabi
 import { servicesAPI, staffAPI, clientsAPI, bookingsAPI, settingsAPI, authAPI } from '@/lib/api';
 import { mockServices, mockStaff, mockClients, mockBookings, defaultSalonSettings, defaultAvailability } from '@/data/mockData';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, parseISO, isWithinInterval, format } from 'date-fns';
-import { playNotificationSound } from '@/lib/notifications';
+import { playNotificationSound, showNewBookingNotification, updateAppBadge } from '@/lib/notifications';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import * as supabaseService from '@/lib/supabaseService';
 
@@ -405,6 +405,12 @@ export function SalonProvider({ children }: { children: ReactNode }) {
       unsubClients();
     };
   }, [isAdminAuthenticated, bookings.length, clients]);
+
+  // Update Android PWA badge with pending booking count
+  useEffect(() => {
+    const pendingCount = bookings.filter(b => b.status === 'pending').length;
+    updateAppBadge(pendingCount);
+  }, [bookings]);
 
   // Service actions
   const addService = async (service: Omit<Service, 'id'>) => {

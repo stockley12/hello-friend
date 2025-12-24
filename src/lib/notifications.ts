@@ -108,3 +108,30 @@ export const areNotificationsEnabled = (): boolean => {
   return 'Notification' in window && Notification.permission === 'granted';
 };
 
+// Get notification permission status
+export const getNotificationStatus = (): 'granted' | 'denied' | 'default' | 'unsupported' => {
+  if (!('Notification' in window)) return 'unsupported';
+  return Notification.permission;
+};
+
+// Badge API for Android PWA - shows count on home screen icon
+export const updateAppBadge = (count: number) => {
+  if ('setAppBadge' in navigator) {
+    if (count > 0) {
+      (navigator as Navigator & { setAppBadge: (count: number) => Promise<void> })
+        .setAppBadge(count)
+        .catch(() => {});
+    } else {
+      clearAppBadge();
+    }
+  }
+};
+
+// Clear the badge
+export const clearAppBadge = () => {
+  if ('clearAppBadge' in navigator) {
+    (navigator as Navigator & { clearAppBadge: () => Promise<void> })
+      .clearAppBadge()
+      .catch(() => {});
+  }
+};
