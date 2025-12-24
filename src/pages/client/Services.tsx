@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Crown, Sparkles, User, Users, Clock, ChevronRight, Heart, Star, Smile } from 'lucide-react';
@@ -52,7 +52,10 @@ const allCategories = ['braids', 'twists', 'locs', 'natural', 'treatment', 'styl
 
 export function Services() {
   const { services } = useSalon();
-  const [selectedGender, setSelectedGender] = useState<'female' | 'male'>('female');
+  const [selectedGender, setSelectedGender] = useState<'female' | 'male'>(() => {
+    const saved = localStorage.getItem('preferredGender');
+    return (saved === 'male' || saved === 'female') ? saved : 'female';
+  });
   
   // Filter services by gender field
   const filteredServices = services.filter(s => {
@@ -75,6 +78,7 @@ export function Services() {
   const handleGenderSelect = (gender: 'female' | 'male') => {
     haptics.medium();
     setSelectedGender(gender);
+    localStorage.setItem('preferredGender', gender);
   };
 
   return (
