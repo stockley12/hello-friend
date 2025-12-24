@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { format, addDays, startOfWeek, eachDayOfInterval, isSameDay, differenceInDays, parseISO } from 'date-fns';
-import { ChevronLeft, ChevronRight, MessageCircle, Bell, Clock, User, Phone } from 'lucide-react';
+import { ChevronLeft, ChevronRight, MessageCircle, Bell, Clock, User, Check } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -13,6 +13,28 @@ export function AdminCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<'day' | 'week'>('day');
   const [selectedStaff, setSelectedStaff] = useState<string>('all');
+  const [contactedClients, setContactedClients] = useState<Record<string, string>>({});
+
+  // Load contacted clients from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem('contactedClients');
+    if (stored) {
+      setContactedClients(JSON.parse(stored));
+    }
+  }, []);
+
+  const markAsContacted = (clientId: string) => {
+    const updated = { ...contactedClients, [clientId]: new Date().toISOString() };
+    setContactedClients(updated);
+    localStorage.setItem('contactedClients', JSON.stringify(updated));
+  };
+
+  const unmarkAsContacted = (clientId: string) => {
+    const updated = { ...contactedClients };
+    delete updated[clientId];
+    setContactedClients(updated);
+    localStorage.setItem('contactedClients', JSON.stringify(updated));
+  };
 
   const weekDays = useMemo(() => {
     const start = startOfWeek(currentDate, { weekStartsOn: 1 });
@@ -142,15 +164,41 @@ See you soon! 💕`;
                       </div>
                     </div>
                   </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex-shrink-0 gap-2 border-green-500/50 text-green-600 hover:bg-green-500/10 hover:text-green-600"
-                    onClick={() => sendFollowUpWhatsApp(client)}
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    <span className="hidden sm:inline">Message</span>
-                  </Button>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {contactedClients[client.id] ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-2 border-primary/50 text-primary hover:bg-primary/10"
+                        onClick={() => unmarkAsContacted(client.id)}
+                        title={`Contacted on ${format(parseISO(contactedClients[client.id]), 'MMM d')}`}
+                      >
+                        <Check className="w-4 h-4" />
+                        <span className="hidden sm:inline">Contacted</span>
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-2 border-green-500/50 text-green-600 hover:bg-green-500/10 hover:text-green-600"
+                          onClick={() => sendFollowUpWhatsApp(client)}
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          <span className="hidden sm:inline">Message</span>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="gap-1 text-muted-foreground hover:text-primary"
+                          onClick={() => markAsContacted(client.id)}
+                          title="Mark as contacted"
+                        >
+                          <Check className="w-4 h-4" />
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </div>
               ))}
               {followUpReminders.length > 5 && (
