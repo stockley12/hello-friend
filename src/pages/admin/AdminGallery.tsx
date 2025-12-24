@@ -16,19 +16,19 @@ export function AdminGallery() {
   const [selectedCategory, setSelectedCategory] = useState<GalleryCategory>('women');
   const [activeTab, setActiveTab] = useState<'women' | 'men'>('women');
 
-  const handleAddImage = () => {
+  const handleAddImage = async () => {
     if (!newImageUrl.trim()) return;
     
     haptics.success();
-    addGalleryImage(newImageUrl.trim(), selectedCategory, newImageCaption.trim() || undefined);
+    await addGalleryImage(newImageUrl.trim(), selectedCategory, newImageCaption.trim() || undefined);
     setNewImageUrl('');
     setNewImageCaption('');
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     haptics.warning();
     if (confirm('Delete this image?')) {
-      deleteGalleryImage(id);
+      await deleteGalleryImage(id);
     }
   };
 
