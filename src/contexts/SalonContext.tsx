@@ -54,8 +54,8 @@ interface SalonContextType {
   
   // Gallery actions
   galleryImages: GalleryImage[];
-  addGalleryImage: (url: string, category: GalleryCategory, caption?: string) => void;
-  deleteGalleryImage: (id: string) => void;
+  addGalleryImage: (url: string, category: GalleryCategory, caption?: string) => Promise<void>;
+  deleteGalleryImage: (id: string) => Promise<void>;
   
   // Booking alerts (auto-dismiss)
   bookingAlert: { clientName: string; date: string; time: string } | null;
@@ -653,7 +653,21 @@ export function SalonProvider({ children }: { children: ReactNode }) {
   };
 
   // Gallery actions
-  const addGalleryImage = (url: string, category: GalleryCategory, caption?: string) => {
+  const addGalleryImage = async (url: string, category: GalleryCategory, caption?: string) => {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      const supabaseImage = await supabaseService.addGalleryImage({ url, category, caption });
+      if (supabaseImage) {
+        setGalleryImages(prev => {
+          const updated = [supabaseImage, ...prev];
+          localStorage.setItem(STORAGE_KEYS.gallery, JSON.stringify(updated));
+          return updated;
+        });
+        return;
+      }
+    }
+    
+    // Fallback to localStorage
     const newImage: GalleryImage = {
       id: `gallery-${Date.now()}`,
       url,
@@ -668,7 +682,21 @@ export function SalonProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const deleteGalleryImage = (id: string) => {
+  const deleteGalleryImage = async (id: string) => {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      const success = await supabaseService.deleteGalleryImage(id);
+      if (success) {
+        setGalleryImages(prev => {
+          const updated = prev.filter(img => img.id !== id);
+          localStorage.setItem(STORAGE_KEYS.gallery, JSON.stringify(updated));
+          return updated;
+        });
+        return;
+      }
+    }
+    
+    // Fallback to localStorage
     setGalleryImages(prev => {
       const updated = prev.filter(img => img.id !== id);
       localStorage.setItem(STORAGE_KEYS.gallery, JSON.stringify(updated));
