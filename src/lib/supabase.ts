@@ -1,20 +1,27 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Get these from your Supabase project dashboard:
 // Settings → API → Project URL and anon/public key
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('⚠️ Supabase credentials not configured. Using localStorage fallback.');
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
 // Check if Supabase is properly configured
 export const isSupabaseConfigured = () => {
   return Boolean(supabaseUrl && supabaseAnonKey);
 };
+
+// Only create client if credentials exist, otherwise create a dummy that won't be used
+let supabaseInstance: SupabaseClient | null = null;
+
+if (isSupabaseConfigured()) {
+  supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
+  console.log('✅ Supabase connected');
+} else {
+  console.warn('⚠️ Supabase credentials not configured. Using localStorage fallback.');
+}
+
+// Export a safe getter - returns null if not configured
+export const supabase = supabaseInstance as SupabaseClient;
 
 // Database types
 export interface DbService {
