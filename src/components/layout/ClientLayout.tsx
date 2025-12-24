@@ -276,6 +276,18 @@ export function ClientLayout({ children }: ClientLayoutProps) {
         </div>
       </footer>
       
+      {/* Floating Call Button - Mobile Only */}
+      <a
+        href={`tel:${settings.phone}`}
+        className="fixed right-4 bottom-24 z-40 md:hidden w-14 h-14 rounded-full bg-green-500 flex items-center justify-center shadow-lg shadow-green-500/30 active:scale-95 transition-transform"
+        aria-label="Call now"
+        style={{ marginBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        <Phone className="w-6 h-6 text-white" />
+        {/* Pulse effect */}
+        <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-30" />
+      </a>
+      
       {/* Mobile Bottom Navigation */}
       <MobileNav />
       
