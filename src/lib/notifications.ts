@@ -103,6 +103,40 @@ export const showNewBookingNotification = (clientName: string, date: string, tim
   });
 };
 
+// Show daily booking summary notification
+export const showDailySummaryNotification = (count: number) => {
+  const message = count === 0 
+    ? "No appointments scheduled today" 
+    : count === 1 
+      ? "You have 1 appointment today" 
+      : `You have ${count} appointments today`;
+  
+  return showNotification(`📅 Today's Schedule`, {
+    body: message,
+    tag: 'daily-summary',
+  });
+};
+
+// Check and show daily summary (only once per day, in the morning)
+const DAILY_SUMMARY_KEY = 'lastDailySummaryDate';
+
+export const checkAndShowDailySummary = (todayBookingsCount: number): boolean => {
+  const today = new Date().toDateString();
+  const lastShown = localStorage.getItem(DAILY_SUMMARY_KEY);
+  
+  // Only show if we haven't shown today and it's before noon
+  const currentHour = new Date().getHours();
+  const isMorning = currentHour >= 6 && currentHour < 12;
+  
+  if (lastShown !== today && isMorning && Notification.permission === 'granted') {
+    localStorage.setItem(DAILY_SUMMARY_KEY, today);
+    showDailySummaryNotification(todayBookingsCount);
+    return true;
+  }
+  
+  return false;
+};
+
 // Check if notifications are enabled
 export const areNotificationsEnabled = (): boolean => {
   return 'Notification' in window && Notification.permission === 'granted';
