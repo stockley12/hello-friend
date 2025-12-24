@@ -5,7 +5,7 @@ import { ArrowRight, Crown, Sparkles, User, Users, Clock, ChevronRight, Heart, S
 import { Button } from '@/components/ui/button';
 import { haptics } from '@/lib/haptics';
 import { useSalon } from '@/contexts/SalonContext';
-import { ImageShowcase } from '@/components/ImageShowcase';
+
 import { VideoShowcase } from '@/components/VideoShowcase';
 import servicesHeroBg from '@/assets/services-hero-bg.jpg';
 
@@ -190,56 +190,39 @@ export function Services() {
                 </p>
               </motion.div>
 
-              <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center max-w-5xl mx-auto">
-                {/* Video Showcase */}
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="order-2 md:order-1"
-                >
-                  <ImageShowcase category={selectedGender === 'female' ? 'women' : 'men'} />
-                </motion.div>
-
-                {/* Image Gallery Grid */}
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="order-1 md:order-2 grid grid-cols-2 gap-3"
-                >
-                  {(selectedGender === 'female' ? womenShowcaseImages : menShowcaseImages).slice(0, 4).map((item, index) => (
+              {/* Image Gallery Grid - Full Width */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-4xl mx-auto">
+                {(selectedGender === 'female' ? womenShowcaseImages : menShowcaseImages).map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 + index * 0.1 }}
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    className="relative group rounded-xl overflow-hidden aspect-square border-2 border-primary/20 shadow-lg"
+                  >
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                      <p className="text-white text-sm font-bold">{item.title}</p>
+                      <p className="text-primary text-xs italic">{item.quote}</p>
+                    </div>
+                    {/* Stars overlay */}
                     <motion.div
-                      key={index}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.4 + index * 0.1 }}
-                      whileHover={{ scale: 1.05, y: -5 }}
-                      className="relative group rounded-xl overflow-hidden aspect-square border-2 border-primary/20 shadow-lg"
+                      className="absolute top-2 right-2 flex gap-0.5"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
                     >
-                      <img
-                        src={item.img}
-                        alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <p className="text-white text-sm font-bold">{item.title}</p>
-                        <p className="text-primary text-xs italic">{item.quote}</p>
-                      </div>
-                      {/* Stars overlay */}
-                      <motion.div
-                        className="absolute top-2 right-2 flex gap-0.5"
-                        initial={{ opacity: 0 }}
-                        whileHover={{ opacity: 1 }}
-                      >
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-3 h-3 fill-primary text-primary" />
-                        ))}
-                      </motion.div>
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3 h-3 fill-primary text-primary" />
+                      ))}
                     </motion.div>
-                  ))}
-                </motion.div>
+                  </motion.div>
+                ))}
               </div>
 
               {/* Happy client tags */}
