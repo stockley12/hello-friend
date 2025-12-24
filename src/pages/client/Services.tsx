@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { haptics } from '@/lib/haptics';
 import { useSalon } from '@/contexts/SalonContext';
 import { ImageShowcase } from '@/components/ImageShowcase';
-import { VideoShowcase } from '@/components/VideoShowcase';
+
 import servicesHeroBg from '@/assets/services-hero-bg.jpg';
 
 // Import showcase images for happy moments
@@ -390,8 +390,6 @@ export function Services() {
         </div>
       </section>
 
-      {/* Smiles That Speak - Video Showcase Section */}
-      <VideoShowcase />
 
       {/* Bottom CTA for non-selected state */}
       {!selectedGender && (
