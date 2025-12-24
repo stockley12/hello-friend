@@ -13,14 +13,14 @@ const womenVideos = [
   '/videos/showcase-6.mp4',
 ];
 
-// Men's videos only - organized
+// Men's videos - using women's videos for now (no men-specific videos yet)
 const menVideos = [
-  '/videos/men-1.mp4',
-  '/videos/men-2.mp4',
-  '/videos/men-3.mp4',
-  '/videos/men-4.mp4',
-  '/videos/men-5.mp4',
-  '/videos/men-6.mp4',
+  '/videos/women-priority.mp4',
+  '/videos/women-1.mp4',
+  '/videos/women-2.mp4',
+  '/videos/women-3.mp4',
+  '/videos/women-4.mp4',
+  '/videos/showcase-hair.mp4',
 ];
 
 interface ImageShowcaseProps {
