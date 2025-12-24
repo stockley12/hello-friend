@@ -1,15 +1,15 @@
 import { useState, useMemo } from 'react';
-import { format, addDays, startOfWeek, eachDayOfInterval, isSameDay } from 'date-fns';
-import { ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
+import { format, addDays, startOfWeek, eachDayOfInterval, isSameDay, differenceInDays, parseISO } from 'date-fns';
+import { ChevronLeft, ChevronRight, MessageCircle, Bell, Clock, User, Phone } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { generateConfirmationLink, openWhatsApp } from '@/lib/whatsapp';
 
 export function AdminCalendar() {
-  const { bookings, staff, getClientById, getServiceById, getStaffById, settings } = useSalon();
+  const { bookings, staff, clients, getClientById, getServiceById, getStaffById, settings } = useSalon();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<'day' | 'week'>('day');
   const [selectedStaff, setSelectedStaff] = useState<string>('all');
@@ -28,6 +28,43 @@ export function AdminCalendar() {
     });
   }, [bookings, currentDate, view, selectedStaff, weekDays]);
 
+  // Calculate clients who haven't booked in over 30 days
+  const followUpReminders = useMemo(() => {
+    const today = new Date();
+    const clientLastBooking: Record<string, { date: Date; booking: typeof bookings[0] }> = {};
+    
+    // Find the most recent booking for each client
+    bookings.forEach(booking => {
+      if (booking.status === 'cancelled') return;
+      const bookingDate = parseISO(booking.date);
+      if (!clientLastBooking[booking.clientId] || bookingDate > clientLastBooking[booking.clientId].date) {
+        clientLastBooking[booking.clientId] = { date: bookingDate, booking };
+      }
+    });
+    
+    // Filter clients whose last booking was more than 30 days ago
+    const reminders = clients
+      .filter(client => {
+        const lastBooking = clientLastBooking[client.id];
+        if (!lastBooking) return false; // No previous bookings
+        const daysSinceLastBooking = differenceInDays(today, lastBooking.date);
+        return daysSinceLastBooking >= 30;
+      })
+      .map(client => {
+        const lastBooking = clientLastBooking[client.id];
+        const daysSince = differenceInDays(today, lastBooking.date);
+        return {
+          client,
+          lastBookingDate: lastBooking.date,
+          daysSince,
+          lastBooking: lastBooking.booking,
+        };
+      })
+      .sort((a, b) => b.daysSince - a.daysSince); // Sort by longest time since booking
+    
+    return reminders;
+  }, [bookings, clients]);
+
   const timeSlots = Array.from({ length: 13 }, (_, i) => `${(i + 8).toString().padStart(2, '0')}:00`);
 
   const getBookingForSlot = (date: Date, time: string) => {
@@ -45,8 +82,87 @@ export function AdminCalendar() {
     setCurrentDate(prev => addDays(prev, direction * (view === 'week' ? 7 : 1)));
   };
 
+  const sendFollowUpWhatsApp = (client: typeof clients[0]) => {
+    const salonPhone = (settings.whatsappNumber || '905338709271').replace(/\D/g, '');
+    const message = `Hi ${client.name}! 👋
+
+It's been a while since your last visit to La'Couronne! We miss you! 💇✨
+
+Ready for a fresh new look? Book your next appointment today!
+
+📱 Call us or book online
+🎁 Special offer for returning clients!
+
+See you soon! 💕`;
+    
+    const clientPhone = client.phone.replace(/\D/g, '');
+    const whatsappLink = `https://wa.me/${clientPhone}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappLink, '_blank');
+  };
+
   return (
     <div className="space-y-6">
+      {/* Follow-up Reminders Section */}
+      {followUpReminders.length > 0 && (
+        <Card className="border-2 border-amber-500/30 bg-amber-500/5">
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                <Bell className="w-5 h-5 text-amber-600" />
+              </div>
+              <div>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  Follow-up Reminders
+                  <Badge variant="secondary" className="bg-amber-500/20 text-amber-700">
+                    {followUpReminders.length}
+                  </Badge>
+                </CardTitle>
+                <CardDescription>Clients who haven't booked in over 30 days</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-2">
+            <div className="space-y-2 max-h-[200px] overflow-y-auto">
+              {followUpReminders.slice(0, 5).map(({ client, daysSince, lastBookingDate }) => (
+                <div 
+                  key={client.id} 
+                  className="flex items-center justify-between p-3 rounded-xl bg-background border border-border hover:border-amber-500/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <User className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-medium text-foreground truncate">{client.name}</p>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        <span>{daysSince} days ago</span>
+                        <span className="text-muted-foreground/50">•</span>
+                        <span>{format(lastBookingDate, 'MMM d, yyyy')}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-shrink-0 gap-2 border-green-500/50 text-green-600 hover:bg-green-500/10 hover:text-green-600"
+                    onClick={() => sendFollowUpWhatsApp(client)}
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span className="hidden sm:inline">Message</span>
+                  </Button>
+                </div>
+              ))}
+              {followUpReminders.length > 5 && (
+                <p className="text-center text-sm text-muted-foreground pt-2">
+                  +{followUpReminders.length - 5} more clients need follow-up
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-2xl font-display font-semibold">Calendar</h1>
         <div className="flex items-center gap-2">
