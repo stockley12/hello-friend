@@ -3,6 +3,8 @@ import { Sparkles, Crown, Heart, Star, Smile, ChevronLeft, ChevronRight } from '
 import { useState, useEffect, useCallback } from 'react';
 
 import showcaseNew2 from '@/assets/showcase-new-2.png';
+import showcase1 from '@/assets/showcase-1.jpg';
+import showcase3 from '@/assets/showcase-3.jpg';
 import showcase4 from '@/assets/showcase-4.jpg';
 import heroImage from '@/assets/hero-image.jpeg';
 
@@ -14,10 +16,22 @@ const showcaseData = [
     mood: 'Creative & Bold'
   },
   {
+    image: showcase1,
+    title: 'Gorgeous Braids',
+    quote: '"I love my new look!"',
+    mood: 'Happy & Radiant'
+  },
+  {
     image: showcaseNew2,
     title: 'Edgy Undercut',
     quote: '"Feeling like a queen!"',
     mood: 'Bold & Unique'
+  },
+  {
+    image: showcase3,
+    title: 'Beautiful Twists',
+    quote: '"Best salon ever!"',
+    mood: 'Joyful & Stunning'
   },
   {
     image: showcase4,

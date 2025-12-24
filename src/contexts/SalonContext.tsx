@@ -4,6 +4,8 @@ import { servicesAPI, staffAPI, clientsAPI, bookingsAPI, settingsAPI, authAPI } 
 import { mockServices, mockStaff, mockClients, mockBookings, defaultSalonSettings, defaultAvailability } from '@/data/mockData';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, parseISO, isWithinInterval, format } from 'date-fns';
 import { playNotificationSound } from '@/lib/notifications';
+import { isSupabaseConfigured } from '@/lib/supabase';
+import * as supabaseService from '@/lib/supabaseService';
 
 interface SalonContextType {
   // Data
@@ -286,11 +288,43 @@ export function SalonProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState(false); // Assume offline by default for instant loading
 
-  // Fetch all data from API (only called manually when needed)
+  // Fetch all data from Supabase or API
   const fetchAllData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     
+    // Try Supabase first if configured
+    if (isSupabaseConfigured()) {
+      try {
+        console.log('🔌 Connecting to Supabase...');
+        const [servicesData, staffData, clientsData, bookingsData, settingsData, galleryData, availabilityData] = await Promise.all([
+          supabaseService.fetchServices(),
+          supabaseService.fetchStaff(),
+          supabaseService.fetchClients(),
+          supabaseService.fetchBookings(),
+          supabaseService.fetchSettings(),
+          supabaseService.fetchGallery(),
+          supabaseService.fetchAvailability(),
+        ]);
+        
+        if (servicesData.length > 0) setServices(servicesData);
+        if (staffData.length > 0) setStaff(staffData);
+        if (clientsData.length > 0) setClients(clientsData);
+        if (bookingsData.length > 0) setBookings(bookingsData);
+        if (settingsData) setSettings(settingsData);
+        if (galleryData.length > 0) setGalleryImages(galleryData);
+        if (availabilityData) setAvailability(availabilityData);
+        
+        setIsOnline(true);
+        console.log('✅ Supabase connected - Real-time sync enabled!');
+        setIsLoading(false);
+        return;
+      } catch (err) {
+        console.warn('Supabase connection failed, trying local API:', err);
+      }
+    }
+    
+    // Fallback to local API
     try {
       const [servicesData, staffData, clientsData, bookingsData, settingsData] = await Promise.all([
         servicesAPI.getAll(),
@@ -310,7 +344,7 @@ export function SalonProvider({ children }: { children: ReactNode }) {
       setIsOnline(true);
     } catch (err) {
       console.warn('Failed to fetch from API, using local data:', err);
-      setError('Unable to connect to server. Using offline mode.');
+      setError('Using offline mode with local storage.');
       setIsOnline(false);
       // Keep using mock/cached data
     } finally {
@@ -323,6 +357,47 @@ export function SalonProvider({ children }: { children: ReactNode }) {
     // Try to connect to the backend
     fetchAllData();
   }, [fetchAllData]);
+
+  // Set up Supabase real-time subscriptions
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+    
+    console.log('📡 Setting up real-time subscriptions...');
+    
+    // Subscribe to booking changes
+    const unsubBookings = supabaseService.subscribeToBookings((newBookings) => {
+      console.log('🔔 Bookings updated in real-time!');
+      
+      // Check for new bookings
+      if (newBookings.length > bookings.length && isAdminAuthenticated) {
+        const latestBooking = newBookings[newBookings.length - 1];
+        const client = clients.find(c => c.id === latestBooking.clientId);
+        
+        setBookingAlert({
+          clientName: client?.name || 'New Client',
+          date: format(parseISO(latestBooking.date), 'MMM d, yyyy'),
+          time: latestBooking.startTime,
+        });
+        playNotificationSound();
+      }
+      
+      setBookings(newBookings);
+      // Also update localStorage for offline access
+      localStorage.setItem(STORAGE_KEYS.bookings, JSON.stringify(newBookings));
+    });
+    
+    // Subscribe to client changes
+    const unsubClients = supabaseService.subscribeToClients((newClients) => {
+      console.log('🔔 Clients updated in real-time!');
+      setClients(newClients);
+      localStorage.setItem(STORAGE_KEYS.clients, JSON.stringify(newClients));
+    });
+    
+    return () => {
+      unsubBookings();
+      unsubClients();
+    };
+  }, [isAdminAuthenticated, bookings.length, clients]);
 
   // Service actions
   const addService = async (service: Omit<Service, 'id'>) => {
@@ -378,6 +453,16 @@ export function SalonProvider({ children }: { children: ReactNode }) {
 
   // Client actions
   const addClient = async (client: Omit<Client, 'id' | 'createdAt'>): Promise<Client> => {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      const supabaseClient = await supabaseService.createClient(client);
+      if (supabaseClient) {
+        // Real-time subscription will update the state
+        return supabaseClient;
+      }
+    }
+    
+    // Fallback to localStorage
     const newClient: Client = { 
       ...client, 
       id: `client-${Date.now()}`, 
@@ -428,6 +513,17 @@ export function SalonProvider({ children }: { children: ReactNode }) {
   // Booking actions
   const addBooking = async (booking: Omit<Booking, 'id' | 'createdAt'>): Promise<Booking> => {
     try {
+      // Try Supabase first
+      if (isSupabaseConfigured()) {
+        const supabaseBooking = await supabaseService.createBooking(booking);
+        if (supabaseBooking) {
+          console.log('✅ Booking saved to Supabase');
+          // Real-time subscription will handle the update
+          return supabaseBooking;
+        }
+      }
+      
+      // Fallback to localStorage
       const newBooking: Booking = { 
         ...booking, 
         id: `book-${Date.now()}`, 
@@ -489,6 +585,13 @@ export function SalonProvider({ children }: { children: ReactNode }) {
   };
   
   const updateBookingStatus = async (id: string, status: BookingStatus) => {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      await supabaseService.updateBookingStatus(id, status);
+      // Real-time subscription will handle the update
+      return;
+    }
+    
     setBookings(prev => {
       const updated = prev.map(b => b.id === id ? { ...b, status } : b);
       localStorage.setItem(STORAGE_KEYS.bookings, JSON.stringify(updated));
