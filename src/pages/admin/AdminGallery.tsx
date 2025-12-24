@@ -343,8 +343,9 @@ export function AdminGallery() {
                 <Button
                   variant="destructive"
                   size="icon"
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
+                  className="absolute top-2 right-2 h-8 w-8 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100"
                   onClick={() => handleDelete(img.id, img.url)}
+                  aria-label="Delete media"
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
@@ -403,8 +404,9 @@ export function AdminGallery() {
                 <Button
                   variant="destructive"
                   size="icon"
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
+                  className="absolute top-2 right-2 h-8 w-8 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100"
                   onClick={() => handleDelete(vid.id, vid.url)}
+                  aria-label="Delete media"
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
