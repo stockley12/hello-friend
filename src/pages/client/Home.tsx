@@ -928,13 +928,6 @@ export function Home() {
                   </Button>
                 </motion.div>
               </Link>
-              <a href={`https://wa.me/${(settings.whatsappNumber || '905338709271').replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
-                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                  <Button variant="outline" className="h-12 px-8 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-bold text-base">
-                    WhatsApp Us
-                  </Button>
-                </motion.div>
-              </a>
             </div>
           </motion.div>
         </div>

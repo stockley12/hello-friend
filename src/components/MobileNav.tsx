@@ -1,17 +1,18 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Home, Scissors, Calendar, User, Phone } from 'lucide-react';
+import { Home, Scissors, Calendar, User, MessageCircle } from 'lucide-react';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/services', label: 'Services', icon: Scissors },
   { href: '/book', label: 'Book', icon: Calendar, primary: true },
   { href: '/about', label: 'About', icon: User },
-  { href: '/contact', label: 'Contact', icon: Phone },
+  { href: 'whatsapp', label: 'WhatsApp', icon: MessageCircle, isWhatsApp: true },
 ];
 
 export function MobileNav() {
   const location = useLocation();
+  const whatsappNumber = '905338709271';
   
   return (
     <nav 
@@ -52,6 +53,29 @@ export function MobileNav() {
                   {item.label}
                 </span>
               </Link>
+            );
+          }
+          
+          // WhatsApp - external link
+          if (item.isWhatsApp) {
+            return (
+              <a
+                key={item.href}
+                href={`https://wa.me/${whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative flex flex-col items-center justify-center w-16 h-full"
+              >
+                <motion.div
+                  whileTap={{ scale: 0.85 }}
+                  className="flex flex-col items-center"
+                >
+                  <Icon className="w-5 h-5 text-green-500" />
+                  <span className="text-[10px] mt-1 text-green-500 font-semibold">
+                    {item.label}
+                  </span>
+                </motion.div>
+              </a>
             );
           }
           
