@@ -431,18 +431,6 @@ export async function deleteStaff(id: string): Promise<boolean> {
 // SETTINGS
 // ============================================
 
-const sanitizeWhatsAppNumber = (value: string | null | undefined): string => {
-  const raw = (value ?? '').trim();
-  if (!raw) return '';
-
-  // Treat obvious placeholder numbers (e.g., lots of consecutive zeros) as "not set"
-  const digits = raw.replace(/\D/g, '');
-  if (!digits) return '';
-  if (/0{6,}/.test(digits)) return '';
-
-  return raw;
-};
-
 export async function fetchSettings(): Promise<SalonSettings | null> {
   if (!isSupabaseConfigured()) return null;
   
@@ -462,7 +450,7 @@ export async function fetchSettings(): Promise<SalonSettings | null> {
     address: data.address || '',
     phone: data.phone || '',
     email: data.email || '',
-    whatsappNumber: sanitizeWhatsAppNumber(data.whatsapp_number),
+    whatsappNumber: data.whatsapp_number || '',
     instagramHandle: data.instagram_handle || '',
     businessHours: data.business_hours || {},
     whatsappTemplate: data.whatsapp_template || '',
