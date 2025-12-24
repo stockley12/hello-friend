@@ -250,7 +250,7 @@ export function Services() {
                 className="flex flex-wrap justify-center gap-3 mt-6"
               >
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/30">
-                  <span className="text-green-500 text-sm font-medium">✨ 500+ Happy Clients</span>
+                  <span className="text-green-500 text-sm font-medium">✨ 200+ Happy Clients in North Cyprus</span>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30">
                   <span className="text-primary text-sm font-medium">⭐ 5-Star Reviews</span>
