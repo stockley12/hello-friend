@@ -313,7 +313,13 @@ export function SalonProvider({ children }: { children: ReactNode }) {
         if (bookingsData.length > 0) setBookings(bookingsData);
         if (settingsData) setSettings(settingsData);
         if (galleryData.length > 0) setGalleryImages(galleryData);
-        if (availabilityData) setAvailability(availabilityData);
+        // Convert Supabase availability data to AvailabilitySettings format
+        if (availabilityData) {
+          setAvailability({
+            ...defaultAvailability,
+            blockedDates: availabilityData.blocked_dates || [],
+          });
+        }
         
         setIsOnline(true);
         console.log('✅ Supabase connected - Real-time sync enabled!');

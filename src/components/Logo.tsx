@@ -1,4 +1,4 @@
-import { motion, HTMLMotionProps } from 'framer-motion';
+import { motion } from 'framer-motion';
 import logoImage from '@/assets/logo.png';
 
 interface LogoProps {
@@ -16,29 +16,41 @@ const imageSizes = {
 };
 
 export function Logo({ size = 'md', className = '', animate = true, spinning = false }: LogoProps) {
-  const Wrapper = animate ? motion.div : 'div';
-  const wrapperProps: HTMLMotionProps<'div'> = animate ? { whileTap: { scale: 0.95 } } : {};
+  if (animate) {
+    return (
+      <motion.div
+        whileTap={{ scale: 0.95 }}
+        className={`select-none ${className}`}
+      >
+        <motion.img 
+          src={logoImage} 
+          alt="La'Couronne - Every Strand Matters"
+          className={`${imageSizes[size]} w-auto object-contain`}
+          style={{ 
+            filter: 'drop-shadow(0 0 10px hsl(48 100% 50% / 0.3))',
+          }}
+          animate={spinning ? { rotate: 360 } : undefined}
+          transition={spinning ? { 
+            duration: 3, 
+            repeat: Infinity, 
+            ease: 'linear' 
+          } : undefined}
+        />
+      </motion.div>
+    );
+  }
 
   return (
-    <Wrapper
-      {...wrapperProps}
-      className={`select-none ${className}`}
-    >
-      <motion.img 
+    <div className={`select-none ${className}`}>
+      <img 
         src={logoImage} 
         alt="La'Couronne - Every Strand Matters"
         className={`${imageSizes[size]} w-auto object-contain`}
         style={{ 
           filter: 'drop-shadow(0 0 10px hsl(48 100% 50% / 0.3))',
         }}
-        animate={spinning ? { rotate: 360 } : undefined}
-        transition={spinning ? { 
-          duration: 3, 
-          repeat: Infinity, 
-          ease: 'linear' 
-        } : undefined}
       />
-    </Wrapper>
+    </div>
   );
 }
 
