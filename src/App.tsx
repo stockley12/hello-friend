@@ -4,7 +4,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { SalonProvider, useSalon } from '@/contexts/SalonContext';
+import { useSalon } from '@/contexts/SalonContext';
 import { ClientLayout } from '@/components/layout/ClientLayout';
 import { AdminLayout } from '@/components/layout/AdminLayout';
 import { WelcomePopup } from '@/components/WelcomePopup';
@@ -113,14 +113,12 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrowserRouter>
-        <SalonProvider>
-          <WelcomePopup />
-          <InstallPrompt />
-          <GlobalBookingAlert />
-          <Toaster />
-          <Sonner />
-          <AppRoutes />
-        </SalonProvider>
+        <WelcomePopup />
+        <InstallPrompt />
+        <GlobalBookingAlert />
+        <Toaster />
+        <Sonner />
+        <AppRoutes />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
