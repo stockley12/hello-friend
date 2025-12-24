@@ -43,20 +43,15 @@ async function cleanupDevServiceWorkerAndCaches() {
   }
 }
 
-if (import.meta.env.DEV) {
-  cleanupDevServiceWorkerAndCaches().finally(() => {
-    // If cleanup triggered a reload, this won't run.
-    if (!document.hidden) renderApp();
-  });
-} else {
-  renderApp();
+// Always render the app immediately - no conditional dev mode checks
+renderApp();
 
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker
-        .register("/sw.js")
-        .then((reg) => console.log("SW registered:", reg.scope))
-        .catch((err) => console.log("SW registration failed:", err));
-    });
-  }
+// Register service worker in production
+if (!import.meta.env.DEV && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((reg) => console.log("SW registered:", reg.scope))
+      .catch((err) => console.log("SW registration failed:", err));
+  });
 }
