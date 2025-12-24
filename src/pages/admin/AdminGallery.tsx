@@ -1,12 +1,13 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Trash2, Image, Users, User, Upload, Video, Link as LinkIcon, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Image, Users, User, Upload, Video, Link as LinkIcon, Loader2, AlertTriangle } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { GalleryCategory, MediaType } from '@/types';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { GalleryCategory, MediaType, GalleryImage } from '@/types';
 import { haptics } from '@/lib/haptics';
 import { toast } from 'sonner';
 
@@ -19,6 +20,8 @@ export function AdminGallery() {
   const [activeTab, setActiveTab] = useState<'women' | 'men'>('women');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMode, setUploadMode] = useState<'file' | 'url'>('file');
+  const [deleteTarget, setDeleteTarget] = useState<GalleryImage | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,15 +73,23 @@ export function AdminGallery() {
     }
   };
 
-  const handleDelete = async (id: string, url: string) => {
+  const openDeleteDialog = (item: GalleryImage) => {
     haptics.warning();
-    if (confirm('Delete this media? This cannot be undone.')) {
-      try {
-        await deleteGalleryImage(id, url);
-        toast.success('Media deleted successfully!');
-      } catch (error) {
-        toast.error('Failed to delete media.');
-      }
+    setDeleteTarget(item);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    
+    setIsDeleting(true);
+    try {
+      await deleteGalleryImage(deleteTarget.id, deleteTarget.url);
+      toast.success('Media deleted successfully!');
+      setDeleteTarget(null);
+    } catch (error) {
+      toast.error('Failed to delete media.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -344,7 +355,7 @@ export function AdminGallery() {
                   variant="destructive"
                   size="icon"
                   className="absolute top-2 right-2 h-8 w-8 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100"
-                  onClick={() => handleDelete(img.id, img.url)}
+                  onClick={() => openDeleteDialog(img)}
                   aria-label="Delete media"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -405,7 +416,7 @@ export function AdminGallery() {
                   variant="destructive"
                   size="icon"
                   className="absolute top-2 right-2 h-8 w-8 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100"
-                  onClick={() => handleDelete(vid.id, vid.url)}
+                  onClick={() => openDeleteDialog(vid)}
                   aria-label="Delete media"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -415,6 +426,84 @@ export function AdminGallery() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="w-5 h-5" />
+              Delete Media
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this {deleteTarget?.mediaType === 'video' ? 'video' : 'image'}? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+
+          {/* Preview */}
+          {deleteTarget && (
+            <div className="flex flex-col items-center gap-3 py-4">
+              <div className="w-40 h-40 rounded-xl overflow-hidden border-2 border-destructive/30 bg-muted">
+                {deleteTarget.mediaType === 'video' ? (
+                  <video
+                    src={deleteTarget.url}
+                    className="w-full h-full object-cover"
+                    muted
+                    autoPlay
+                    loop
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    src={deleteTarget.url}
+                    alt={deleteTarget.caption || 'Gallery item'}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://via.placeholder.com/160?text=Error';
+                    }}
+                  />
+                )}
+              </div>
+              <div className="text-center">
+                <p className="font-medium text-foreground">
+                  {deleteTarget.caption || 'Untitled'}
+                </p>
+                <p className="text-sm text-muted-foreground capitalize">
+                  {deleteTarget.category} • {deleteTarget.mediaType === 'video' ? 'Video' : 'Image'}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="flex gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setDeleteTarget(null)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={isDeleting}
+              className="gap-2"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
