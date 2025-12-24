@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useSalon } from '@/contexts/SalonContext';
 
-// Women's videos only - organized (priority video first)
-const womenVideos = [
+// Fallback videos when no gallery videos exist
+const fallbackWomenVideos = [
   '/videos/women-priority.mp4',
   '/videos/women-1.mp4',
   '/videos/women-2.mp4',
@@ -13,8 +14,7 @@ const womenVideos = [
   '/videos/showcase-6.mp4',
 ];
 
-// Men's videos - using women's videos for now (no men-specific videos yet)
-const menVideos = [
+const fallbackMenVideos = [
   '/videos/women-priority.mp4',
   '/videos/women-1.mp4',
   '/videos/women-2.mp4',
@@ -30,10 +30,25 @@ interface ImageShowcaseProps {
 }
 
 export function ImageShowcase({ direction = 'right', className = '', category = 'women' }: ImageShowcaseProps) {
-  // Use correct video list based on category
-  const videoList = category === 'men' ? menVideos : womenVideos;
+  const { galleryImages } = useSalon();
+  
+  // Get videos from gallery for this category
+  const categoryVideos = galleryImages
+    .filter(item => item.category === category && item.mediaType === 'video')
+    .map(item => item.url);
+  
+  // Use gallery videos if available, otherwise use fallbacks
+  const videoList = categoryVideos.length > 0 
+    ? categoryVideos 
+    : (category === 'men' ? fallbackMenVideos : fallbackWomenVideos);
+  
   const [currentIndex, setCurrentIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Reset index when video list changes
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [category, categoryVideos.length]);
 
   // Swipe handlers
   const handleDragEnd = useCallback((event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {

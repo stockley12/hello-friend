@@ -145,11 +145,13 @@ export interface DashboardStats {
 
 // Gallery
 export type GalleryCategory = 'women' | 'men';
+export type MediaType = 'image' | 'video';
 
 export interface GalleryImage {
   id: string;
   url: string;
   category: GalleryCategory;
+  mediaType: MediaType;
   caption?: string;
   createdAt: string;
 }

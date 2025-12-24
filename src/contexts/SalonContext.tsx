@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback, useMemo, useEffect } from 'react';
-import { Service, Staff, Client, Booking, SalonSettings, BookingStatus, AvailabilitySettings, IncomeEntry, DashboardStats, GalleryImage, GalleryCategory } from '@/types';
+import { Service, Staff, Client, Booking, SalonSettings, BookingStatus, AvailabilitySettings, IncomeEntry, DashboardStats, GalleryImage, GalleryCategory, MediaType } from '@/types';
 import { servicesAPI, staffAPI, clientsAPI, bookingsAPI, settingsAPI, authAPI } from '@/lib/api';
 import { mockServices, mockStaff, mockClients, mockBookings, defaultSalonSettings, defaultAvailability } from '@/data/mockData';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, parseISO, isWithinInterval, format } from 'date-fns';
@@ -54,8 +54,9 @@ interface SalonContextType {
   
   // Gallery actions
   galleryImages: GalleryImage[];
-  addGalleryImage: (url: string, category: GalleryCategory, caption?: string) => Promise<void>;
-  deleteGalleryImage: (id: string) => Promise<void>;
+  addGalleryImage: (url: string, category: GalleryCategory, mediaType: MediaType, caption?: string) => Promise<void>;
+  deleteGalleryImage: (id: string, url?: string) => Promise<void>;
+  uploadGalleryFile: (file: File, category: GalleryCategory) => Promise<string | null>;
   
   // Booking alerts (auto-dismiss)
   bookingAlert: { clientName: string; date: string; time: string } | null;
@@ -407,6 +408,20 @@ export function SalonProvider({ children }: { children: ReactNode }) {
 
   // Service actions
   const addService = async (service: Omit<Service, 'id'>) => {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      const newSupabaseService = await supabaseService.createService(service);
+      if (newSupabaseService) {
+        setServices(prev => {
+          const updated = [...prev, newSupabaseService];
+          localStorage.setItem(STORAGE_KEYS.services, JSON.stringify(updated));
+          return updated;
+        });
+        return;
+      }
+    }
+    
+    // Fallback to localStorage
     const newService = { ...service, id: `srv-${Date.now()}` };
     setServices(prev => {
       const updated = [...prev, newService];
@@ -416,6 +431,20 @@ export function SalonProvider({ children }: { children: ReactNode }) {
   };
   
   const updateService = async (id: string, updates: Partial<Service>) => {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      const success = await supabaseService.updateService(id, updates);
+      if (success) {
+        setServices(prev => {
+          const updated = prev.map(s => s.id === id ? { ...s, ...updates } : s);
+          localStorage.setItem(STORAGE_KEYS.services, JSON.stringify(updated));
+          return updated;
+        });
+        return;
+      }
+    }
+    
+    // Fallback to localStorage
     setServices(prev => {
       const updated = prev.map(s => s.id === id ? { ...s, ...updates } : s);
       localStorage.setItem(STORAGE_KEYS.services, JSON.stringify(updated));
@@ -424,6 +453,20 @@ export function SalonProvider({ children }: { children: ReactNode }) {
   };
   
   const deleteService = async (id: string) => {
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      const success = await supabaseService.deleteService(id);
+      if (success) {
+        setServices(prev => {
+          const updated = prev.filter(s => s.id !== id);
+          localStorage.setItem(STORAGE_KEYS.services, JSON.stringify(updated));
+          return updated;
+        });
+        return;
+      }
+    }
+    
+    // Fallback to localStorage
     setServices(prev => {
       const updated = prev.filter(s => s.id !== id);
       localStorage.setItem(STORAGE_KEYS.services, JSON.stringify(updated));
@@ -653,10 +696,10 @@ export function SalonProvider({ children }: { children: ReactNode }) {
   };
 
   // Gallery actions
-  const addGalleryImage = async (url: string, category: GalleryCategory, caption?: string) => {
+  const addGalleryImage = async (url: string, category: GalleryCategory, mediaType: MediaType, caption?: string) => {
     // Try Supabase first
     if (isSupabaseConfigured()) {
-      const supabaseImage = await supabaseService.addGalleryImage({ url, category, caption });
+      const supabaseImage = await supabaseService.addGalleryImage({ url, category, mediaType, caption });
       if (supabaseImage) {
         setGalleryImages(prev => {
           const updated = [supabaseImage, ...prev];
@@ -672,6 +715,7 @@ export function SalonProvider({ children }: { children: ReactNode }) {
       id: `gallery-${Date.now()}`,
       url,
       category,
+      mediaType,
       caption,
       createdAt: new Date().toISOString(),
     };
@@ -682,7 +726,12 @@ export function SalonProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const deleteGalleryImage = async (id: string) => {
+  const deleteGalleryImage = async (id: string, url?: string) => {
+    // Try to delete file from storage if URL provided
+    if (url && isSupabaseConfigured()) {
+      await supabaseService.deleteGalleryFile(url);
+    }
+    
     // Try Supabase first
     if (isSupabaseConfigured()) {
       const success = await supabaseService.deleteGalleryImage(id);
@@ -702,6 +751,14 @@ export function SalonProvider({ children }: { children: ReactNode }) {
       localStorage.setItem(STORAGE_KEYS.gallery, JSON.stringify(updated));
       return updated;
     });
+  };
+
+  // Upload gallery file
+  const uploadGalleryFile = async (file: File, category: GalleryCategory): Promise<string | null> => {
+    if (isSupabaseConfigured()) {
+      return await supabaseService.uploadGalleryFile(file, category);
+    }
+    return null;
   };
 
   // Toggle VIP status for clients
@@ -996,6 +1053,7 @@ export function SalonProvider({ children }: { children: ReactNode }) {
     galleryImages,
     addGalleryImage,
     deleteGalleryImage,
+    uploadGalleryFile,
     bookingAlert,
     clearBookingAlert,
     isAdminAuthenticated,
