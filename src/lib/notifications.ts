@@ -124,17 +124,24 @@ export const checkAndShowDailySummary = (todayBookingsCount: number): boolean =>
   const today = new Date().toDateString();
   const lastShown = localStorage.getItem(DAILY_SUMMARY_KEY);
   
-  // Only show if we haven't shown today and it's before noon
-  const currentHour = new Date().getHours();
-  const isMorning = currentHour >= 6 && currentHour < 12;
+  // TESTING MODE: Always trigger (remove time restriction temporarily)
+  // TODO: Restore morning check after testing
+  // const currentHour = new Date().getHours();
+  // const isMorning = currentHour >= 6 && currentHour < 12;
   
-  if (lastShown !== today && isMorning && Notification.permission === 'granted') {
+  if (lastShown !== today && Notification.permission === 'granted') {
     localStorage.setItem(DAILY_SUMMARY_KEY, today);
     showDailySummaryNotification(todayBookingsCount);
     return true;
   }
   
   return false;
+};
+
+// Manual test function - call from console: testDailySummary()
+(window as any).testDailySummary = () => {
+  localStorage.removeItem(DAILY_SUMMARY_KEY);
+  showDailySummaryNotification(3);
 };
 
 // Check if notifications are enabled
