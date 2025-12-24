@@ -557,7 +557,13 @@ export async function deleteGalleryImage(id: string): Promise<boolean> {
 // AVAILABILITY
 // ============================================
 
-export async function fetchAvailability(): Promise<AvailabilitySettings | null> {
+// Define a simpler type for the availability response from Supabase
+interface SupabaseAvailabilityData {
+  time_slots: string[];
+  blocked_dates: Array<{ id: string; date: string; reason: string }>;
+}
+
+export async function fetchAvailability(): Promise<SupabaseAvailabilityData | null> {
   if (!isSupabaseConfigured()) return null;
   
   const { data, error } = await supabase
@@ -572,20 +578,20 @@ export async function fetchAvailability(): Promise<AvailabilitySettings | null> 
   }
   
   return {
-    timeSlots: data.time_slots || [],
-    blockedDates: data.blocked_dates || [],
+    time_slots: (data.time_slots as string[]) || [],
+    blocked_dates: (data.blocked_dates as Array<{ id: string; date: string; reason: string }>) || [],
   };
 }
 
-export async function updateAvailability(settings: AvailabilitySettings): Promise<boolean> {
+export async function updateAvailability(settings: { time_slots: string[]; blocked_dates: Array<{ id: string; date: string; reason: string }> }): Promise<boolean> {
   if (!isSupabaseConfigured()) return false;
   
   const { error } = await supabase
     .from('availability')
     .upsert({
       id: 1,
-      time_slots: settings.timeSlots,
-      blocked_dates: settings.blockedDates,
+      time_slots: settings.time_slots,
+      blocked_dates: settings.blocked_dates,
     });
   
   if (error) {

@@ -79,9 +79,8 @@ export const showNotification = (title: string, options?: NotificationOptions) =
     const notification = new Notification(title, {
       icon: '/icon-192.png',
       badge: '/icon-192.png',
-      vibrate: [200, 100, 200],
-      requireInteraction: false, // Don't require user interaction
-      silent: false, // Allow sound
+      requireInteraction: false,
+      silent: false,
       ...options,
     });
     
@@ -101,7 +100,6 @@ export const showNewBookingNotification = (clientName: string, date: string, tim
   return showNotification(`🎉 New Booking!`, {
     body: `${clientName} booked for ${date} at ${time}`,
     tag: 'new-booking',
-    renotify: true,
   });
 };
 

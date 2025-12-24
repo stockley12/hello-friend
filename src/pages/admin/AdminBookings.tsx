@@ -221,7 +221,7 @@ export function AdminBookings() {
             <SelectItem value="no-show">👻 No-show</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={dateFilter} onValueChange={(v: string) => setDateFilter(v)}>
+        <Select value={dateFilter} onValueChange={(v: 'all' | 'today' | 'upcoming' | 'past') => setDateFilter(v)}>
           <SelectTrigger className="w-full sm:w-36">
             <SelectValue placeholder="Date" />
           </SelectTrigger>

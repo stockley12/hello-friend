@@ -118,7 +118,7 @@ export function Gallery() {
                 Check back soon to see our work!
               </p>
               <a 
-                href={`https://instagram.com/${settings.instagram?.replace('@', '') || 'lacouronne'}`}
+                href={`https://instagram.com/${settings.instagramHandle?.replace('@', '') || 'lacouronne'}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 mt-6 text-primary hover:underline"
