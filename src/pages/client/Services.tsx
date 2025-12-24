@@ -299,6 +299,21 @@ export function Services() {
                   <p className="text-muted-foreground">
                     {Object.keys(groupedServices).length} categories • {filteredServices.length} services available
                   </p>
+                  
+                  {/* Men's Video Coming Soon Alert */}
+                  {selectedGender === 'male' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30"
+                    >
+                      <Sparkles className="w-4 h-4 text-blue-400" />
+                      <span className="text-blue-400 text-sm font-medium">
+                        Videos for our men's hair styles coming soon!
+                      </span>
+                      <Sparkles className="w-4 h-4 text-blue-400" />
+                    </motion.div>
+                  )}
                 </div>
 
                 {/* Services by Category */}
