@@ -52,7 +52,7 @@ const allCategories = ['braids', 'twists', 'locs', 'natural', 'treatment', 'styl
 
 export function Services() {
   const { services } = useSalon();
-  const [selectedGender, setSelectedGender] = useState<'female' | 'male' | null>(null);
+  const [selectedGender, setSelectedGender] = useState<'female' | 'male'>('female');
   
   // Filter services by gender field
   const filteredServices = services.filter(s => {
