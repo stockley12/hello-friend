@@ -24,20 +24,20 @@ export function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-muted/30">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'hsl(40, 10%, 8%)' }}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-sm"
       >
-        <Card className="card-premium">
+        <Card className="border border-primary/20" style={{ background: 'hsl(40, 10%, 10%)' }}>
           <CardContent className="p-8">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Lock className="h-8 w-8 text-primary" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'hsl(48, 100%, 50%, 0.15)' }}>
+                <Lock className="h-8 w-8" style={{ color: 'hsl(48, 100%, 50%)' }} />
               </div>
-              <h1 className="font-display text-2xl font-semibold">{settings.name}</h1>
-              <p className="text-muted-foreground text-sm">Admin Access</p>
+              <h1 className="font-display text-2xl font-semibold" style={{ color: 'hsl(45, 30%, 95%)' }}>{settings.name}</h1>
+              <p className="text-sm" style={{ color: 'hsl(40, 15%, 60%)' }}>Admin Access</p>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -47,14 +47,15 @@ export function AdminLogin() {
                   placeholder="Enter PIN"
                   value={pin}
                   onChange={(e) => { setPin(e.target.value); setError(''); }}
-                  className="h-12 text-center text-2xl tracking-widest"
+                  className="h-12 text-center text-2xl tracking-widest border-primary/30"
+                  style={{ background: 'hsl(40, 10%, 12%)', color: 'hsl(45, 30%, 95%)' }}
                   maxLength={6}
                 />
-                {error && <p className="text-destructive text-sm mt-2 text-center">{error}</p>}
+                {error && <p className="text-sm mt-2 text-center" style={{ color: 'hsl(0, 84%, 60%)' }}>{error}</p>}
               </div>
-              <Button type="submit" className="w-full h-12">Sign In</Button>
+              <Button type="submit" className="w-full h-12 btn-premium">Sign In</Button>
             </form>
-            <p className="text-xs text-muted-foreground text-center mt-4">Enter your admin PIN</p>
+            <p className="text-xs text-center mt-4" style={{ color: 'hsl(40, 15%, 60%)' }}>Enter your admin PIN</p>
           </CardContent>
         </Card>
       </motion.div>
