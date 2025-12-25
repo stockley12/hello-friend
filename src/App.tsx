@@ -13,7 +13,7 @@ import { BookingAlert } from '@/components/BookingAlert';
 import { AnimatePresence } from 'framer-motion';
 
 // Clear old cached data on version update (but keep admin auth!)
-const APP_VERSION = '2.1.0';
+const APP_VERSION = '2.2.0';
 const storedVersion = localStorage.getItem('app_version');
 if (storedVersion !== APP_VERSION) {
   // Clear settings to get new WhatsApp number, but KEEP admin auth
