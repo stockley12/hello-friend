@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 
 export function AdminLogin() {
+  const navigate = useNavigate();
   const { authenticateAdmin, settings } = useSalon();
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
@@ -21,8 +22,8 @@ export function AdminLogin() {
     try {
       const isValid = await authenticateAdmin(pin);
       if (isValid) {
-        // Force full page load so Safari updates URL bar
-        window.location.href = '/admin/dashboard';
+        // Use SPA navigation to avoid full page reload
+        navigate('/admin/dashboard', { replace: true });
       } else {
         setError('Invalid PIN');
         setPin('');

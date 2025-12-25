@@ -228,3 +228,4 @@ SELECT COUNT(*) AS total_services FROM services;
 SELECT COUNT(*) AS total_staff FROM staff;
 SELECT name AS salon_name FROM settings WHERE id = 1;
 
+
