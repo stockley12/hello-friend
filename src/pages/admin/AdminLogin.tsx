@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock } from 'lucide-react';
+import { Lock, Loader2 } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,16 +10,26 @@ export function AdminLogin() {
   const { authenticateAdmin, settings } = useSalon();
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const isValid = await authenticateAdmin(pin);
-    if (isValid) {
-      // Force full page load so Safari updates URL bar
-      window.location.href = '/admin/dashboard';
-    } else {
-      setError('Invalid PIN');
-      setPin('');
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      const isValid = await authenticateAdmin(pin);
+      if (isValid) {
+        // Force full page load so Safari updates URL bar
+        window.location.href = '/admin/dashboard';
+      } else {
+        setError('Invalid PIN');
+        setPin('');
+        setIsLoading(false);
+      }
+    } catch {
+      setError('Connection error - try again');
+      setIsLoading(false);
     }
   };
 
@@ -50,10 +60,20 @@ export function AdminLogin() {
                   className="h-12 text-center text-2xl tracking-widest border-primary/30"
                   style={{ background: 'hsl(40, 10%, 12%)', color: 'hsl(45, 30%, 95%)' }}
                   maxLength={6}
+                  disabled={isLoading}
                 />
                 {error && <p className="text-sm mt-2 text-center" style={{ color: 'hsl(0, 84%, 60%)' }}>{error}</p>}
               </div>
-              <Button type="submit" className="w-full h-12 btn-premium">Sign In</Button>
+              <Button type="submit" className="w-full h-12 btn-premium" disabled={isLoading || !pin}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
             </form>
             <p className="text-xs text-center mt-4" style={{ color: 'hsl(40, 15%, 60%)' }}>Enter your admin PIN</p>
           </CardContent>
