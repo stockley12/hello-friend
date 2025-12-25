@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, Loader2 } from 'lucide-react';
 import { useSalon } from '@/contexts/SalonContext';
