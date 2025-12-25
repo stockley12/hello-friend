@@ -289,31 +289,59 @@ export function SalonProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState(false); // Assume offline by default for instant loading
 
-  // Fetch all data from Supabase or API
+  // Helper: fetch with timeout to prevent hanging on slow connections
+  const fetchWithTimeout = async <T,>(promise: Promise<T>, timeoutMs: number = 5000): Promise<T | null> => {
+    try {
+      const result = await Promise.race([
+        promise,
+        new Promise<null>((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout')), timeoutMs)
+        )
+      ]);
+      return result as T;
+    } catch {
+      return null;
+    }
+  };
+
+  // Fetch all data from Supabase or API (non-blocking with timeout)
   const fetchAllData = useCallback(async () => {
-    setIsLoading(true);
+    // Don't block - app is already usable with local data
     setError(null);
     
     // Try Supabase first if configured
     if (isSupabaseConfigured()) {
       try {
         console.log('🔌 Connecting to Supabase...');
-        const [servicesData, staffData, clientsData, bookingsData, settingsData, galleryData, availabilityData] = await Promise.all([
-          supabaseService.fetchServices(),
-          supabaseService.fetchStaff(),
-          supabaseService.fetchClients(),
-          supabaseService.fetchBookings(),
-          supabaseService.fetchSettings(),
-          supabaseService.fetchGallery(),
-          supabaseService.fetchAvailability(),
-        ]);
         
-        if (servicesData.length > 0) setServices(servicesData);
-        if (staffData.length > 0) setStaff(staffData);
-        if (clientsData.length > 0) setClients(clientsData);
-        if (bookingsData.length > 0) setBookings(bookingsData);
+        // Use timeout to prevent hanging on slow/unavailable connections
+        const results = await fetchWithTimeout(
+          Promise.all([
+            supabaseService.fetchServices(),
+            supabaseService.fetchStaff(),
+            supabaseService.fetchClients(),
+            supabaseService.fetchBookings(),
+            supabaseService.fetchSettings(),
+            supabaseService.fetchGallery(),
+            supabaseService.fetchAvailability(),
+          ]),
+          8000 // 8 second timeout
+        );
+        
+        if (!results) {
+          console.warn('⚠️ Supabase timeout - using local data');
+          setIsOnline(false);
+          return;
+        }
+        
+        const [servicesData, staffData, clientsData, bookingsData, settingsData, galleryData, availabilityData] = results;
+        
+        if (servicesData && servicesData.length > 0) setServices(servicesData);
+        if (staffData && staffData.length > 0) setStaff(staffData);
+        if (clientsData && clientsData.length > 0) setClients(clientsData);
+        if (bookingsData && bookingsData.length > 0) setBookings(bookingsData);
         if (settingsData) setSettings(settingsData);
-        if (galleryData.length > 0) setGalleryImages(galleryData);
+        if (galleryData && galleryData.length > 0) setGalleryImages(galleryData);
         // Convert Supabase availability data to AvailabilitySettings format
         if (availabilityData) {
           setAvailability({
@@ -324,38 +352,44 @@ export function SalonProvider({ children }: { children: ReactNode }) {
         
         setIsOnline(true);
         console.log('✅ Supabase connected - Real-time sync enabled!');
-        setIsLoading(false);
         return;
       } catch (err) {
         console.warn('Supabase connection failed, trying local API:', err);
       }
     }
     
-    // Fallback to local API
+    // Fallback to local API with timeout
     try {
-      const [servicesData, staffData, clientsData, bookingsData, settingsData] = await Promise.all([
-        servicesAPI.getAll(),
-        staffAPI.getAll(),
-        clientsAPI.getAll(),
-        bookingsAPI.getAll(),
-        settingsAPI.get(),
-      ]);
+      const results = await fetchWithTimeout(
+        Promise.all([
+          servicesAPI.getAll(),
+          staffAPI.getAll(),
+          clientsAPI.getAll(),
+          bookingsAPI.getAll(),
+          settingsAPI.get(),
+        ]),
+        5000 // 5 second timeout
+      );
       
-      setServices(servicesData);
-      setStaff(staffData);
-      setClients(clientsData);
-      setBookings(bookingsData);
-      if (settingsData) {
-        setSettings(settingsData);
+      if (results) {
+        const [servicesData, staffData, clientsData, bookingsData, settingsData] = results;
+        setServices(servicesData);
+        setStaff(staffData);
+        setClients(clientsData);
+        setBookings(bookingsData);
+        if (settingsData) {
+          setSettings(settingsData);
+        }
+        setIsOnline(true);
+      } else {
+        console.warn('API timeout - using local data');
+        setIsOnline(false);
       }
-      setIsOnline(true);
     } catch (err) {
       console.warn('Failed to fetch from API, using local data:', err);
       setError('Using offline mode with local storage.');
       setIsOnline(false);
       // Keep using mock/cached data
-    } finally {
-      setIsLoading(false);
     }
   }, []);
 
