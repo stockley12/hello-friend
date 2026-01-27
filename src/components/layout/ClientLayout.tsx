@@ -15,6 +15,7 @@ interface ClientLayoutProps {
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
+  { href: '/products', label: 'Products' },
   { href: '/gallery', label: 'Gallery' },
   { href: '/book', label: 'Book' },
   { href: '/about', label: 'About' },
