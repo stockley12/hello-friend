@@ -25,6 +25,7 @@ if (storedVersion !== APP_VERSION) {
 // Client Pages
 import { Home } from '@/pages/client/Home';
 import { Services } from '@/pages/client/Services';
+import { Products } from '@/pages/client/Products';
 import { Book } from '@/pages/client/Book';
 import { Gallery } from '@/pages/client/Gallery';
 import { About } from '@/pages/client/About';
@@ -85,6 +86,7 @@ function AppRoutes() {
       {/* Client Routes */}
       <Route path="/" element={<ClientLayout><Home /></ClientLayout>} />
       <Route path="/services" element={<ClientLayout><Services /></ClientLayout>} />
+      <Route path="/products" element={<ClientLayout><Products /></ClientLayout>} />
       <Route path="/gallery" element={<ClientLayout><Gallery /></ClientLayout>} />
       <Route path="/book" element={<ClientLayout><Book /></ClientLayout>} />
       <Route path="/about" element={<ClientLayout><About /></ClientLayout>} />
