@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, ChevronRight, Star, MessageCircle, Filter, X, Sparkles } from 'lucide-react';
+import { ShoppingBag, Star, MessageCircle, Filter, X, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useSalon } from '@/contexts/SalonContext';
@@ -267,19 +266,13 @@ const categories: { id: ProductCategory; label: string }[] = [
 
 function ProductCard({ product, onInquire }: { product: Product; onInquire: (product: Product) => void }) {
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      className="group relative rounded-2xl overflow-hidden bg-card border border-border hover:border-primary/50 transition-all duration-300"
-    >
+    <div className="group relative rounded-2xl overflow-hidden bg-card border border-border hover:border-primary/50 transition-colors duration-300">
       {/* Product Image */}
       <div className="relative aspect-square overflow-hidden">
         <img 
           src={product.image} 
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover"
         />
         
         {/* Badge */}
@@ -295,20 +288,6 @@ function ProductCard({ product, onInquire }: { product: Product; onInquire: (pro
             Save ${product.originalPrice - product.price}
           </Badge>
         )}
-        
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
-        {/* Quick Action */}
-        <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-          <Button 
-            onClick={() => onInquire(product)}
-            className="w-full btn-premium rounded-full text-sm"
-          >
-            <MessageCircle className="w-4 h-4 mr-2" />
-            Inquire Now
-          </Button>
-        </div>
       </div>
       
       {/* Product Info */}
@@ -353,8 +332,17 @@ function ProductCard({ product, onInquire }: { product: Product; onInquire: (pro
             )}
           </div>
         )}
+        
+        {/* Inquire Button */}
+        <Button 
+          onClick={() => onInquire(product)}
+          className="w-full btn-premium rounded-full text-sm mt-4"
+        >
+          <MessageCircle className="w-4 h-4 mr-2" />
+          Inquire Now
+        </Button>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -366,18 +354,11 @@ function ProductModal({ product, onClose, whatsappNumber }: { product: Product; 
   };
   
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+    <div
       className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/80 backdrop-blur-sm p-0 md:p-4"
       onClick={onClose}
     >
-      <motion.div
-        initial={{ y: '100%' }}
-        animate={{ y: 0 }}
-        exit={{ y: '100%' }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+      <div
         className="w-full md:max-w-lg bg-card rounded-t-3xl md:rounded-2xl max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
@@ -490,8 +471,8 @@ function ProductModal({ product, onClose, whatsappNumber }: { product: Product; 
             Get personalized recommendations and pricing
           </p>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -519,25 +500,20 @@ export function Products() {
         <div className="absolute bottom-10 left-10 w-48 h-48 rounded-full bg-accent/10 blur-3xl" />
         
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-3xl mx-auto"
-          >
+          <div className="text-center max-w-3xl mx-auto">
             <Badge className="bg-primary/20 text-primary border-primary/30 mb-4">
               <ShoppingBag className="w-3 h-3 mr-1" />
               Premium Products
             </Badge>
             
             <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">
-              <span className="text-gradient-rose">Hair Shop</span>
+              Hair Shop
             </h1>
             
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Premium 100% virgin human hair bundles, HD lace wigs, closures, frontals, and styling accessories.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
       
@@ -585,20 +561,15 @@ export function Products() {
       {/* Products Grid */}
       <section className="py-8 md:py-12">
         <div className="container mx-auto px-4">
-          <motion.div 
-            layout
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
-          >
-            <AnimatePresence mode="popLayout">
-              {filteredProducts.map(product => (
-                <ProductCard 
-                  key={product.id} 
-                  product={product} 
-                  onInquire={handleInquire}
-                />
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {filteredProducts.map(product => (
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                onInquire={handleInquire}
+              />
+            ))}
+          </div>
           
           {filteredProducts.length === 0 && (
             <div className="text-center py-16">
@@ -613,60 +584,41 @@ export function Products() {
       <section className="py-12 md:py-16 bg-card border-t border-border">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="p-6"
-            >
+            <div className="p-6">
               <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
                 <Sparkles className="w-7 h-7 text-primary" />
               </div>
               <h3 className="font-display text-xl font-semibold mb-2">100% Virgin Hair</h3>
               <p className="text-sm text-muted-foreground">Premium quality human hair that can be colored, bleached, and heat styled.</p>
-            </motion.div>
+            </div>
             
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="p-6"
-            >
+            <div className="p-6">
               <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
                 <ShoppingBag className="w-7 h-7 text-primary" />
               </div>
               <h3 className="font-display text-xl font-semibold mb-2">Bundle Deals</h3>
               <p className="text-sm text-muted-foreground">Save more when you buy bundles + closure or frontal combos.</p>
-            </motion.div>
+            </div>
             
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="p-6"
-            >
+            <div className="p-6">
               <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
                 <MessageCircle className="w-7 h-7 text-primary" />
               </div>
               <h3 className="font-display text-xl font-semibold mb-2">Expert Guidance</h3>
               <p className="text-sm text-muted-foreground">Chat with us for personalized product recommendations.</p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
       
       {/* Product Modal */}
-      <AnimatePresence>
-        {selectedProduct && (
-          <ProductModal 
-            product={selectedProduct} 
-            onClose={() => setSelectedProduct(null)}
-            whatsappNumber={settings.whatsappNumber || '14045551234'}
-          />
-        )}
-      </AnimatePresence>
+      {selectedProduct && (
+        <ProductModal 
+          product={selectedProduct} 
+          onClose={() => setSelectedProduct(null)}
+          whatsappNumber={settings.whatsappNumber || '14045551234'}
+        />
+      )}
     </div>
   );
 }
