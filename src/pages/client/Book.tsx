@@ -26,7 +26,7 @@ const getTimeSlotLabel = (time: string): string => {
 };
 
 // Format price
-const formatPrice = (price: number) => `₺${price.toLocaleString('tr-TR')}`;
+const formatPrice = (price: number) => `$${price.toLocaleString()}`;
 
 // Note: Services are now filtered by the 'gender' field on each service
 // gender: 'female' | 'male' | 'both'
@@ -85,8 +85,8 @@ export function Book() {
   }, [formData.services, services]);
 
   useEffect(() => {
-    const salonName = settings?.name || "La'Couronne";
-    document.title = `Book Braids Appointment | ${salonName}`;
+    const salonName = settings?.name || "BriBraidsBeauty";
+    document.title = `Book Appointment | ${salonName}`;
   }, [settings?.name]);
   
   // Scroll to form on step change
@@ -237,7 +237,7 @@ export function Book() {
   if (bookingComplete && createdBooking) {
     // Generate WhatsApp link directly using formData (no lookup needed)
     const salonPhone = (settings.whatsappNumber || '905338709271').replace(/\D/g, '');
-    const whatsappMessage = `Hi La'Couronne! 👋
+    const whatsappMessage = `Hi BriBraidsBeauty! 👋
 
 I'd like to confirm my booking:
 
