@@ -13,8 +13,8 @@ const bookHeroBg = '/book-hero-bg.png?v=2';
 
 const faqs = [
   {
-    question: "Where are you located?",
-    answer: "We're located in Atlanta, Georgia. Our salon is easily accessible and offers a welcoming atmosphere for all clients."
+    question: "Where exactly are you located in Magusa?",
+    answer: "We're located in the heart of Magusa (Famagusta), easily accessible from the main city center. Our salon offers convenient parking and is just a short walk from the historic walled city."
   },
   {
     question: "Do I need to book an appointment in advance?",
@@ -114,15 +114,15 @@ export function About() {
               transition={{ delay: 0.2 }}
             >
               <MapPin className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="text-xs md:text-sm font-medium tracking-wider uppercase">Atlanta, Georgia</span>
+              <span className="text-xs md:text-sm font-medium tracking-wider uppercase">Magusa, North Cyprus</span>
             </motion.div>
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold mb-4 md:mb-6">
               Our Story
             </h1>
             <p className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed">
               Founded on the belief that everyone deserves to feel extraordinary. 
-              BriBraidsBeauty has been transforming not just hair, but confidence, 
-              one client at a time in the heart of Atlanta.
+              {settings.name} has been transforming not just hair, but confidence, 
+              one client at a time in the heart of Magusa.
             </p>
           </motion.div>
         </div>

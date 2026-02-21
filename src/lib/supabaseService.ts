@@ -720,4 +720,3 @@ export async function verifyAdminPin(pin: string): Promise<boolean> {
   return data.admin_pin === pin;
 }
 
-
