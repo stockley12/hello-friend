@@ -13,6 +13,8 @@ export function AdminLogin() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -21,8 +23,7 @@ export function AdminLogin() {
     try {
       const isValid = await authenticateAdmin(pin);
       if (isValid) {
-        // Force full page load so Safari updates URL bar
-        window.location.href = '/admin/dashboard';
+        navigate('/admin/dashboard', { replace: true });
       } else {
         setError('Invalid PIN');
         setPin('');
