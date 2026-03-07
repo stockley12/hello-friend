@@ -25,8 +25,6 @@ const getTimeSlotLabel = (time: string): string => {
   return 'Night';
 };
 
-// Format price
-const formatPrice = (price: number) => `₺${price.toLocaleString('tr-TR')}`;
 
 // Note: Services are now filtered by the 'gender' field on each service
 // gender: 'female' | 'male' | 'both'
@@ -68,13 +66,6 @@ export function Book() {
     });
   }, [services, formData.gender]);
 
-  // Calculate total price
-  const totalPrice = useMemo(() => {
-    return formData.services.reduce((sum, serviceId) => {
-      const service = services.find(s => s.id === serviceId);
-      return sum + (service?.price || 0);
-    }, 0);
-  }, [formData.services, services]);
 
   // Get selected service names
   const selectedServiceNames = useMemo(() => {
@@ -193,7 +184,7 @@ export function Book() {
       const endTime = `${Math.floor(endMinutes / 60).toString().padStart(2, '0')}:${(endMinutes % 60).toString().padStart(2, '0')}`;
       
       // Create booking notes with service details
-      const bookingNotes = `Gender: ${formData.gender === 'female' ? 'Female' : 'Male'}\nServices: ${selectedServiceNames}\nTotal: ${formatPrice(totalPrice)}`;
+      const bookingNotes = `Gender: ${formData.gender === 'female' ? 'Female' : 'Male'}\nServices: ${selectedServiceNames}`;
       
       // Create the booking
       const booking = await addBooking({
@@ -243,7 +234,6 @@ I'd like to confirm my booking:
 
 👤 Name: ${formData.clientName}
 💇 Services: ${selectedServiceNames}
-💰 Total: ${formatPrice(totalPrice)}
 📅 Date: ${format(new Date(formData.date), 'EEEE, d MMMM yyyy')}
 ⏰ Time: ${formData.time}
 
@@ -297,7 +287,6 @@ Please confirm my appointment. Thank you! 🙏`;
                 <div>
                   <p className="text-xs text-muted-foreground uppercase">Services</p>
                   <p className="font-semibold text-foreground">{selectedServiceNames}</p>
-                  <p className="text-primary font-bold">{formatPrice(totalPrice)}</p>
                 </div>
               </div>
               
@@ -467,11 +456,6 @@ Please confirm my appointment. Thank you! 🙏`;
                                 </span>
                               </div>
                             </div>
-                            <div className="text-right">
-                              <p className={`text-lg font-bold ${isSelected ? 'text-primary' : 'text-foreground'}`}>
-                                {formatPrice(service.price)}
-                              </p>
-                            </div>
                           </div>
                         </motion.button>
                       );
@@ -496,10 +480,6 @@ Please confirm my appointment. Thank you! 🙏`;
                       <div>
                         <p className="text-sm text-muted-foreground">{formData.services.length} service(s) selected</p>
                         <p className="text-xs text-muted-foreground">{selectedServiceNames}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Total</p>
-                        <p className="text-xl font-bold text-primary">{formatPrice(totalPrice)}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -584,7 +564,7 @@ Please confirm my appointment. Thank you! 🙏`;
                       <p className="text-sm font-medium text-foreground">{selectedServiceNames}</p>
                       <p className="text-xs text-muted-foreground">{formData.clientName} • {formData.gender === 'female' ? 'Female' : 'Male'}</p>
                     </div>
-                    <p className="text-lg font-bold text-primary">{formatPrice(totalPrice)}</p>
+                    <p className="text-sm text-primary font-medium">💬 Price on consultation</p>
                   </div>
                 </div>
 

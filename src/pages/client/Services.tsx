@@ -360,11 +360,6 @@ export function Services() {
                                 {service.description}
                               </p>
                               <div className="flex items-center gap-3 mt-3">
-                                <span className={`text-lg font-bold ${
-                                  selectedGender === 'female' ? 'text-pink-500' : 'text-blue-500'
-                                }`}>
-                                  ₺{service.price.toLocaleString()}
-                                </span>
                                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
                                   <Clock className="w-3 h-3" />
                                   {service.durationMin >= 60 
@@ -372,6 +367,7 @@ export function Services() {
                                     : `${service.durationMin}m`
                                   }
                                 </span>
+                                <span className="text-xs text-primary font-medium">💬 Price on consultation</span>
                               </div>
                             </div>
                             <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
