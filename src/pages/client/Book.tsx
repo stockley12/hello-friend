@@ -204,6 +204,14 @@ export function Book() {
       haptics.success();
       
       animate(checkProgress, 1, { duration: 0.5, delay: 0.2 });
+      
+      // Auto-open WhatsApp after a brief delay so user sees the success screen
+      const salonPhone = (settings.whatsappNumber || '905338709271').replace(/\D/g, '');
+      const whatsappMsg = `Hi La'Couronne! 👋\n\nI'd like to confirm my booking:\n\n👤 Name: ${formData.clientName}\n💇 Services: ${selectedServiceNames}\n📅 Date: ${format(new Date(formData.date), 'EEEE, d MMMM yyyy')}\n⏰ Time: ${formData.time}\n\nPlease confirm my appointment. Thank you! 🙏`;
+      const waLink = `https://wa.me/${salonPhone}?text=${encodeURIComponent(whatsappMsg)}`;
+      setTimeout(() => {
+        window.open(waLink, '_blank', 'noopener,noreferrer');
+      }, 1500);
     } catch (error) {
       console.error('Booking failed:', error);
       haptics.error();
