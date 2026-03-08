@@ -769,7 +769,7 @@ export function SalonProvider({ children }: { children: ReactNode }) {
       await supabaseService.updateAvailability({
         time_slots: timeSlots,
         blocked_dates: newAvailability.blockedDates,
-        weekly_schedule: newAvailability.weeklySchedule,
+        weekly_schedule: newAvailability.weeklySchedule as unknown as Record<string, { isOpen: boolean; startTime: string; endTime: string }>,
         slot_duration_minutes: newAvailability.slotDurationMinutes,
         max_bookings_per_slot: newAvailability.maxBookingsPerSlot,
       });
