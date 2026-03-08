@@ -609,10 +609,13 @@ export async function deleteGalleryFile(url: string): Promise<boolean> {
 // AVAILABILITY
 // ============================================
 
-// Define a simpler type for the availability response from Supabase
+// Define a type for the availability response from Supabase
 interface SupabaseAvailabilityData {
   time_slots: string[];
   blocked_dates: Array<{ id: string; date: string; reason: string }>;
+  weekly_schedule: Record<string, { isOpen: boolean; startTime: string; endTime: string }> | null;
+  slot_duration_minutes: number;
+  max_bookings_per_slot: number;
 }
 
 export async function fetchAvailability(): Promise<SupabaseAvailabilityData | null> {
@@ -622,20 +625,31 @@ export async function fetchAvailability(): Promise<SupabaseAvailabilityData | nu
     .from('availability')
     .select('*')
     .eq('id', 1)
-    .single();
+    .maybeSingle();
   
   if (error) {
     console.error('Error fetching availability:', error);
     return null;
   }
   
+  if (!data) return null;
+  
   return {
     time_slots: (data.time_slots as string[]) || [],
     blocked_dates: (data.blocked_dates as Array<{ id: string; date: string; reason: string }>) || [],
+    weekly_schedule: (data as Record<string, unknown>).weekly_schedule as SupabaseAvailabilityData['weekly_schedule'] || null,
+    slot_duration_minutes: ((data as Record<string, unknown>).slot_duration_minutes as number) || 60,
+    max_bookings_per_slot: ((data as Record<string, unknown>).max_bookings_per_slot as number) || 1,
   };
 }
 
-export async function updateAvailability(settings: { time_slots: string[]; blocked_dates: Array<{ id: string; date: string; reason: string }> }): Promise<boolean> {
+export async function updateAvailability(settings: {
+  time_slots: string[];
+  blocked_dates: Array<{ id: string; date: string; reason: string }>;
+  weekly_schedule: Record<string, { isOpen: boolean; startTime: string; endTime: string }>;
+  slot_duration_minutes: number;
+  max_bookings_per_slot: number;
+}): Promise<boolean> {
   if (!isSupabaseConfigured()) return false;
   
   const { error } = await supabase
@@ -644,7 +658,10 @@ export async function updateAvailability(settings: { time_slots: string[]; block
       id: 1,
       time_slots: settings.time_slots,
       blocked_dates: settings.blocked_dates,
-    });
+      weekly_schedule: settings.weekly_schedule,
+      slot_duration_minutes: settings.slot_duration_minutes,
+      max_bookings_per_slot: settings.max_bookings_per_slot,
+    } as Record<string, unknown>);
   
   if (error) {
     console.error('Error updating availability:', error);
