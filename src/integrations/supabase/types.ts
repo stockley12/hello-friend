@@ -19,19 +19,28 @@ export type Database = {
           blocked_dates: Json | null
           created_at: string | null
           id: number
+          max_bookings_per_slot: number | null
+          slot_duration_minutes: number | null
           time_slots: Json | null
+          weekly_schedule: Json | null
         }
         Insert: {
           blocked_dates?: Json | null
           created_at?: string | null
           id?: number
+          max_bookings_per_slot?: number | null
+          slot_duration_minutes?: number | null
           time_slots?: Json | null
+          weekly_schedule?: Json | null
         }
         Update: {
           blocked_dates?: Json | null
           created_at?: string | null
           id?: number
+          max_bookings_per_slot?: number | null
+          slot_duration_minutes?: number | null
           time_slots?: Json | null
+          weekly_schedule?: Json | null
         }
         Relationships: []
       }
