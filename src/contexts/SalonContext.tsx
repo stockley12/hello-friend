@@ -344,10 +344,21 @@ export function SalonProvider({ children }: { children: ReactNode }) {
         if (galleryData && galleryData.length > 0) setGalleryImages(galleryData);
         // Convert Supabase availability data to AvailabilitySettings format
         if (availabilityData) {
-          setAvailability({
+          const newAvailability: AvailabilitySettings = {
             ...defaultAvailability,
             blockedDates: availabilityData.blocked_dates || [],
-          });
+            slotDurationMinutes: availabilityData.slot_duration_minutes || 60,
+            maxBookingsPerSlot: availabilityData.max_bookings_per_slot || 1,
+          };
+          // If weekly_schedule is stored in Supabase, use it
+          if (availabilityData.weekly_schedule) {
+            newAvailability.weeklySchedule = {
+              ...defaultAvailability.weeklySchedule,
+              ...availabilityData.weekly_schedule,
+            };
+          }
+          setAvailability(newAvailability);
+          localStorage.setItem(STORAGE_KEYS.availability, JSON.stringify(newAvailability));
         }
         
         setIsOnline(true);
@@ -616,7 +627,26 @@ export function SalonProvider({ children }: { children: ReactNode }) {
         const supabaseBooking = await supabaseService.createBooking(booking);
         if (supabaseBooking) {
           console.log('✅ Booking saved to Supabase');
-          // Real-time subscription will handle the update
+          
+          // Trigger notification for admin (real-time will also handle this but may have delay)
+          const client = clients.find(c => c.id === supabaseBooking.clientId);
+          const formattedDate = format(parseISO(supabaseBooking.date), 'MMM d, yyyy');
+          
+          // Show browser notification
+          showNewBookingNotification(
+            client?.name || 'New Client',
+            formattedDate,
+            supabaseBooking.startTime
+          );
+          
+          // Show in-app alert
+          setBookingAlert({
+            clientName: client?.name || 'New Client',
+            date: formattedDate,
+            time: supabaseBooking.startTime,
+          });
+          playNotificationSound();
+          
           return supabaseBooking;
         }
       }
@@ -718,6 +748,32 @@ export function SalonProvider({ children }: { children: ReactNode }) {
   const updateAvailability = async (newAvailability: AvailabilitySettings) => {
     setAvailability(newAvailability);
     localStorage.setItem(STORAGE_KEYS.availability, JSON.stringify(newAvailability));
+    
+    // Sync to Supabase
+    if (isSupabaseConfigured()) {
+      // Generate time_slots array from weekly schedule for backwards compatibility
+      const timeSlots: string[] = [];
+      Object.values(newAvailability.weeklySchedule).forEach(day => {
+        if (day.isOpen) {
+          const [startHour] = day.startTime.split(':').map(Number);
+          const [endHour] = day.endTime.split(':').map(Number);
+          const duration = newAvailability.slotDurationMinutes / 60;
+          for (let h = startHour; h + duration <= endHour; h += duration) {
+            const slot = `${h.toString().padStart(2, '0')}:00`;
+            if (!timeSlots.includes(slot)) timeSlots.push(slot);
+          }
+        }
+      });
+      timeSlots.sort();
+      
+      await supabaseService.updateAvailability({
+        time_slots: timeSlots,
+        blocked_dates: newAvailability.blockedDates,
+        weekly_schedule: newAvailability.weeklySchedule as unknown as Record<string, { isOpen: boolean; startTime: string; endTime: string }>,
+        slot_duration_minutes: newAvailability.slotDurationMinutes,
+        max_bookings_per_slot: newAvailability.maxBookingsPerSlot,
+      });
+    }
   };
 
   // Income tracking functions
